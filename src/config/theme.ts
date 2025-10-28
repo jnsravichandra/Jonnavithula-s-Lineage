@@ -24,6 +24,10 @@ const baseTheme = {
   breakpoints: BREAKPOINTS,
   borderRadius: "8px",
   transition: "0.3s ease-in-out",
+  transitionDuration: "0.3s",
+  transitionTimingFunction: "ease-in-out",
+  transitionDelay: "0s",
+  transitionProperty: "all",
 };
 
 // --- Export the complete theme objects ---

@@ -8,12 +8,24 @@ import { useTheme } from "./hooks/useTheme";
 function App() {
   const { theme } = useTheme();
   return (
-    <div style={{ backgroundColor: theme.colors.backgroundPrimary }}>
-      <Header />
+    <div
+      style={{
+        backgroundColor: theme.colors.backgroundPrimary,
+        minHeight: "100vh",
+        color: theme.colors.textPrimary,
+        transition: theme.transition,
+        transitionDuration: theme.transitionDuration,
+        fontFamily: theme.typography.fonts.body,
+        fontWeight: theme.typography.weights.regular,
+      }}
+    >
       <BrowserRouter>
-        <AppRoutes />
+        <Header />
+        <main style={{ flex: 1 }}>
+          <AppRoutes />
+        </main>
+        <Footer />
       </BrowserRouter>
-      <Footer />
     </div>
   );
 }
