@@ -1,4 +1,4 @@
-import type { Member } from "../models/Member";
+import type { Member } from "../models/SupabaseDataModel";
 import supabase from "../context/SupabaseClient";
 
 

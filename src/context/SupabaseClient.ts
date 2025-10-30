@@ -5,6 +5,13 @@ const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
 const supabase = createClient(supabaseUrl, supabaseKey);
 
-console.log(supabase);
+export const SupabaseTables = {
+    "Member": "Member",
+    "Spouse": "Spouse",
+    "Story": "Story",
+    "DescendantLinkage": "Descendant Linkage",
+}
+
+// console.log(supabase);
 
 export default supabase

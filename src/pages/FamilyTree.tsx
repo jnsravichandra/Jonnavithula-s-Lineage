@@ -1,7 +1,9 @@
-export default function FamilyTree() {
+function FamilyTree() {
   return (
-    <div>
-      <h1>Family Tree</h1>
-    </div>
+    <>
+      <h1>This is Family Tree Page</h1>
+    </>
   );
 }
+
+export default FamilyTree;

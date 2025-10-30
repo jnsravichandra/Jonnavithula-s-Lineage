@@ -1,5 +1,5 @@
 import { MemberAPI } from "../api/members_api";
-import type { Member } from "../models/Member";
+import type { Member } from "../models/SupabaseDataModel";
 
 const getAllMembers = async (): Promise<Member[]> => {
     try {
