@@ -3,27 +3,17 @@ import "./App.css";
 import AppRoutes from "./routes/AppRoutes";
 import Header from "./components/layout/Header";
 import Footer from "./components/layout/Footer";
-import { useTheme } from "./hooks/useTheme";
+// import { useTheme } from "./hooks/useTheme";
+// import NewHeader from "./components/newHeader";
 
 function App() {
-  const { theme } = useTheme();
+  // const { theme } = useTheme();
   return (
-    <div
-      style={{
-        backgroundColor: theme.colors.backgroundPrimary,
-        minHeight: "100vh",
-        color: theme.colors.textPrimary,
-        transition: theme.transition,
-        transitionDuration: theme.transitionDuration,
-        fontFamily: theme.typography.fonts.body,
-        fontWeight: theme.typography.weights.regular,
-      }}
-    >
+    <div className="bg-background-primary text-text-primary min-h-screen font-body font-regular transition-colors duration-300">
       <BrowserRouter>
+        {/* <NewHeader></NewHeader> */}
         <Header />
-        <main style={{ flex: 1 }}>
-          <AppRoutes />
-        </main>
+        <AppRoutes />
         <Footer />
       </BrowserRouter>
     </div>

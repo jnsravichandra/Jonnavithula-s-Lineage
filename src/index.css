@@ -1,6 +1,133 @@
 @import "tailwindcss";
 
-* {
-    padding: 0;
-    margin: 0;
+
+:root {
+  /* Breakpoints */
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
+  --breakpoint-2xl: 1536px;
+
+  /* Spacing */
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 32px;
+  --spacing-2xl: 64px;
+
+  /* Typography */
+  --font-heading: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
+    "Segoe UI Symbol";
+  --font-body: Roboto, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica,
+    Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  --font-code: "Fira Code", SFMono-Regular, Consolas, "Liberation Mono", Menlo,
+    Courier, monospace;
+
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.25rem;
+  --text-2xl: 1.5rem;
+  --text-3xl: 1.875rem;
+  --text-4xl: 2.25rem;
+  --text-5xl: 3rem;
+  --text-6xl: 3.75rem;
+
+  --font-weight-light: 300;
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  --font-weight-extrabold: 800;
+
+  /* Colors (Light Mode) */
+  --color-background-primary: #f8f4ed;
+  --color-background-secondary: #e7e1d8;
+  --color-text-primary: #2c3e50;
+  --color-text-secondary: #a19a8c;
+  /* --color-accent-primary: #3a5c4f; */
+  --color-accent-primary: #5a8d79;
+  --color-accent-secondary: #8c6b3b;
+  --color-highlight: #8cb380;
+  --color-success: #10b981;
+  --color-error: #ef4444;
+
+  /* Borders & Transitions */
+  --radius: 8px;
+  --transition: 0.3s ease-in-out;
+}
+
+.dark {
+  --color-background-primary: #2a3f38;
+  --color-background-secondary: #3a3a3a;
+  --color-text-primary: #e0e0e0;
+  --color-text-secondary: #8a9a9a;
+  --color-accent-primary: #c8a461;
+  --color-accent-secondary: #5e8472;
+  --color-highlight: #a9d19e;
+  --color-success: #10b981;
+  --color-error: #ef4444;
+}
+
+@theme {
+  /* Breakpoints */
+  --breakpoint-sm: var(--breakpoint-sm);
+  --breakpoint-md: var(--breakpoint-md);
+  --breakpoint-lg: var(--breakpoint-lg);
+  --breakpoint-xl: var(--breakpoint-xl);
+  --breakpoint-2xl: var(--breakpoint-2xl);
+
+  /* Spacing */
+  --spacing-xs: var(--spacing-xs);
+  --spacing-sm: var(--spacing-sm);
+  --spacing-md: var(--spacing-md);
+  --spacing-lg: var(--spacing-lg);
+  --spacing-xl: var(--spacing-xl);
+  --spacing-2xl: var(--spacing-2xl);
+
+  /* Typography */
+  --font-heading: var(--font-heading);
+  --font-body: var(--font-body);
+  --font-code: var(--font-code);
+  --text-xs: var(--text-xs);
+  --text-sm: var(--text-sm);
+  --text-base: var(--text-base);
+  --text-lg: var(--text-lg);
+  --text-xl: var(--text-xl);
+  --text-2xl: var(--text-2xl);
+  --text-3xl: var(--text-3xl);
+  --text-4xl: var(--text-4xl);
+  --text-5xl: var(--text-5xl);
+  --text-6xl: var(--text-6xl);
+  --font-weight-light: var(--font-weight-light);
+  --font-weight-regular: var(--font-weight-regular);
+  --font-weight-medium: var(--font-weight-medium);
+  --font-weight-semibold: var(--font-weight-semibold);
+  --font-weight-bold: var(--font-weight-bold);
+  --font-weight-extrabold: var(--font-weight-extrabold);
+
+  /* Colors */
+  --color-background-primary: var(--color-background-primary);
+  --color-background-secondary: var(--color-background-secondary);
+  --color-text-primary: var(--color-text-primary);
+  --color-text-secondary: var(--color-text-secondary);
+  --color-accent-primary: var(--color-accent-primary);
+  --color-accent-secondary: var(--color-accent-secondary);
+  --color-highlight: var(--color-highlight);
+  --color-success: var(--color-success);
+  --color-error: var(--color-error);
+
+  /* Borders & Transitions */
+  --radius: var(--radius);
+  --transition: var(--transition);
+}
+
+/* @custom-variant dark (&:where (.dark, .dark *)) */
+
+html, body, #root {
+  height: 100%;
 }
