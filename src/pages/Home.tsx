@@ -1,173 +1,68 @@
+import Logo from "../assets/Logo1-nobackground.png";
 import { Link } from "react-router-dom";
-import { useTheme } from "../hooks/useTheme";
-
-const stories = [
-  {
-    id: 1,
-    title: "Featured Ancestors",
-    description: "Your liec celius heriet taollinge",
-    meta: "► BEC 4480",
-    imageUrl: "https://via.placeholder.com/400x300/E7E1D8/2C3E50?text=Palace",
-  },
-  {
-    id: 2,
-    title: "Featured Ancesters",
-    description: "Your lizer edðn hmst iessfiage",
-    meta: "► BEC39 80",
-    imageUrl: "https://via.placeholder.com/400x300/E7E1D8/2C3E50?text=Family",
-  },
-  {
-    id: 3,
-    title: "Featured Attonors",
-    description: "Your Fiae salue kinet san liage",
-    meta: "► BCC 845 30",
-    imageUrl: "https://via.placeholder.com/400x300/E7E1D8/2C3E50?text=Village",
-  },
-];
+import { SampleData } from "../data/Sample_Data";
 
 function Home() {
-  const { theme } = useTheme();
-
-  const heroSection = () => {
+  const HeroSection = () => {
     return (
       <>
-        <section
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
-            textAlign: "center",
-            padding: `calc(${theme.spacing["2xl"]} * 2) ${theme.spacing.lg}`,
-            minHeight: "40vh",
-          }}
-        >
-          <h2
+        {/* Hero Section */}
+        <section className="relative flex flex-col justify-center items-center text-center min-h-[500px] py-2xl mb-0">
+          {/* Background Image */}
+          <div
+            className="absolute inset-0 bg-center bg-no-repeat opacity-15"
             style={{
-              fontSize: theme.typography.sizes["5xl"],
-              fontWeight: theme.typography.weights.bold,
-              color: theme.colors.accentPrimary,
-              marginBottom: theme.spacing.lg,
+              backgroundImage: `url(${Logo})`,
+              backgroundSize: "70%",
             }}
-          >
-            Uncover Your Roots
-          </h2>
-          <Link to="/tree">
-            <button
-              style={{
-                backgroundColor: theme.colors.accentPrimary,
-                color:
-                  theme.name === "light" ? "#FFFFFF" : theme.colors.textPrimary,
-                border: "none",
-                padding: `${theme.spacing.md} ${theme.spacing.xl}`,
-                borderRadius: theme.borderRadius,
-                fontSize: theme.typography.sizes.lg,
-                fontWeight: theme.typography.weights.medium,
-                cursor: "pointer",
-                transition: theme.transition,
-              }}
-            >
-              Explore the Tree
-            </button>
-          </Link>
-          <p
-            style={{
-              marginTop: theme.spacing.lg,
-              color: theme.colors.textSecondary,
-            }}
-          >
-            brief description
-          </p>
+          ></div>
+          {/* Content */}
+          <div className="relative flex flex-col items-center gap-lg">
+            <h1 className="text-5xl font-heading font-bold text-accent-primary">
+              Uncover Your Roots
+            </h1>
+            <Link to="/tree">
+              <button className="bg-accent-primary text-background-primary font-semibold text-lg py-md px-xl rounded-xl hover:bg-opacity-80 transition-colors duration-300">
+                Explore the Tree
+              </button>
+            </Link>
+          </div>
         </section>
       </>
     );
   };
 
-  const latestStories = () => {
+  const LatestStoriesSection = () => {
     return (
       <>
-        <section
-          style={{
-            backgroundColor: theme.colors.backgroundSecondary,
-            padding: `${theme.spacing["2xl"]} ${theme.spacing.xl}`,
-          }}
-        >
-          <div style={{ maxWidth: "1280px", margin: "0 auto" }}>
-            <h3
-              style={{
-                fontSize: theme.typography.sizes["4xl"],
-                fontWeight: theme.typography.weights.bold,
-                textAlign: "center",
-                marginBottom: theme.spacing.sm,
-              }}
-            >
-              Latest Stories
-            </h3>
-            <p
-              style={{
-                textAlign: "center",
-                color: theme.colors.textSecondary,
-                marginBottom: theme.spacing["2xl"],
-              }}
-            >
-              Lor finuy fit eqreet tinef Pessligunt bikrengs
-            </p>
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
-                gap: theme.spacing.xl,
-              }}
-            >
-              {stories.map((story) => (
-                <div
-                  key={story.id}
-                  style={{
-                    backgroundColor: theme.colors.backgroundPrimary,
-                    borderRadius: theme.borderRadius,
-                    overflow: "hidden",
-                    boxShadow: "0 4px 6px rgba(0,0,0,0.1)",
-                    transition: theme.transition,
-                  }}
-                >
-                  <img
-                    src={story.imageUrl}
-                    alt={story.title}
-                    style={{
-                      width: "100%",
-                      height: "200px",
-                      objectFit: "cover",
-                    }}
-                  />
-                  <div style={{ padding: theme.spacing.lg }}>
-                    <h4
-                      style={{
-                        fontSize: theme.typography.sizes.xl,
-                        fontWeight: theme.typography.weights.semibold,
-                        marginBottom: theme.spacing.sm,
-                      }}
-                    >
-                      {story.title}
-                    </h4>
-                    <p
-                      style={{
-                        color: theme.colors.textSecondary,
-                        marginBottom: theme.spacing.md,
-                      }}
-                    >
-                      {story.description}
-                    </p>
-                    <p
-                      style={{
-                        color: theme.colors.accentPrimary,
-                        fontWeight: theme.typography.weights.medium,
-                      }}
-                    >
-                      {story.meta}
-                    </p>
-                  </div>
-                </div>
-              ))}
+        {/* Latest Stories Section */}
+        <section className="bg-background-secondary min-h-[300px] p-md rounded-2xl ">
+          <h2 className="text-3xl font-heading font-bold text-text-primary mb-lg">
+            Latest Stories
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-lg">
+            {/* Placeholder Story Cards */}
+            {SampleData.storiesList.map((story, index) => (
+              <div
+                key={index}
+                className="bg-background-primary p-md rounded-md shadow-sm min-h-[200px] border-accent-secondary"
+              >
+                <h3 className="text-xl font-bold text-accent-primary mb-sm">
+                  {story.title}
+                </h3>
+                <p className="text-text-secondary">
+                  {story.content.slice(0, 100)}
+                  {story.content.length > 100 && "..."}
+                </p>
+              </div>
+            ))}
+            {/* { Add more Stories } */}
+            <div className="flex items-center">
+              <Link to="/stories">
+              <button className="bg-accent-primary text-background-primary font-semibold text-lg py-md px-xl rounded-xl hover:bg-opacity-80 transition-colors duration-300">
+                Add More Stories
+              </button>
+            </Link>
             </div>
           </div>
         </section>
@@ -176,10 +71,10 @@ function Home() {
   };
 
   return (
-    <>
-      {heroSection()}
-      {latestStories()}
-    </>
+    <div className="space-y-2xl">
+      {HeroSection()}
+      {LatestStoriesSection()}
+    </div>
   );
 }
 

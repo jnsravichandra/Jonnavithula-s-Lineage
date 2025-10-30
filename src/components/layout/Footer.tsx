@@ -1,17 +1,8 @@
-import { useTheme } from "../../hooks/useTheme";
-
 function Footer() {
-  const { theme } = useTheme();
+  
   return (
-    <footer
-      style={{
-        padding: "1rem 1rem",
-        textAlign: "center",
-        backgroundColor: theme.colors.backgroundSecondary,
-        transition: theme.transition,
-      }}
-    >
-      <p>© {new Date().getFullYear()} Jonnavithula Family. All rights reserved.</p>
+    <footer className="bg-background-secondary text-text-primary p-2 text-center shadow-md mt-1 mb-1">
+      <p className="text-sm">© {new Date().getFullYear()} Jonnavithula Family. All rights reserved.</p>
     </footer>
   );
 }

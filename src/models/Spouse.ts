@@ -5,7 +5,7 @@ export interface Spouse {
     member_b_id: string;
     relationship_status: string;
     start_date: Date;
-    end_date: Date;
+    end_date: Date | null;
     location: string;
     notes: string;
 }

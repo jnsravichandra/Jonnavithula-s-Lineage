@@ -5,6 +5,6 @@ export interface DescendantLinkage {
     created_at: Date;
     relationship_type: string;
     date_established: Date;
-    date_terminated: Date;
+    date_terminated: Date | null;
     notes: string; 
 }

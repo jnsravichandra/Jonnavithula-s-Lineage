@@ -10,9 +10,9 @@ export interface Member {
   last_name: string;
   gender: string;
   birth_date: Date;
-  death_date: Date;
+  death_date: Date | null;
   birth_place: string;
-  death_place: string;
+  death_place: string | null;
   occupation: string;
   religion: string;
   notes: string;

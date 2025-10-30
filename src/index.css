@@ -16,6 +16,9 @@
   --spacing-lg: 24px;
   --spacing-xl: 32px;
   --spacing-2xl: 64px;
+  --spacing-3xl: 96px;
+  --spacing-4xl: 128px;
+  --spacing-5xl: 192px;
 
   /* Typography */
   --font-heading: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
@@ -75,11 +78,11 @@
 
 @theme {
   /* Breakpoints */
-  --breakpoint-sm: var(--breakpoint-sm);
+  /* --breakpoint-sm: var(--breakpoint-sm);
   --breakpoint-md: var(--breakpoint-md);
   --breakpoint-lg: var(--breakpoint-lg);
   --breakpoint-xl: var(--breakpoint-xl);
-  --breakpoint-2xl: var(--breakpoint-2xl);
+  --breakpoint-2xl: var(--breakpoint-2xl); */
 
   /* Spacing */
   --spacing-xs: var(--spacing-xs);

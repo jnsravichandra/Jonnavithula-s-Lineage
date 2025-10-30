@@ -119,7 +119,9 @@ function Header() {
     return (
       <button
         onClick={toggleTheme}
-        className="p-2 rounded-full bg-background-primary text-accent-primary hover:bg-accent-secondary hover:text-background-primary transition-colors duration-300"
+        className="p-2 rounded-full bg-background-primary text-accent-primary 
+        hover:bg-accent-secondary hover:text-background-primary 
+        transition-colors duration-300"
         aria-label="Toggle theme"
       >
         {isDarkMode === "light" ? (
@@ -133,7 +135,7 @@ function Header() {
 
   return (
     <>
-      <header className="container bg-background-secondary p-sm shadow-md">
+      <header className=" bg-background-secondary p-sm shadow-md ">
         <div className="mx-auto flex justify-between items-center h-[60px] p-sm">
           {headerLogo()}
           <div className="flex justify-end items-center gap-4 p-sm">

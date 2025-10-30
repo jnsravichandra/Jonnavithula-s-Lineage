@@ -9,11 +9,12 @@ import Footer from "./components/layout/Footer";
 function App() {
   // const { theme } = useTheme();
   return (
-    <div className="bg-background-primary text-text-primary min-h-screen font-body font-regular transition-colors duration-300">
+    <div className="bg-background-primary text-text-primary min-h-screen font-body font-regular transition-colors duration-300 flex flex-col">
       <BrowserRouter>
-        {/* <NewHeader></NewHeader> */}
         <Header />
-        <AppRoutes />
+        <main className="grow p-md">
+          <AppRoutes />
+        </main>
         <Footer />
       </BrowserRouter>
     </div>
