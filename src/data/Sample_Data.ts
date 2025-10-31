@@ -1,7 +1,7 @@
-import type { Member } from "../models/Member";
-import type { DescendantLinkage } from "../models/DescendantLinkage";
-import type { Spouse } from "../models/Spouse";
-import type { Story } from "../models/Story";
+import type { Member } from "../models/SupabaseDataModel";
+import type { DescendantLinkage } from "../models/SupabaseDataModel";
+import type { Spouse } from "../models/SupabaseDataModel";
+import type { Story } from "../models/SupabaseDataModel";
 
 const memberList: Member[] = [
   // Generation 1
@@ -16,7 +16,7 @@ const memberList: Member[] = [
     death_date: new Date("1995-11-20"),
     birth_place: "Vijayawada, India",
     death_place: "Hyderabad, India",
-    occupation: "Farmer",
+    profession: "Farmer",
     religion: "Hinduism",
     notes: "Patriarch of the family.",
     profile_picture_url: "https://i.pravatar.cc/150?u=gen1-rajarao",
@@ -32,7 +32,7 @@ const memberList: Member[] = [
     death_date: new Date("2005-03-12"),
     birth_place: "Guntur, India",
     death_place: "Hyderabad, India",
-    occupation: "Homemaker",
+    profession: "Homemaker",
     religion: "Hinduism",
     notes: "Matriarch of the family.",
     profile_picture_url: "https://i.pravatar.cc/150?u=gen1-sita",
@@ -49,7 +49,7 @@ const memberList: Member[] = [
     death_date: null,
     birth_place: "Hyderabad, India",
     death_place: null,
-    occupation: "Engineer",
+    profession: "Engineer",
     religion: "Hinduism",
     notes: "Eldest son of Raja Rao and Sita.",
     profile_picture_url: "https://i.pravatar.cc/150?u=gen2-ramesh",
@@ -65,7 +65,7 @@ const memberList: Member[] = [
     death_date: null,
     birth_place: "Chennai, India",
     death_place: null,
-    occupation: "Teacher",
+    profession: "Teacher",
     religion: "Hinduism",
     notes: "Wife of Ramesh.",
     profile_picture_url: "https://i.pravatar.cc/150?u=gen2-priya",
@@ -81,7 +81,7 @@ const memberList: Member[] = [
     death_date: null,
     birth_place: "Hyderabad, India",
     death_place: null,
-    occupation: "Doctor",
+    profession: "Doctor",
     religion: "Hinduism",
     notes: "Daughter of Raja Rao and Sita.",
     profile_picture_url: "https://i.pravatar.cc/150?u=gen2-sunita",
@@ -98,7 +98,7 @@ const memberList: Member[] = [
     death_date: null,
     birth_place: "Hyderabad, India",
     death_place: null,
-    occupation: "Software Developer",
+    profession: "Software Developer",
     religion: "Hinduism",
     notes: "Son of Ramesh and Priya.",
     profile_picture_url: "https://i.pravatar.cc/150?u=gen3-arjun",
@@ -114,7 +114,7 @@ const memberList: Member[] = [
     death_date: null,
     birth_place: "Hyderabad, India",
     death_place: null,
-    occupation: "Graphic Designer",
+    profession: "Graphic Designer",
     religion: "Hinduism",
     notes: "Daughter of Ramesh and Priya.",
     profile_picture_url: "https://i.pravatar.cc/150?u=gen3-anjali",

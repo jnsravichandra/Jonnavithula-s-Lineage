@@ -9,7 +9,7 @@ export interface Member {
   death_date: Date | null;
   birth_place: string;
   death_place: string | null;
-  occupation: string;
+  profession: string;
   religion: string;
   notes: string;
   profile_picture_url: string;
