@@ -1,10 +1,10 @@
-// import { PersonCard } from "../components/PersonCard";
 import { MemberService } from "../services/MemberService";
 import { useEffect, useState } from "react";
 import type { DescendantLinkage, Member, Spouse, TreeNode } from "../models/SupabaseDataModel";
 import { DescendantLinkageService } from "../services/DescendantLinkageService";
 import { SpouseService } from "../services/SpouseService";
 import { TransformToTree } from "../services/TransformToTree";
+import FamilyGroup from "../components/FamilyTree/FamilyGroup";
 
 type FamilyTree = {
   members: Member[];
@@ -42,12 +42,15 @@ function FamilyTree() {
     setFamilyTreeNodes(TransformToTree(FamilyData.members, FamilyData.linkages, FamilyData.spouses));
   }, [FamilyData]);
 
-
   return (
     <>
       <h1>This is Family Tree Page</h1>
-      {console.log(familyTreeNodes)}
-      
+      {console.log(familyTreeNodes[0])}
+      {familyTreeNodes.length > 0 && (
+        <>
+          <FamilyGroup member={familyTreeNodes[0]} />
+        </>
+      )}
     </>
   );
 }

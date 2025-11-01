@@ -1,23 +1,27 @@
 import { PencilIcon, UserPlusIcon } from "@heroicons/react/24/solid";
-import type { Member } from "../models/SupabaseDataModel";
+import type { TreeNode } from "../../models/SupabaseDataModel";
 
 interface PersonCardProps {
-  person: Member;
+  member: TreeNode;
 }
 
-export const PersonCard = ({ person }: PersonCardProps) => {
+export const PersonCard = ({ member }: PersonCardProps) => {
+ 
   const getFullName = () => {
-    return [person.first_name, person.middle_name, person.last_name].filter(Boolean).join(" ");
+    return [member.first_name, member.middle_name, member.last_name].filter(Boolean).join(" ");
   };
 
   const getLifeSpan = () => {
-    const birthYear = new Date(person.birth_date).getFullYear();
-    const deathYear = person.death_date ? new Date(person.death_date).getFullYear() : "";
+    const birthYear = new Date(member.birth_date).getFullYear();
+    const deathYear = member.death_date ? new Date(member.death_date).getFullYear() : "";
     return `(${birthYear} - ${deathYear})`;
   };
 
+  const primarySpouse = member.spouses.length > 0 ? member.spouses[0] : null;
+  const spouseName = primarySpouse ? [primarySpouse.first_name, primarySpouse.middle_name, primarySpouse.last_name].filter(Boolean).join(" ") : "N/A";
+
   return (
-    <div className="bg-background-secondary p-4 rounded-lg shadow-md border border-gray-700 w-96 relative">
+    <div className={`bg-background-secondary p-4 rounded-lg shadow-md border w-100 relative h-80`}>
       {/* Action buttons top right */}
       <div className="absolute top-2 right-2 flex gap-2">
         <button className="p-1 hover:bg-background-primary rounded-full">
@@ -41,17 +45,19 @@ export const PersonCard = ({ person }: PersonCardProps) => {
       </div>
 
       {/* Bottom section: Additional Details */}
-      <div className="border-t border-gray-700 pt-4 space-y-2">
+      <div className="border-t bg-background-secondary pt-4 space-y-2">
         <div>
           <span className="font-semibold text-text-primary">Spouse: </span>
-          {/* <span className="text-text-secondary">{person.spouse_name || "N/A"}</span> */}
-          <span className="text-text-secondary">Spouse Name</span>
+          <span className="text-text-secondary">{spouseName || "N/A"}</span>
         </div>
         <div>
           <span className="font-semibold text-text-primary">Profession: </span>
-          <span className="text-text-secondary">{person.profession || "N/A"}</span>
+          <span className="text-text-secondary">{member.profession || "N/A"}</span>
         </div>
-        <p className="text-text-secondary italic">{person.notes || ""}</p>
+        <div>
+          <span className="font-semibold text-text-primary">Notes: </span>
+          <span className="text-text-secondary italic">{member.notes || ""}</span>
+        </div>
       </div>
     </div>
   );

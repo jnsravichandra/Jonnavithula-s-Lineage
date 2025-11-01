@@ -51,7 +51,8 @@
   --color-background-primary: #f8f4ed;
   --color-background-secondary: #e7e1d8;
   --color-text-primary: #2c3e50;
-  --color-text-secondary: #a19a8c;
+  /* --color-text-secondary: #a19a8c; */
+  --color-text-secondary: #4c4c4b;
   /* --color-accent-primary: #3a5c4f; */
   --color-accent-primary: #5a8d79;
   --color-accent-secondary: #8c6b3b;
