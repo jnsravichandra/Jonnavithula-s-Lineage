@@ -7,16 +7,12 @@ interface PersonCardProps {
 
 export const PersonCard = ({ person }: PersonCardProps) => {
   const getFullName = () => {
-    return [person.first_name, person.middle_name, person.last_name]
-      .filter(Boolean)
-      .join(" ");
+    return [person.first_name, person.middle_name, person.last_name].filter(Boolean).join(" ");
   };
 
   const getLifeSpan = () => {
     const birthYear = new Date(person.birth_date).getFullYear();
-    const deathYear = person.death_date
-      ? new Date(person.death_date).getFullYear()
-      : "";
+    const deathYear = person.death_date ? new Date(person.death_date).getFullYear() : "";
     return `(${birthYear} - ${deathYear})`;
   };
 
@@ -39,9 +35,7 @@ export const PersonCard = ({ person }: PersonCardProps) => {
 
         {/* Name and Lifespan */}
         <div className="mt-4">
-          <h2 className="text-2xl font-bold text-text-primary">
-            {getFullName()}
-          </h2>
+          <h2 className="text-2xl font-bold text-text-primary">{getFullName()}</h2>
           <p className="text-text-secondary">{getLifeSpan()}</p>
         </div>
       </div>
