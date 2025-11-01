@@ -1,7 +1,7 @@
 import { ChevronUpIcon } from "@heroicons/react/24/solid";
 import type { TreeNode } from "../../models/SupabaseDataModel";
 import { PersonCard } from "./PersonCard";
-import { ChevronDownIcon } from "@heroicons/react/24/solid";
+import { ChevronDownIcon, ArrowLeftIcon, ArrowRightIcon } from "@heroicons/react/24/solid";
 
 interface ParentNodeGroupProps {
   member: TreeNode;
@@ -15,34 +15,41 @@ function ParentNodeGroup({ member, isExpanded, hasChildren, onToggleExpand }: Pa
 
   return (
     <>
-      <div className="flex justify-center relative">
-        {/* 1. Primary Member Card (The anchor of this family unit) */}
-        <div className="mx-8">
-          <PersonCard member={member} />
-        </div>
-
-        {/* --- Marriage Connector Line (CSS Border/Div) --- */}
-        {primarySpouse && (
-          // This absolute div is positioned to stretch exactly between the two card centers
-          <div
-            className="absolute h-0 border-t-2 border-dashed border-gray-500 top-1/2 left-1/2 transform -translate-x-1/2 z-0"
-            // Tailwind doesn't have a utility for "calc(100% - X)", so we use inline style:
-            style={{ width: "calc(100% - 100px)", marginLeft: "50px" }}
-          />
-        )}
-
-        {/* 2. Spouse Card */}
-        {primarySpouse && (
-          <div className="mx-8">
-            <PersonCard member={primarySpouse} />
+      <div className="flex justify-center relative pr-xl pl-xl">
+        <div className="flex items-start justify-center relative pr-xl pl-xl">
+          {/* 1. Primary Member Card (The anchor of this family unit) */}
+          <div className="z-10">
+            <PersonCard member={member} />
           </div>
-        )}
+
+          {/* --- Marriage Connector Line (New Central Element) --- */}
+          {primarySpouse && (
+            // The line is now an independent flex item that sits between the cards.
+            // We use h-full to make the container visible for positioning the line itself.
+            <>
+              <div className="flex h-full items-center justify-center relative">
+                {/* The actual line element is now tiny, centered, and placed at the desired vertical position. */}
+                <ArrowLeftIcon className="h-4 w-4" />
+                <div className="border-t-2 border-dashed border-accent-primary w-16 z-0" >
+                </div>
+                <ArrowRightIcon className="h-4 w-4" />
+              </div>
+            </>
+          )}
+
+          {/* 2. Spouse Card */}
+          {primarySpouse && (
+            <div className="z-10">
+              <PersonCard member={primarySpouse} />
+            </div>
+          )}
+        </div>
 
         {/* 3. Expand/Collapse Button (Placed below the center of the couple) */}
         {hasChildren && (
           <button
             onClick={onToggleExpand}
-            className="absolute -bottom-4 z-10 p-1 bg-teal-500 text-white rounded-full shadow-lg hover:bg-teal-600 transition border-4 border-white"
+            className="absolute -bottom-1/10 z-10 p-1 bg-text-primary text-background-primary rounded-full shadow-lg hover:bg-background-secondary transition border-4 border-highlight"
             title={isExpanded ? "Collapse Children" : "Expand Children"}
           >
             {isExpanded ? <ChevronUpIcon className="h-4 w-4" /> : <ChevronDownIcon className="h-4 w-4" />}

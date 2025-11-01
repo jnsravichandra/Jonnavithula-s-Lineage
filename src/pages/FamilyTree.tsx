@@ -45,10 +45,9 @@ function FamilyTree() {
   return (
     <>
       <h1>This is Family Tree Page</h1>
-      {console.log(familyTreeNodes[0])}
       {familyTreeNodes.length > 0 && (
         <>
-          <FamilyGroup member={familyTreeNodes[0]} />
+          <FamilyGroup member={familyTreeNodes.filter( (fam) => (fam.gender.toLowerCase() === "male"))[0]} />
         </>
       )}
     </>
