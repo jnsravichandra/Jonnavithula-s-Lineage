@@ -1,6 +1,6 @@
 import type { DescendantLinkage, Member, Spouse, TreeNode } from "../models/SupabaseDataModel";
 
-export function TransformToTree(members: Member[], linkages: DescendantLinkage[], spouses: Spouse[]): TreeNode[] {
+export function TransformToTree(members: Member[], linkages: DescendantLinkage[], spouses: Spouse[]): {rootNode: TreeNode | null, unlinkedNodes: TreeNode[], allNodes: TreeNode[]} {
   // 1. Initialise the nodes and lookup map
   const nodeMap: { [key: string]: TreeNode } = {};
   const rootNodes: TreeNode[] = [];
@@ -71,6 +71,16 @@ export function TransformToTree(members: Member[], linkages: DescendantLinkage[]
       });
     }
   });
- 
-  return rootNodes.filter((node) => rootSpouses.has(node.member_id));
+
+  const rootMember: TreeNode = rootNodes.filter((m) => m.children.length && m.spouses.length).sort((a, b) => {
+    const dateA = a.birth_date ? new Date(a.birth_date).getTime() : 0;
+    const dateB = b.birth_date ? new Date(b.birth_date).getTime() : 0;
+    return dateB - dateA;
+  })[0];
+
+  const unlinkedRootNodes = rootNodes.filter((node) => !node.children.length).filter((node) => !node.spouses.length);
+
+  const allNodes = Object.values(nodeMap);
+
+  return {rootNode: rootMember ?? null, unlinkedNodes: unlinkedRootNodes, allNodes: allNodes};
 }

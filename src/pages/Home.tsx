@@ -71,7 +71,7 @@ function Home() {
   };
 
   return (
-    <div className="space-y-2xl">
+    <div className="p-md space-y-2xl">
       {HeroSection()}
       {LatestStoriesSection()}
     </div>

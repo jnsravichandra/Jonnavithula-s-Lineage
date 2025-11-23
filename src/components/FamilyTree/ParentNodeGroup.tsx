@@ -3,47 +3,80 @@ import type { TreeNode } from "../../models/SupabaseDataModel";
 import { PersonCard } from "./PersonCard";
 import { ChevronDownIcon, ArrowLeftIcon, ArrowRightIcon } from "@heroicons/react/24/solid";
 
+interface CardActionProps {
+  onSelect: (memberId: string) => void;
+  onEdit: (memberId: string) => void;
+  onAdd: (memberId: string) => void;
+  focusedMemberId: string | null;
+}
+
 interface ParentNodeGroupProps {
   member: TreeNode;
   isExpanded: boolean;
   hasChildren: boolean;
   onToggleExpand: () => void;
+  cardActionProps: CardActionProps;
 }
 
-function ParentNodeGroup({ member, isExpanded, hasChildren, onToggleExpand }: ParentNodeGroupProps) {
+function ParentNodeGroup({ member, isExpanded, hasChildren, onToggleExpand, cardActionProps }: ParentNodeGroupProps) {
   const primarySpouse = member.spouses.length > 0 ? member.spouses[0] : null;
+
+  const parentNode_couple = () => {
+    const primaryMemberCard = () => {
+      return (
+        <>
+          <div className="z-10">
+            <PersonCard member={member} {...cardActionProps} />
+          </div>
+        </>
+      );
+    };
+
+    const spouseCard = () => {
+      return (
+        <>
+          {primarySpouse && (
+            <div className="z-10">
+              <PersonCard member={primarySpouse} {...cardActionProps} />
+            </div>
+          )}
+        </>
+      );
+    };
+
+    const coupleConnector = () => {
+      return (
+        <>
+          <>
+            <div className="flex h-full items-center justify-center relative">
+              {/* The actual line element is now tiny, centered, and placed at the desired vertical position. */}
+              <ArrowLeftIcon className="h-4 w-4" />
+              <div className="border-t-2 border-dashed border-accent-primary w-16 z-0"></div>
+              <ArrowRightIcon className="h-4 w-4" />
+            </div>
+          </>
+        </>
+      );
+    };
+
+    return (
+      <>
+        <div className="flex items-start justify-center relative pr-xl pl-xl">
+          {/* 1. Primary Member Card (The anchor of this family unit) */}
+          {primaryMemberCard()}
+          {/* --- Marriage Connector Line (New Central Element) --- */}
+          {primarySpouse && coupleConnector()}
+          {/* 2. Spouse Card */}
+          {spouseCard()}
+        </div>
+      </>
+    );
+  };
 
   return (
     <>
       <div className="flex justify-center relative pr-xl pl-xl">
-        <div className="flex items-start justify-center relative pr-xl pl-xl">
-          {/* 1. Primary Member Card (The anchor of this family unit) */}
-          <div className="z-10">
-            <PersonCard member={member} />
-          </div>
-
-          {/* --- Marriage Connector Line (New Central Element) --- */}
-          {primarySpouse && (
-            // The line is now an independent flex item that sits between the cards.
-            // We use h-full to make the container visible for positioning the line itself.
-            <>
-              <div className="flex h-full items-center justify-center relative">
-                {/* The actual line element is now tiny, centered, and placed at the desired vertical position. */}
-                <ArrowLeftIcon className="h-4 w-4" />
-                <div className="border-t-2 border-dashed border-accent-primary w-16 z-0" >
-                </div>
-                <ArrowRightIcon className="h-4 w-4" />
-              </div>
-            </>
-          )}
-
-          {/* 2. Spouse Card */}
-          {primarySpouse && (
-            <div className="z-10">
-              <PersonCard member={primarySpouse} />
-            </div>
-          )}
-        </div>
+        {parentNode_couple()}
 
         {/* 3. Expand/Collapse Button (Placed below the center of the couple) */}
         {hasChildren && (

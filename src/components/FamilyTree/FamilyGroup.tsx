@@ -3,20 +3,33 @@ import { useState } from "react";
 import ParentNodeGroup from "./ParentNodeGroup";
 import { TreeConnectors } from "./TreeConnectors";
 
-interface FamilyGroupProps {
-  member: TreeNode;
+interface CardActionProps {
+  onSelect: (memberId: string) => void;
+  onEdit: (memberId: string) => void;
+  onAdd: (memberId: string) => void;
+  focusedMemberId: string | null;
 }
 
-function FamilyGroup({ member }: FamilyGroupProps) {
+interface FamilyGroupProps {
+  member: TreeNode;
+  cardActionProps: CardActionProps;
+}
+
+function FamilyGroup({ member, cardActionProps }: FamilyGroupProps) {
   const [isExpanded, setIsExpanded] = useState(false);
-  // const primarySpouse = member.spouses.length > 0 ? member.spouses[0] : null;
   const hasChildren = member.children.length > 0;
 
   return (
     <>
       <div className="flex flex-col items-center">
         {/* 1. Render the Parent Node Group (Horizontal Layout & Collapse/Expand Button) */}
-        <ParentNodeGroup member={member} isExpanded={isExpanded} hasChildren={hasChildren} onToggleExpand={() => setIsExpanded(!isExpanded)} />
+        <ParentNodeGroup
+          member={member}
+          isExpanded={isExpanded}
+          hasChildren={hasChildren}
+          onToggleExpand={() => setIsExpanded(!isExpanded)}
+          cardActionProps={cardActionProps}
+        />
 
         {/* 2. Children Renderer (Recursive Step, Conditional Rendering) */}
         {hasChildren && isExpanded && (
@@ -30,10 +43,10 @@ function FamilyGroup({ member }: FamilyGroupProps) {
                 <TreeConnectors type="sibling-connector" />
                 {member.children.map((child) => (
                   <>
-                    <div key={child.member_id} className="pt-6 relative">
+                    <div key={child.member_id + "-child"} className="pt-6 relative">
                       {/* Line 3: Vertical Line from Sibling Line to Child's Group */}
                       <TreeConnectors type="child-vertical" />
-                      <FamilyGroup member={child} />
+                      <FamilyGroup member={child} cardActionProps={cardActionProps} />
                     </div>
                   </>
                 ))}
