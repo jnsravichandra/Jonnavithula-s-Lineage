@@ -8,7 +8,7 @@ import SideNav from "./components/layout/SideNav";
 function App() {
   const never = false;
   return (
-    <div className="min-h-screen flex flex-col bg-background-primary text-text-primary font-body font-regular transition-colors duration-200">
+    <div className="min-h-screen flex flex-col bg-background-primary text-text-primary font-body font-regular transition-colors duration-1000">
       <Toaster position="top-right" toastOptions={{ duration: 4000 }} />
       <Header />
       {/* This fills all space between header and footer */}

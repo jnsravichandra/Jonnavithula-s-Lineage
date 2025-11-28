@@ -1,10 +1,14 @@
 import { PlusIcon } from "@heroicons/react/24/solid";
-import usePersonCardActions from "../../hooks/usePersonCardActions";
+import { type PersonCardActionType } from "../../hooks/usePersonCardActions";
 import { ModalDialog } from "../ModalDialogComponent";
 import { MemberForm } from "../MemberForm";
 
-function AddMember() {
-  const personCardActions = usePersonCardActions();
+interface AddMemberProps {
+  onMemberAdded: () => void;
+  personCardActions: PersonCardActionType;
+}
+
+function AddMember({ onMemberAdded, personCardActions }: AddMemberProps) {
   const handleGlobalAdd = () => {
     personCardActions.cardActions?.onAdd("");
   };
@@ -24,7 +28,10 @@ function AddMember() {
             <MemberForm
               member={personCardActions.member!}
               onClose={personCardActions.cardActions.onClose!}
-              onSuccess={personCardActions.cardActions.onSuccess!}
+              onSuccess={() => {
+                personCardActions.cardActions.onSuccess!();
+                onMemberAdded();
+              }}
               contextMemberId={personCardActions.focusedMemberId}
             />
           </ModalDialog>

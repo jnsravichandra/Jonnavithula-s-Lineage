@@ -18,8 +18,8 @@ function TabbedLayout({
   children,
 }: TabbedLayoutProps) {
   return (
-    <div className="bg-background-secondary rounded-xl shadow-lg p-4">
-      <div className="flex border-b border-background-primary mb-4">
+    <div className="bg-background-secondary rounded-xl shadow-lg p-4 ">
+      <div className="flex border-b border-background-primary mb-4 ">
         {tabs.map((tab) => (
           <button
             key={tab.key}

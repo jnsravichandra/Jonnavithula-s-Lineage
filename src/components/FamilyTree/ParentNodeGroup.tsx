@@ -20,7 +20,7 @@ function ParentNodeGroup({ member, isExpanded, hasChildren, onToggleExpand, card
       return (
         <>
           <div className="z-10">
-            <PersonCard member={member} {...cardActionProps} />
+            <PersonCard member={member} cardActionProps={cardActionProps} />
           </div>
         </>
       );
@@ -31,7 +31,7 @@ function ParentNodeGroup({ member, isExpanded, hasChildren, onToggleExpand, card
         <>
           {primarySpouse && (
             <div className="z-10">
-              <PersonCard member={primarySpouse} {...cardActionProps} />
+              <PersonCard member={primarySpouse}  cardActionProps={cardActionProps} />
             </div>
           )}
         </>

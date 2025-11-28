@@ -5,6 +5,7 @@ import TabbedLayout from "../../components/TabbedLayout";
 import useFamilyTreeData from "../../hooks/useFamilyTreeData";
 import AddMember from "../../components/FamilyTree/AddMember";
 import UnlinkedMembers from "../../components/FamilyTree/UnlinkedMember";
+import usePersonCardActions from "../../hooks/usePersonCardActions";
 
 const familyTreeTabs = [
   { key: "Family Tree", label: "Family Tree" },
@@ -16,6 +17,7 @@ function FamilyTree() {
   const [activeTabKey, setActiveTabKey] = useState(familyTreeTabs[0].key);
 
   const familyTreeData = useFamilyTreeData();
+  const personCardActions = usePersonCardActions();
 
   const onTabChange = (tabKey: string) => {
     setActiveTabKey(tabKey);
@@ -25,7 +27,10 @@ function FamilyTree() {
     <>
       <div className="p-0 bg-background-secondary rounded-2xl shadow-2xl">
         <div className="p-2 float-end">
-          <AddMember />
+          <AddMember
+            onMemberAdded={familyTreeData.refreshFamilyData}
+            personCardActions={personCardActions}
+          />
         </div>
         <TabbedLayout
           tabs={familyTreeTabs}
@@ -37,6 +42,7 @@ function FamilyTree() {
               {familyTreeData.transformedTree?.rootNode && (
                 <FamilyTreeView
                   rootNode={familyTreeData.transformedTree?.rootNode}
+                  cardActions={personCardActions.cardActions!}
                 />
               )}
             </>
@@ -47,6 +53,8 @@ function FamilyTree() {
               {familyTreeData.transformedTree?.unlinkedNodes && (
                 <UnlinkedMembers
                   unlinkedNodes={familyTreeData.transformedTree?.unlinkedNodes}
+                  refreshFamilyData={familyTreeData.refreshFamilyData}
+                  personCardActions={personCardActions}
                 />
               )}
             </>

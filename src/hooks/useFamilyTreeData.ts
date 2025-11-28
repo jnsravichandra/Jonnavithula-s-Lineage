@@ -21,6 +21,14 @@ export interface FamilyData {
   spouses: Spouse[];
 }
 
+export type FamilyTreeDataType = {
+  familyData: FamilyData;
+  transformedTree: TransformedTree;
+  loading: boolean;
+  error: string | null;
+  refreshFamilyData: () => void;
+}
+
 function useFamilyTreeData() {
   const [familyData, setFamilyData] = useState<FamilyData | null>(null);
   const [transformedTree, setTransformedTree] =
@@ -28,7 +36,7 @@ function useFamilyTreeData() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchFamilyRawData = async () => {
+  const refreshFamilyData = async () => {
     setLoading(true);
     try {
       const [members, linkages, spouses] = await Promise.all([
@@ -50,7 +58,7 @@ function useFamilyTreeData() {
   };
 
   useEffect(() => {
-    fetchFamilyRawData();
+    refreshFamilyData();
   }, []);
 
   useEffect(() => {
@@ -76,12 +84,16 @@ function useFamilyTreeData() {
     }
   }, [familyData]);
 
-  return {
-    familyData,
-    transformedTree,
+  const familyTreeData: FamilyTreeDataType = {
+    familyData: familyData as FamilyData,
+    transformedTree: transformedTree as TransformedTree,
     loading,
     error,
+    refreshFamilyData,
   };
+
+
+  return familyTreeData;
 }
 
 export default useFamilyTreeData;

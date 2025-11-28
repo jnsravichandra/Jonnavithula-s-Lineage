@@ -1,20 +1,26 @@
 import toast from "react-hot-toast";
-import type { DeleteResult } from "../../hooks/usePersonCardActions";
-import usePersonCardActions from "../../hooks/usePersonCardActions";
+import type {
+  DeleteResult,
+  PersonCardActionType,
+} from "../../hooks/usePersonCardActions";
 import type { TreeNode } from "../../models/SupabaseDataModel";
 import { PersonCard } from "./PersonCard";
 
 interface UnlinkedMemberProps {
   unlinkedNodes: TreeNode[];
-  // This callback will notify the parent component to update its state
-  onMemberDeleted?: (deletedMemberId: string) => void;
+  refreshFamilyData: () => void;
+  personCardActions: PersonCardActionType;
 }
 
-function UnlinkedMembers({ unlinkedNodes, onMemberDeleted }: UnlinkedMemberProps) {
-  const personCardActions = usePersonCardActions();
-
+function UnlinkedMembers({
+  unlinkedNodes,
+  refreshFamilyData,
+  personCardActions,
+}: UnlinkedMemberProps) {
   // This function wraps the delete action to show a toast notification.
-  const handleDeleteWithToast = async (member: TreeNode): Promise<DeleteResult> => {
+  const handleDeleteWithToast = async (
+    member: TreeNode
+  ): Promise<DeleteResult> => {
     if (!personCardActions.cardActions) {
       // Return a default error result if actions aren't ready
       return { success: false, message: "Card actions not initialized." };
@@ -28,9 +34,7 @@ function UnlinkedMembers({ unlinkedNodes, onMemberDeleted }: UnlinkedMemberProps
     if (result.success) {
       toast.success(result.message);
       // If the parent provided a callback, call it so the UI can be updated
-      if (onMemberDeleted) {
-        onMemberDeleted(member.member_id);
-      }
+      refreshFamilyData();
     } else {
       toast.error(result.message);
     }
@@ -55,6 +59,11 @@ function UnlinkedMembers({ unlinkedNodes, onMemberDeleted }: UnlinkedMemberProps
               />
             </span>
           ))}
+        {unlinkedNodes.length === 0 && (
+          <>
+            <h1>No unlinked members found.</h1>
+          </>
+        )}
       </div>
     </>
   );
