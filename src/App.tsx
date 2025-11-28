@@ -1,15 +1,30 @@
 import "./App.css";
 import AppRoutes from "./routes/AppRoutes";
+import { Toaster } from "react-hot-toast";
 import Header from "./components/layout/Header";
 import Footer from "./components/layout/Footer";
+import SideNav from "./components/layout/SideNav";
 
 function App() {
+  const never = false;
   return (
-    <div className="bg-background-primary text-text-primary min-h-screen font-body font-regular transition-colors duration-300 flex flex-col">
+    <div className="min-h-screen flex flex-col bg-background-primary text-text-primary font-body font-regular transition-colors duration-200">
+      <Toaster position="top-right" toastOptions={{ duration: 4000 }} />
       <Header />
-      <main className="grow">
-        <AppRoutes />
-      </main>
+      {/* This fills all space between header and footer */}
+      <div className="flex flex-1">
+        {never && (
+          /* Sidebar spans full height of this flex row */
+          <aside className="w-auto border-r">
+            /* your side nav here */
+            <SideNav />
+          </aside>
+        )}
+        {/* Main page content, scrolls if needed */}
+        <main className="flex-1 overflow-y-auto">
+          <AppRoutes />
+        </main>
+      </div>
       <Footer />
     </div>
   );

@@ -149,7 +149,8 @@ const spouseList: Spouse[] = [
 const descendantLinkageList: DescendantLinkage[] = [
   {
     parent_child_id: "pc-rajarao-ramesh",
-    parent_id: "gen1-rajarao",
+    parent_a_id: "gen1-rajarao",
+    parent_b_id: "gen1-sita",
     child_id: "gen2-ramesh",
     created_at: new Date("1952-02-20"),
     relationship_type: "Biological",
@@ -159,7 +160,8 @@ const descendantLinkageList: DescendantLinkage[] = [
   },
   {
     parent_child_id: "pc-sita-ramesh",
-    parent_id: "gen1-sita",
+    parent_a_id: "gen1-rajarao",
+    parent_b_id: "gen1-sita",
     child_id: "gen2-ramesh",
     created_at: new Date("1952-02-20"),
     relationship_type: "Biological",
@@ -169,7 +171,8 @@ const descendantLinkageList: DescendantLinkage[] = [
   },
   {
     parent_child_id: "pc-rajarao-sunita",
-    parent_id: "gen1-rajarao",
+    parent_a_id: "gen1-rajarao",
+    parent_b_id: "gen1-sita",
     child_id: "gen2-sunita",
     created_at: new Date("1958-11-30"),
     relationship_type: "Biological",
@@ -179,7 +182,8 @@ const descendantLinkageList: DescendantLinkage[] = [
   },
   {
     parent_child_id: "pc-ramesh-arjun",
-    parent_id: "gen2-ramesh",
+    parent_a_id: "gen2-ramesh",
+    parent_b_id: "gen2-priya",
     child_id: "gen3-arjun",
     created_at: new Date("1983-09-01"),
     relationship_type: "Biological",
@@ -189,7 +193,8 @@ const descendantLinkageList: DescendantLinkage[] = [
   },
   {
     parent_child_id: "pc-priya-anjali",
-    parent_id: "gen2-priya",
+    parent_a_id: "gen2-ramesh",
+    parent_b_id: "gen2-priya",
     child_id: "gen3-anjali",
     created_at: new Date("1986-12-10"),
     relationship_type: "Biological",

@@ -2,13 +2,7 @@ import { ChevronUpIcon } from "@heroicons/react/24/solid";
 import type { TreeNode } from "../../models/SupabaseDataModel";
 import { PersonCard } from "./PersonCard";
 import { ChevronDownIcon, ArrowLeftIcon, ArrowRightIcon } from "@heroicons/react/24/solid";
-
-interface CardActionProps {
-  onSelect: (memberId: string) => void;
-  onEdit: (memberId: string) => void;
-  onAdd: (memberId: string) => void;
-  focusedMemberId: string | null;
-}
+import type { CardActionProps } from "../../hooks/usePersonCardActions";
 
 interface ParentNodeGroupProps {
   member: TreeNode;

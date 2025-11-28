@@ -1,14 +1,23 @@
+import usePersonCardActions from "../../hooks/usePersonCardActions";
 import type { TreeNode } from "../../models/SupabaseDataModel";
+import FamilyGroup from "./FamilyGroup";
 
 interface FamilyTreeViewProps {
-  rootNode: TreeNode | null;
+  rootNode: TreeNode;
 }
 
-function FamilyTreeView( {rootNode}: FamilyTreeViewProps ) {
+function FamilyTreeView({ rootNode }: FamilyTreeViewProps) {
+  const personCardActions = usePersonCardActions();
   return (
     <>
-    {JSON.stringify(rootNode)}
-      <h1>Family Tree View</h1>
+      {rootNode && (
+        <div className="flex py-xl overflow-auto">
+          <FamilyGroup
+            member={rootNode!}
+            cardActionProps={personCardActions.cardActions!}
+          />
+        </div>
+      )}
     </>
   );
 }

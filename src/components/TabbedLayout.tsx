@@ -11,7 +11,12 @@ interface TabbedLayoutProps {
   children: React.ReactNode;
 }
 
-function TabbedLayout ({ tabs, activeTabKey, onTabChange, children }: TabbedLayoutProps) {
+function TabbedLayout({
+  tabs,
+  activeTabKey,
+  onTabChange,
+  children,
+}: TabbedLayoutProps) {
   return (
     <div className="bg-background-secondary rounded-xl shadow-lg p-4">
       <div className="flex border-b border-background-primary mb-4">
@@ -27,13 +32,14 @@ function TabbedLayout ({ tabs, activeTabKey, onTabChange, children }: TabbedLayo
                   : "border-b-2 font-medium border-transparent text-text-secondary hover:text-text-primary hover:background-primary-hover"
               }
             `}
-          >{tab.label}
+          >
+            {tab.label}
           </button>
         ))}
       </div>
       <div className="p-4 bg-background-primary rounded-b-xl">{children}</div>
     </div>
   );
-};
+}
 
 export default TabbedLayout;

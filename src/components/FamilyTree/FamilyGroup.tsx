@@ -2,13 +2,8 @@ import type { TreeNode } from "../../models/SupabaseDataModel";
 import { useState } from "react";
 import ParentNodeGroup from "./ParentNodeGroup";
 import { TreeConnectors } from "./TreeConnectors";
+import type { CardActionProps } from "../../hooks/usePersonCardActions";
 
-interface CardActionProps {
-  onSelect: (memberId: string) => void;
-  onEdit: (memberId: string) => void;
-  onAdd: (memberId: string) => void;
-  focusedMemberId: string | null;
-}
 
 interface FamilyGroupProps {
   member: TreeNode;

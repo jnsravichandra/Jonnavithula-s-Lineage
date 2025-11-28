@@ -1,0 +1,87 @@
+import { useEffect, useState } from "react";
+import type {
+  Member,
+  DescendantLinkage,
+  Spouse,
+  TreeNode,
+} from "../models/SupabaseDataModel";
+import { MemberService } from "../services/MemberService";
+import { DescendantLinkageService } from "../services/DescendantLinkageService";
+import { SpouseService } from "../services/SpouseService";
+import { TransformToTree } from "../services/TransformToTree";
+
+export interface TransformedTree {
+  rootNode: TreeNode | null;
+  unlinkedNodes: TreeNode[];
+  linkedNodes: TreeNode[];
+}
+export interface FamilyData {
+  members: Member[];
+  linkages: DescendantLinkage[];
+  spouses: Spouse[];
+}
+
+function useFamilyTreeData() {
+  const [familyData, setFamilyData] = useState<FamilyData | null>(null);
+  const [transformedTree, setTransformedTree] =
+    useState<TransformedTree | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const fetchFamilyRawData = async () => {
+    setLoading(true);
+    try {
+      const [members, linkages, spouses] = await Promise.all([
+        MemberService.getAllMembers(),
+        DescendantLinkageService.getAllDescendantLinkages(),
+        SpouseService.getAllSpouses(),
+      ]);
+      setFamilyData({
+        members: members,
+        linkages: linkages,
+        spouses: spouses,
+      });
+    } catch (error) {
+      setError("Error while fetching Raw family Data" + error);
+      console.error("Error while fetching Raw family Data", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchFamilyRawData();
+  }, []);
+
+  useEffect(() => {
+    if (familyData) {
+      setLoading(true);
+      try {
+        const { rootNode, unlinkedNodes, allNodes } = TransformToTree(
+          familyData.members,
+          familyData.linkages,
+          familyData.spouses
+        );
+        setTransformedTree({
+          rootNode: rootNode,
+          unlinkedNodes: unlinkedNodes,
+          linkedNodes: allNodes,
+        });
+      } catch (error) {
+        setError("Error while transforming family Data" + error);
+        console.error("Error while transforming family Data", error);
+      } finally {
+        setLoading(false);
+      }
+    }
+  }, [familyData]);
+
+  return {
+    familyData,
+    transformedTree,
+    loading,
+    error,
+  };
+}
+
+export default useFamilyTreeData;

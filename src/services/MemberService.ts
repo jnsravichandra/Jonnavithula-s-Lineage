@@ -43,7 +43,8 @@ const updateMember = async (member: Member): Promise<Member> => {
 
 const deleteMember = async (id: string): Promise<void> => {
   try {
-    await MemberAPI.deleteMember(id);
+    const deleteMember = await MemberAPI.deleteMember(id);
+    return deleteMember;
   } catch (error) {
     console.log(error);
     throw error;

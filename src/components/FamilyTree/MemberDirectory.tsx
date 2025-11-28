@@ -1,14 +1,7 @@
-import type { TreeNode } from "../../models/SupabaseDataModel";
-
-interface MemberDirectoryProps {
-  members: TreeNode[];
-}
-
-function MemberDirectory({ members }: MemberDirectoryProps) {
+function MemberDirectory() {
   return (
     <>
-      {members}
-      <h1>Member Directory</h1>{" "}
+      <h1>Member Directory</h1>
     </>
   );
 }
