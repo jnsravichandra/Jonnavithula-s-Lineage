@@ -1,7 +1,7 @@
 import { useState } from "react";
 import FamilyTreeView from "../../components/FamilyTree/FamilyTreeView";
 import MemberDirectory from "../../components/FamilyTree/MemberDirectory";
-import TabbedLayout from "../../components/TabbedLayout";
+import TabbedLayout from "../../components/shared/TabbedLayout";
 import useFamilyTreeData from "../../hooks/useFamilyTreeData";
 import AddMember from "../../components/FamilyTree/AddMember";
 import UnlinkedMembers from "../../components/FamilyTree/UnlinkedMember";

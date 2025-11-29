@@ -44,10 +44,12 @@ function usePersonCardActions() {
   }, []);
 
   const handleSelect = useCallback(
-    async (memberId: string) => {
+    async (memberId: string | null) => {
       setFocusedMemberId(memberId);
       // console.log(`Select ${memberId}`);
-      getMember(memberId);
+      if (memberId) {
+        getMember(memberId);
+      }
     },
     [getMember]
   );

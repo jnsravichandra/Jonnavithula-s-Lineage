@@ -1,7 +1,7 @@
 import { PlusIcon } from "@heroicons/react/24/solid";
 import { type PersonCardActionType } from "../../hooks/usePersonCardActions";
-import { ModalDialog } from "../ModalDialogComponent";
-import { MemberForm } from "../MemberForm";
+import { ModalDialog } from "../shared/ModalDialogComponent";
+import { MemberForm } from "./MemberForm";
 
 interface AddMemberProps {
   onMemberAdded: () => void;
@@ -21,7 +21,7 @@ function AddMember({ onMemberAdded, personCardActions }: AddMemberProps) {
             onClose={personCardActions.cardActions.onClose!}
             title={
               personCardActions.member
-                ? `Edit ${personCardActions.member.first_name}`
+                ? `Edit ${personCardActions.member.first_name} ${personCardActions.member.middle_name} ${personCardActions.member.last_name} Details`
                 : "Add New Member"
             }
           >

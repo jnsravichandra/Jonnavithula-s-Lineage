@@ -2,15 +2,12 @@ import { PencilIcon, UserPlusIcon, TrashIcon } from "@heroicons/react/24/solid";
 import type { TreeNode } from "../../models/SupabaseDataModel";
 import type { CardActionProps } from "../../hooks/usePersonCardActions";
 
-interface PersonCardProps{
+interface PersonCardProps {
   member: TreeNode;
   cardActionProps: CardActionProps;
 }
 
-export const PersonCard = ({
-  member,
-  cardActionProps
-}: PersonCardProps) => {
+export const PersonCard = ({ member, cardActionProps }: PersonCardProps) => {
   const memberId = member.member_id;
   const isFocused = cardActionProps.focusedMemberId === memberId;
 
@@ -152,7 +149,10 @@ export const PersonCard = ({
   return (
     <>
       <div
-        onClick={() => cardActionProps.onSelect(memberId)}
+        onClick={(e) => {
+          e.stopPropagation();
+          cardActionProps.onSelect(memberId);
+        }}
         className={`bg-background-secondary p-4 rounded-lg shadow-md border w-100 relative
           ${
             member.spouses.length === 0 && member.children.length === 0

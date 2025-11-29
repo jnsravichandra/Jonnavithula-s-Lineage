@@ -1,5 +1,5 @@
 import { useState } from "react";
-import logo from "../../assets/Logo1-nobackground.png";
+import logo from "../../../assets/Logo1-nobackground.png";
 import { Link, NavLink } from "react-router-dom";
 import {
   SunIcon,

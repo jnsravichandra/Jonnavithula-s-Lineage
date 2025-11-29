@@ -4,14 +4,14 @@ import FamilyGroup from "./FamilyGroup";
 
 interface FamilyTreeViewProps {
   rootNode: TreeNode;
-  cardActions: CardActionProps
+  cardActions: CardActionProps;
 }
 
 function FamilyTreeView({ rootNode, cardActions }: FamilyTreeViewProps) {
   return (
     <>
       {rootNode && (
-        <div className="flex py-xl overflow-auto">
+        <div className="flex py-xl overflow-auto" onClick={() => cardActions.onSelect('')}>
           <FamilyGroup
             member={rootNode!}
             cardActionProps={cardActions}

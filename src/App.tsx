@@ -1,14 +1,14 @@
 import "./App.css";
 import AppRoutes from "./routes/AppRoutes";
 import { Toaster } from "react-hot-toast";
-import Header from "./components/layout/Header";
-import Footer from "./components/layout/Footer";
-import SideNav from "./components/layout/SideNav";
+import Header from "./components/shared/layout/Header";
+import Footer from "./components/shared/layout/Footer";
+import SideNav from "./components/shared/layout/SideNav";
 
 function App() {
   const never = false;
   return (
-    <div className="min-h-screen flex flex-col bg-background-primary text-text-primary font-body font-regular transition-colors duration-1000">
+    <div className="min-h-screen flex flex-col bg-background-primary text-text-primary font-body font-regular transition-colors duration-150">
       <Toaster position="top-right" toastOptions={{ duration: 4000 }} />
       <Header />
       {/* This fills all space between header and footer */}
