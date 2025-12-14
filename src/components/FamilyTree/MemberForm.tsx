@@ -22,28 +22,31 @@ interface MemberFormProps {
   member: Member | null;
   onSuccess: () => void;
   onClose: () => void;
-  contextMemberId: string | null;
+  focussedMemberId: string | null;
+  operationType: string;
+  relationType: string | null;
 }
 
-export const MemberForm = ({ member, onSuccess, onClose }: MemberFormProps) => {
-  const isEditing = !!member;
+export const MemberForm = ({ member, onSuccess, onClose, focussedMemberId, operationType, relationType}: MemberFormProps) => {
+
   const [formData, setFormData] = useState<Partial<Member>>(initialFormState);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  console.log(focussedMemberId, relationType)
 
   useEffect(() => {
-    if (isEditing && member) {
+    if ((operationType === 'edit' || operationType === 'add-global') && member) {
       setFormData({
         ...member,
         birth_date: member.birth_date
           ? new Date(member.birth_date)
           : new Date(),
-        death_date: member.death_date ? new Date(member.death_date) : null,
+        death_date: member.death_date ? new Date(member.death_date) : null
       });
     } else {
       setFormData(initialFormState);
     }
-  }, [member, isEditing]);
+  }, [member, operationType]);
 
   const handleChange = (
     e: React.ChangeEvent<
@@ -61,39 +64,42 @@ export const MemberForm = ({ member, onSuccess, onClose }: MemberFormProps) => {
     }
   };
 
+  // --- Logic for UPDATING an existing member ---
+  const handleUpdateMember = async () => {
+    if (!member) throw new Error("No member data available for update.");
+
+    const updatedMember: Member = {
+      ...formData,
+      member_id: member.member_id,
+      created_at: member.created_at,
+    } as Member;
+
+    await MemberService.updateMember(updatedMember);
+    toast.success("Member updated successfully!");
+  };
+
+  // --- Logic for CREATING a new member (and optionally linking it) ---
+  const handleCreateMember = async () => {
+    const newMember: Partial<Member> = {
+      ...formData,
+      created_at: new Date(),
+    };
+    delete newMember.member_id;
+
+  };
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);
     setError(null);
 
     try {
-      if (isEditing && member) {
-        // --- UPDATE (Edit) LOGIC ---
-        const updatedMember: Member = {
-          ...formData,
-          member_id: member.member_id, // Ensure member_id is included
-          created_at: member.created_at, // Preserve original creation date
-        } as Member; // Cast to Member, assuming required fields are filled
-
-        await MemberService.updateMember(updatedMember);
+      if (operationType === 'edit') {
+        await handleUpdateMember();
       } else {
-        // --- CREATE (Add) LOGIC ---
-        const newMember: Partial<Member> = {
-          ...formData,
-          created_at: new Date(), // Set new creation date
-        };
-
-        // Remove member_id if it exists (Supabase auto-generates it)
-        delete newMember.member_id;
-
-        // TODO: Add logic to use 'contextMemberId' to create a relationship
-        // (e.g., call DescendantLinkageService.createLink(contextMemberId, newMemberId))
-        // This logic needs to be implemented after the member is successfully created.
-
-        await MemberService.insertMember(newMember as Member);
+        await handleCreateMember();
       }
 
-      // If successful, trigger the onSuccess callback (closes modal, refreshes data)
       onSuccess();
     } catch (error) {
       console.error("Failed to save member:", (error as Error).message);
@@ -103,6 +109,9 @@ export const MemberForm = ({ member, onSuccess, onClose }: MemberFormProps) => {
       setIsLoading(false);
     }
   };
+
+  // Determine if the form is in "edit" mode to control button text
+  const isEditing = operationType === 'edit';
 
   const formatDateForInput = (date: Date | null) => {
     if (!date) return "";
@@ -117,17 +126,18 @@ export const MemberForm = ({ member, onSuccess, onClose }: MemberFormProps) => {
     name: string,
     id: string,
     value: string,
-    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
+    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void,
+    isRequired = false
   ) => {
     return (
       <input
         type="text"
         name={name}
         id={id}
-        value={value}
+        value={value!}
         onChange={onChange}
         className="mt-sm h-2xl p-sm text-2xl block w-full rounded-md border border-text-secondary shadow-sm focus:border-accent-primary focus:ring-accent-primary"
-        required
+        required={isRequired}
       />
     );
   };
@@ -136,7 +146,8 @@ export const MemberForm = ({ member, onSuccess, onClose }: MemberFormProps) => {
     name: string,
     id: string,
     value: string,
-    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
+    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void,
+    isRequired = false
   ) => {
     return (
       <>
@@ -147,6 +158,7 @@ export const MemberForm = ({ member, onSuccess, onClose }: MemberFormProps) => {
           value={value}
           onChange={onChange}
           className="mt-sm p-sm h-2xl text-2xl block w-full rounded-md border border-text-secondary  shadow-sm focus:border-accent-primary focus:ring-accent-primary"
+          required={isRequired}
         />
       </>
     );
@@ -223,7 +235,8 @@ export const MemberForm = ({ member, onSuccess, onClose }: MemberFormProps) => {
               "first_name",
               "first_name",
               formData.first_name!,
-              handleChange
+              handleChange,
+              true
             )}
           </div>
 
@@ -238,7 +251,8 @@ export const MemberForm = ({ member, onSuccess, onClose }: MemberFormProps) => {
               "middle_name",
               "middle_name",
               formData.middle_name!,
-              handleChange
+              handleChange,
+              false
             )}
           </div>
 
@@ -253,7 +267,8 @@ export const MemberForm = ({ member, onSuccess, onClose }: MemberFormProps) => {
               "last_name",
               "last_name",
               formData.last_name!,
-              handleChange
+              handleChange,
+              true
             )}
           </div>
 
@@ -288,7 +303,8 @@ export const MemberForm = ({ member, onSuccess, onClose }: MemberFormProps) => {
               "birth_date",
               "birth_date",
               formatDateForInput(formData.birth_date!),
-              handleChange
+              handleChange,
+              true
             )}
           </div>
 
@@ -303,7 +319,8 @@ export const MemberForm = ({ member, onSuccess, onClose }: MemberFormProps) => {
               "death_date",
               "death_date",
               formatDateForInput(formData.death_date!),
-              handleChange
+              handleChange,
+              false
             )}
           </div>
 
@@ -318,7 +335,8 @@ export const MemberForm = ({ member, onSuccess, onClose }: MemberFormProps) => {
               "birth_place",
               "birth_place",
               formData.birth_place!,
-              handleChange
+              handleChange,
+              false
             )}
           </div>
 
@@ -333,7 +351,8 @@ export const MemberForm = ({ member, onSuccess, onClose }: MemberFormProps) => {
               "death_place",
               "death_place",
               formData.death_place!,
-              handleChange
+              handleChange,
+              false
             )}
           </div>
 
@@ -348,7 +367,8 @@ export const MemberForm = ({ member, onSuccess, onClose }: MemberFormProps) => {
               "profession",
               "profession",
               formData.profession!,
-              handleChange
+              handleChange,
+              false
             )}
           </div>
 
@@ -363,7 +383,8 @@ export const MemberForm = ({ member, onSuccess, onClose }: MemberFormProps) => {
               "religion",
               "religion",
               formData.religion!,
-              handleChange
+              handleChange,
+              false
             )}
           </div>
 
@@ -424,7 +445,7 @@ export const MemberForm = ({ member, onSuccess, onClose }: MemberFormProps) => {
           >
             {isLoading
               ? "Saving..."
-              : isEditing
+              : isEditing 
               ? "Save Changes"
               : "Create Member"}
           </button>

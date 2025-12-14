@@ -53,7 +53,7 @@ export const PersonCard = ({ member, cardActionProps }: PersonCardProps) => {
           <button
             onClick={(e) => {
               e.stopPropagation();
-              cardActionProps.onAdd(memberId);
+              cardActionProps.onAdd(memberId, e);
             }}
             className="p-1 hover:bg-background-primary rounded-full"
           >

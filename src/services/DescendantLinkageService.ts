@@ -50,10 +50,23 @@ const deleteDescendantLinkage = async (id: string): Promise<void> => {
     }
 }
 
+const getParents = async (id: string): Promise<{ father_id: string | null, mother_id: string | null } | null> => {
+    try{
+        const linkage = await DescendantLinkageAPI.getDescendantLinkageById(id);
+        const father_id = linkage?.parent_a_id || null;
+        const mother_id = linkage?.parent_b_id || null;
+        return { father_id, mother_id };
+    } catch (error) {
+        console.log(error);
+        return null;
+    }
+}
+
 export const DescendantLinkageService = {
     getAllDescendantLinkages,
     getDescendantLinkageById,
     insertDescendantLinkage,
     updateDescendantLinkage,
     deleteDescendantLinkage,
+    getParents,
 }

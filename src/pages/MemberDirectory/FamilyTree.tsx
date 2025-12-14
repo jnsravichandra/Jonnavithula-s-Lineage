@@ -28,7 +28,7 @@ function FamilyTree() {
       <div className="p-0 bg-background-secondary rounded-2xl shadow-2xl">
         <div className="p-2 float-end">
           <AddMember
-            onMemberAdded={familyTreeData.refreshFamilyData}
+            refreshFamilyData={familyTreeData.refreshFamilyData}
             personCardActions={personCardActions}
           />
         </div>
@@ -43,6 +43,9 @@ function FamilyTree() {
                 <FamilyTreeView
                   rootNode={familyTreeData.transformedTree?.rootNode}
                   cardActions={personCardActions.cardActions!}
+                  addContextMenu={personCardActions.addContextMenu}
+                  closeAddContextMenu={personCardActions.closeAddContextMenu}
+                  addContextMenuOptions={personCardActions.addContextMenuOptions}
                 />
               )}
             </>
