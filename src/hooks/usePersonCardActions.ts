@@ -1,6 +1,8 @@
 import { useEffect, useState, useCallback } from 'react';
 import type { Member, TreeNode } from '../models/SupabaseDataModel';
 import { MemberService } from '../services/MemberService';
+import { DescendantLinkageService } from '../services/DescendantLinkageService';
+import { SpouseService } from '../services/SpouseService';
 
 export type DeleteResult = {
   success: boolean;
@@ -8,9 +10,10 @@ export type DeleteResult = {
 };
 
 export type ContextMenuState = {
-  memberId: string;
-  x: number;
-  y: number;
+  memberId: string; // The member this menu is for
+  anchorEl: HTMLElement; // The button element to anchor the menu to
+  x: number; // The calculated left position
+  y: number; // The calculated top position
 } | null;
 
 export interface CardActionProps {
@@ -101,8 +104,9 @@ function usePersonCardActions() {
   );
 
   const handleDelete = useCallback(async (member: TreeNode): Promise<DeleteResult> => {
-    // console.log(`Delete ${member.member_id}`);
     try {
+      await DescendantLinkageService.deleteDescendantLinkageByMemberId(member.member_id);
+      await SpouseService.deleteSpouseForMember(member.member_id);
       await MemberService.deleteMember(member.member_id);
       const successMessage = `Member "${member.first_name} ${member.last_name || ''}" was deleted successfully.`;
       return { success: true, message: successMessage };
@@ -134,10 +138,18 @@ function usePersonCardActions() {
   const handleAdd = useCallback(
     (memberId?: string, event?: React.MouseEvent) => {
       // Case 1: Contextual Add (from a PersonCard)
+      console.log(`Adding to member ${memberId}`);
+      console.log()
       if (memberId && event) {
         event.stopPropagation();
-        const rect = (event.currentTarget as HTMLElement).getBoundingClientRect();
-        setAddContextMenu({ memberId, x: rect.right, y: rect.bottom });
+        const anchorEl = event.currentTarget as HTMLElement;
+        const rect = anchorEl.getBoundingClientRect();
+        setAddContextMenu({
+          memberId,
+          anchorEl,
+          x: rect.left + rect.width + window.scrollX,
+          y: rect.top + window.scrollY,
+        });
       } else {
         // Case 2: Global Add (no context)
         setFocusedMemberId(null);
@@ -168,6 +180,32 @@ function usePersonCardActions() {
     { label: 'Add Sibling', action: () => openAddRelationModal('Sibling') },
     { label: 'Add Parent', action: () => openAddRelationModal('Parent') },
   ];
+
+  useEffect(() => {
+    if (!addContextMenu?.anchorEl) {
+      return;
+    }
+
+    const updatePosition = () => {
+      setAddContextMenu((prev) => {
+        if (!prev?.anchorEl) return null; // Menu was closed, do nothing
+        const rect = prev.anchorEl.getBoundingClientRect();
+        return {
+          ...prev,
+          x: rect.left + rect.width + window.scrollX,
+          y: rect.top + window.scrollY,
+        };
+      });
+    };
+
+    window.addEventListener('scroll', updatePosition, true);
+    window.addEventListener('resize', updatePosition);
+
+    return () => {
+      window.removeEventListener('scroll', updatePosition, true);
+      window.removeEventListener('resize', updatePosition);
+    };
+  }, [addContextMenu?.anchorEl]);
 
   useEffect(() => {
     setCardActions({

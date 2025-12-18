@@ -46,10 +46,20 @@ const deleteDescendantLinkage = async (id: string): Promise<void> => {
     }
 }
 
+const getParentsByMemberId = async (memberId: string): Promise<DescendantLinkage> => {
+    const { data, error } = await supabase.from(SupabaseTables.DescendantLinkage).select("*").eq("child_id", memberId).single();
+    if (error) {
+        console.log(error);
+        throw error;
+    }
+    return data || ({} as DescendantLinkage);
+}
+
 export const DescendantLinkageAPI = {
     getAllDescendantLinkages,
     getDescendantLinkageById,
     createDescendantLinkage,
     updateDescendantLinkage,
     deleteDescendantLinkage,
+    getParentsByMemberId,
 }

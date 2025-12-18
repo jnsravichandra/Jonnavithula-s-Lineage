@@ -50,10 +50,44 @@ const deleteSpouse = async (id: string): Promise<void> => {
     }
 }
 
+const getSpouseForMaleMember = async (member_id: string): Promise<Spouse | null> => {
+    try {
+        const spouse = await SpouseAPI.getSpouseForMaleMember(member_id);
+        return spouse;
+    } catch (error) {
+        console.log(error);
+        return null;
+    }
+}
+
+const getSpouseForFemaleMember = async (member_id: string): Promise<Spouse | null> => {
+    try {
+        const spouse = await SpouseAPI.getSpouseForFemaleMember(member_id);
+        return spouse;
+    } catch (error) {
+        console.log(error);
+        return null;
+    }
+}
+
+const deleteSpouseForMember = async (member_id: string): Promise<void> => {
+    try {
+        await SpouseAPI.deleteSpouseForMember(member_id);
+    } catch (error) {
+        console.log(error);
+        throw error;
+    }
+}
+
+
+
 export const SpouseService = {
     getAllSpouses,
     getSpouseById,
     insertSpouse,
     updateSpouse,
     deleteSpouse,
+    getSpouseForMaleMember,
+    getSpouseForFemaleMember,
+    deleteSpouseForMember,
 }

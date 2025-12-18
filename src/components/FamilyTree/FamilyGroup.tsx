@@ -37,13 +37,11 @@ function FamilyGroup({ member, cardActionProps }: FamilyGroupProps) {
                 {/* Line 2: Horizontal Line connecting all siblings */}
                 <TreeConnectors type="sibling-connector" />
                 {member.children.map((child) => (
-                  <>
-                    <div key={child.member_id + "-child"} className="pt-6 relative">
-                      {/* Line 3: Vertical Line from Sibling Line to Child's Group */}
-                      <TreeConnectors type="child-vertical" />
-                      <FamilyGroup member={child} cardActionProps={cardActionProps} />
-                    </div>
-                  </>
+                  <div key={child.member_id} className="pt-6 relative">
+                    {/* Line 3: Vertical Line from Sibling Line to Child's Group */}
+                    <TreeConnectors type="child-vertical" />
+                    <FamilyGroup member={child} cardActionProps={cardActionProps} />
+                  </div>
                 ))}
               </div>
             </div>

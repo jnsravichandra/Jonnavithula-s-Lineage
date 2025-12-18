@@ -1,7 +1,7 @@
-import { PlusIcon } from "@heroicons/react/24/solid";
-import { type PersonCardActionType } from "../../hooks/usePersonCardActions";
-import { ModalDialog } from "../shared/ModalDialogComponent";
-import { MemberForm } from "./MemberForm";
+import { PlusIcon } from '@heroicons/react/24/solid';
+import { type PersonCardActionType } from '../../hooks/usePersonCardActions';
+import { ModalDialog } from '../shared/ModalDialogComponent';
+import { MemberForm } from './MemberForm';
 
 interface AddMemberProps {
   refreshFamilyData: () => void;
@@ -10,83 +10,39 @@ interface AddMemberProps {
 
 function AddMember({ refreshFamilyData, personCardActions }: AddMemberProps) {
   const handleGlobalAdd = () => {
-    personCardActions.cardActions?.onAdd("");
-  };
-
-  const AddMember_Global = () => {
-    return (
-      <>
-        <MemberForm
-          member={personCardActions.member!}
-          onClose={personCardActions.cardActions.onClose!}
-          onSuccess={() => {
-            personCardActions.cardActions.onSuccess!();
-            refreshFamilyData();
-          }}
-          focussedMemberId={personCardActions.focusedMemberId}
-        />
-      </>
-    );
-  };
-
-  const AddMember_Contextual = () => {
-    {console.log(personCardActions)}
-    return (
-      <>
-        <MemberForm
-          member={personCardActions.member!}
-          onClose={personCardActions.cardActions.onClose!}
-          onSuccess={() => {
-            personCardActions.cardActions.onSuccess!();
-            refreshFamilyData();
-          }}
-          focussedMemberId={personCardActions.focusedMemberId}
-        />
-      </>
-    );
-  };
-
-  const EditMember = () => {
-    return (
-      <>
-        <MemberForm
-          member={personCardActions.member!}
-          onClose={personCardActions.cardActions.onClose!}
-          onSuccess={() => {
-            personCardActions.cardActions.onSuccess!();
-            refreshFamilyData();
-          }}
-          focussedMemberId={personCardActions.focusedMemberId}
-        />
-      </>
-    );
+    personCardActions.cardActions?.onAdd('');
   };
 
   const AddMember_Modal = () => {
+    // console.log(personCardActions);
     const modalTitle = (): string => {
-      if (personCardActions.modalMode?.operationType === "add-global") {
-        return "Add New Member";
-      } else if (personCardActions.modalMode?.operationType === "add-linked") {
-        return `Add ${ personCardActions.modalMode.relationType} to ${personCardActions.member?.first_name} ${personCardActions.member?.middle_name} ${personCardActions.member?.last_name}`;
-      } else if (personCardActions.modalMode?.operationType === "edit") {
+      if (personCardActions.modalMode?.operationType === 'add-global') {
+        return 'Add New Member';
+      } else if (personCardActions.modalMode?.operationType === 'add-linked') {
+        return `Add ${personCardActions.modalMode.relationType} to ${personCardActions.contextMember?.first_name} ${
+          personCardActions.contextMember?.middle_name ? personCardActions.contextMember?.middle_name + ' ' : ''
+        } ${personCardActions.contextMember?.last_name}`;
+      } else if (personCardActions.modalMode?.operationType === 'edit') {
         return `Edit ${personCardActions.member?.first_name} ${personCardActions.member?.middle_name} ${personCardActions.member?.last_name}`;
       } else {
-        return "Add New Member";
+        return 'Add New Member';
       }
     };
     return (
       <>
         {personCardActions.cardActions && (
-          <ModalDialog
-            open={personCardActions.isModalOpen}
-            onClose={personCardActions.cardActions.onClose!}
-            title={modalTitle()}
-          >
-            
-            {personCardActions.modalMode?.operationType === "add-global" && AddMember_Global()}
-            {personCardActions.modalMode?.operationType === "add-linked" &&
-              AddMember_Contextual()}
-            {personCardActions.modalMode?.operationType === "edit" && EditMember()}
+          <ModalDialog open={personCardActions.isModalOpen} onClose={personCardActions.cardActions.onClose!} title={modalTitle()}>
+            <MemberForm
+              member={personCardActions.member!}
+              onClose={personCardActions.cardActions.onClose!}
+              onSuccess={() => {
+                personCardActions.cardActions.onSuccess!();
+                refreshFamilyData();
+              }}
+              focussedMemberId={personCardActions.focusedMemberId}
+              relationType={personCardActions.modalMode?.relationType ?? null}
+              operationType={personCardActions.modalMode?.operationType ?? ''}
+            />
           </ModalDialog>
         )}
       </>

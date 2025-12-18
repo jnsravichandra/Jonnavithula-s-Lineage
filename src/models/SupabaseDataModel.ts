@@ -2,7 +2,7 @@ export interface Member {
   member_id?: string;
   created_at: Date;
   first_name: string;
-  middle_name: string;
+  middle_name: string | null;
   last_name: string;
   gender: string;
   birth_date: Date;
@@ -16,7 +16,7 @@ export interface Member {
 }
 
 export interface DescendantLinkage {
-  parent_child_id: string;
+  parent_child_id?: string;
   parent_a_id: string;
   parent_b_id: string;
   child_id: string;
@@ -28,7 +28,7 @@ export interface DescendantLinkage {
 }
 
 export interface Spouse {
-  spouse_id: string;
+  spouse_id?: string;
   created_at: Date;
   member_a_id: string;
   member_b_id: string;
@@ -40,7 +40,7 @@ export interface Spouse {
 }
 
 export interface Story {
-  id: string;
+  id?: string;
   created_at: Date;
   title: string;
   content: string;

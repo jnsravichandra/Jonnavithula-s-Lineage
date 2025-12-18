@@ -1,10 +1,7 @@
-import toast from "react-hot-toast";
-import type {
-  DeleteResult,
-  PersonCardActionType,
-} from "../../hooks/usePersonCardActions";
-import type { TreeNode } from "../../models/SupabaseDataModel";
-import { PersonCard } from "./PersonCard";
+import toast from 'react-hot-toast';
+import type { DeleteResult, PersonCardActionType } from '../../hooks/usePersonCardActions';
+import type { TreeNode } from '../../models/SupabaseDataModel';
+import { PersonCard } from './PersonCard';
 
 interface UnlinkedMemberProps {
   unlinkedNodes: TreeNode[];
@@ -12,18 +9,13 @@ interface UnlinkedMemberProps {
   personCardActions: PersonCardActionType;
 }
 
-function UnlinkedMembers({
-  unlinkedNodes,
-  refreshFamilyData,
-  personCardActions,
-}: UnlinkedMemberProps) {
+function UnlinkedMembers({ unlinkedNodes, refreshFamilyData, personCardActions }: UnlinkedMemberProps) {
+  console.log(unlinkedNodes);
   // This function wraps the delete action to show a toast notification.
-  const handleDeleteWithToast = async (
-    member: TreeNode
-  ): Promise<DeleteResult> => {
+  const handleDeleteWithToast = async (member: TreeNode): Promise<DeleteResult> => {
     if (!personCardActions.cardActions) {
       // Return a default error result if actions aren't ready
-      return { success: false, message: "Card actions not initialized." };
+      return { success: false, message: 'Card actions not initialized.' };
     }
 
     // Call the original onDelete function from the hook
