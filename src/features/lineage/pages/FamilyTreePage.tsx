@@ -1,12 +1,9 @@
-import { useState } from 'react';
-import FamilyTreeView from '../components/FamilyTreeView';
-import MemberDirectory from '../components/MemberDirectory';
-import TabbedLayout from '../../../shared/components/ui/TabbedLayout';
-import useFamilyTreeData from '../hooks/useFamilyTreeData';
+import { useState } from "react";
+import TabbedLayout from "../../../shared/components/ui/TabbedLayout";
+import { useFamilyTreeData, usePersonCardActions } from "../hooks";
+import { AddMember, FamilyTreeView, MemberDirectory, UnlinkedMembers } from "../components";
 
-import UnlinkedMembers from '../components/UnlinkedMember';
-import usePersonCardActions from '../hooks/usePersonCardActions';
-import AddMember from '../components/AddMember';
+
 
 const familyTreeTabs = [
   { key: 'Family Tree', label: 'Family Tree' },

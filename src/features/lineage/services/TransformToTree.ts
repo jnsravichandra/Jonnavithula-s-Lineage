@@ -1,4 +1,4 @@
-import type { DescendantLinkage, Member, Spouse, TreeNode } from "../models/SupabaseDataModel";
+import type { TreeNode, Member, DescendantLinkage, Spouse } from "../../../shared/datamodels";
 
 // Helper function for consistent date comparison (handles nulls)
 // Returns -1 if 'a' is older/should come first, 1 if 'b' is older/should come first, 0 if equal.

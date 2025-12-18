@@ -1,7 +1,7 @@
 import { PlusIcon } from '@heroicons/react/24/solid';
 import type { PersonCardActionType } from '../hooks';
-import { ModalDialog } from '../../../shared/components/ui/ModalDialogComponent';
 import { MemberForm } from './MemberForm';
+import { ModalDialog } from '../../../shared/components/ui';
 
 
 interface AddMemberProps {
