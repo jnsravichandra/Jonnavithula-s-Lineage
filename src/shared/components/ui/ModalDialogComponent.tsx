@@ -30,8 +30,8 @@ export const ModalDialog = ({ open, onClose, title, children }: ModalProps) => {
         {/* modal container */}
         <div
           onClick={(e) => e.stopPropagation()}
-          className={`bg-background-secondary rounded-xl shadow p-6 transition-all relative w-11/12 border ${
-            open ? "scale-100 opacity-100" : "scale-125 opacity-0"
+          className={`bg-background-secondary rounded-xl shadow-xl p-6 transition-all relative w-8/12 border ${
+            open ? "scale-80 opacity-100" : "scale-90 opacity-0"
           }`}
         >
           <button onClick={onClose} className="absolute top-2 right-2 p-1">

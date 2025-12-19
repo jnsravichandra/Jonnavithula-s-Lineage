@@ -6,6 +6,8 @@ export * from './FamilyTreeView';
 export { default as FamilyTreeView } from './FamilyTreeView';
 export * from './LinkMember';
 export { default as LinkMember } from './LinkMember';
+export * from './MemberActionModal';
+export { default as MemberActionModal } from './MemberActionModal';
 export * from './MemberDirectory';
 export { default as MemberDirectory } from './MemberDirectory';
 export * from './MemberForm';

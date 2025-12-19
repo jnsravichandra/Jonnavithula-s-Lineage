@@ -31,7 +31,7 @@ const compareDates = (a: TreeNode, b: TreeNode): number => {
 };
 
 
-export function TransformToTree(members: Member[], linkages: DescendantLinkage[], spouses: Spouse[]): {rootNode: TreeNode | null, unlinkedNodes: TreeNode[], allNodes: TreeNode[]} {
+export function transformToTree(members: Member[], linkages: DescendantLinkage[], spouses: Spouse[]): {rootNode: TreeNode | null, roots: TreeNode[], unlinkedNodes: TreeNode[], allNodes: TreeNode[]} {
     const nodeMap: { [key: string]: TreeNode } = {};
     const rootCandidates: TreeNode[] = [];
 
@@ -123,5 +123,5 @@ export function TransformToTree(members: Member[], linkages: DescendantLinkage[]
 
     const allNodes = Object.values(nodeMap);
 
-    return { rootNode: primaryRoot, unlinkedNodes: unlinkedRootNodes, allNodes: allNodes };
+    return { rootNode: primaryRoot, roots: mainTreeRoots, unlinkedNodes: unlinkedRootNodes, allNodes: allNodes };
 }

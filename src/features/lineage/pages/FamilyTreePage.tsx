@@ -1,7 +1,7 @@
 import { useState } from "react";
 import TabbedLayout from "../../../shared/components/ui/TabbedLayout";
 import { useFamilyTreeData, usePersonCardActions } from "../hooks";
-import { AddMember, FamilyTreeView, MemberDirectory, UnlinkedMembers } from "../components";
+import { AddMember, FamilyTreeView, MemberActionModal, MemberDirectory, UnlinkedMembers } from "../components";
 
 
 
@@ -25,18 +25,19 @@ function FamilyTree() {
     <>
       <div className="p-0 bg-background-secondary rounded-2xl shadow-2xl">
         <div className="p-2 float-end">
-          <AddMember refreshFamilyData={familyTreeData.refreshFamilyData} personCardActions={personCardActions} />
+          {personCardActions.handlers && <AddMember onAdd={personCardActions.handlers.onAdd} />}
         </div>
+        <MemberActionModal refreshFamilyData={familyTreeData.refreshFamilyData} personCardActions={personCardActions} />
         <TabbedLayout tabs={familyTreeTabs} activeTabKey={activeTabKey} onTabChange={onTabChange}>
           {activeTabKey === 'Family Tree' && (
             <>
               {familyTreeData.transformedTree?.rootNode && (
                 <FamilyTreeView
                   rootNode={familyTreeData.transformedTree?.rootNode}
-                  cardActions={personCardActions.cardActions!}
-                  addContextMenu={personCardActions.addContextMenu}
-                  closeAddContextMenu={personCardActions.closeAddContextMenu}
-                  addContextMenuOptions={personCardActions.addContextMenuOptions}
+                  handlers={personCardActions.handlers!}
+                  addContextMenu={personCardActions.ui.contextMenu.state}
+                  closeAddContextMenu={personCardActions.ui.contextMenu.close}
+                  addContextMenuOptions={personCardActions.ui.contextMenu.options}
                 />
               )}
             </>
