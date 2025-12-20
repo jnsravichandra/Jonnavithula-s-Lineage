@@ -1,15 +1,16 @@
 import { PencilIcon, UserPlusIcon, TrashIcon, LinkIcon } from '@heroicons/react/24/solid';
 import type { TreeNode } from '../../../shared/datamodels/SupabaseDataModel';
-import type { CardActionProps } from '../hooks/usePersonCardActions';
+import type { PersonCardActionType } from '../types';
 
 interface PersonCardProps {
   member: TreeNode;
-  cardActionProps: CardActionProps;
+  personCardActions: PersonCardActionType;
+  variant?: 'default' | 'spouse';
 }
 
-export const PersonCard = ({ member, cardActionProps }: PersonCardProps) => {
+export const PersonCard = ({ member, personCardActions, variant = 'default' }: PersonCardProps) => {
   const memberId = member.member_id;
-  const isFocused = cardActionProps.focusedMemberId === memberId;
+  const isFocused = personCardActions.data.focusedMemberId === memberId;
   const isUnlinkedMember = member.spouses.length === 0 && member.children.length === 0;
 
   const getFullName = () => {
@@ -25,14 +26,24 @@ export const PersonCard = ({ member, cardActionProps }: PersonCardProps) => {
   const primarySpouse = member.spouses.length > 0 ? member.spouses[0] : null;
   const spouseName = primarySpouse ? [primarySpouse.first_name, primarySpouse.middle_name, primarySpouse.last_name].filter(Boolean).join(' ') : 'N/A';
 
-  const actionButtons = () => {
-    return (
-      <>
+  return (
+    <>
+      <div
+        onClick={(e) => {
+          e.stopPropagation();
+          personCardActions.handlers.onSelect(memberId);
+        }}
+        className={`bg-background-secondary p-4 rounded-lg shadow-md w-100 relative transition-all
+          ${member.spouses.length === 0 && member.children.length === 0 ? 'h-80' : 'h-80'}
+          ${variant === 'spouse' ? 'border-2 border-dashed border-text-secondary/30' : 'border border-solid border-text-secondary/20'}
+          ${isFocused ? 'ring-2 ring-accent-primary' : ''}`}
+      >
+        {/* Action buttons top right */}
         <div className="absolute top-2 right-2 flex gap-2">
           <button
             onClick={(e) => {
               e.stopPropagation();
-              cardActionProps.onEdit(memberId);
+              personCardActions.handlers.onEdit(memberId);
             }}
             className="p-1 hover:bg-background-primary rounded-full"
             title="Edit Member Details"
@@ -43,7 +54,6 @@ export const PersonCard = ({ member, cardActionProps }: PersonCardProps) => {
             <button
               onClick={(e) => {
                 e.stopPropagation();
-                // cardActionProps.linkMember(member);
               }}
               className="p-1 hover:bg-background-primary rounded-full"
               title="Link Member"
@@ -54,7 +64,7 @@ export const PersonCard = ({ member, cardActionProps }: PersonCardProps) => {
             <button
               onClick={(e) => {
                 e.stopPropagation();
-                cardActionProps.onAdd(memberId, e);
+                personCardActions.handlers.onAdd(memberId, e);
               }}
               className="p-1 hover:bg-background-primary rounded-full"
             >
@@ -65,63 +75,39 @@ export const PersonCard = ({ member, cardActionProps }: PersonCardProps) => {
           <button
             onClick={(e) => {
               e.stopPropagation();
-              cardActionProps.onDelete(member);
+              personCardActions.handlers.onDelete(member);
             }}
             className="p-1 hover:bg-background-primary rounded-full"
           >
             <TrashIcon className="h-5 w-5 text-text-secondary" />
           </button>
         </div>
-      </>
-    );
-  };
 
-  const imageAndName = () => {
-    return (
-      <>
+        {/* Top section: Image and Name */}
         <div className="flex items-center gap-4 mb-4">
-          {/* Profile Picture */}
-          {/* Use member.profile_picture_url if available, fallback to placeholder */}
           <div
             className={`w-24 h-24 bg-background-primary rounded-full shrink-0 
             flex items-center justify-center text-4xl text-text-primary font-bold overflow-hidden
-            ${isFocused ? 'border-6 border-accent-primary' : ''}`}
+            ${isFocused ? 'border-6 border-accent-primary' : `border-4 ${member.gender === 'Female' ? 'border-pink-300' : 'border-blue-300'}`}`}
           >
-            {member.profile_picture_url ? (
-              <img src={member.profile_picture_url} alt={member.first_name} className="w-full h-full object-cover" />
-            ) : (
-              getFullName().charAt(0) // Display first initial as placeholder
-            )}
+            {member.profile_picture_url ? <img src={member.profile_picture_url} alt={member.first_name} className="w-full h-full object-cover" /> : getFullName().charAt(0)}
           </div>
-          {/* Name and Lifespan */}
           <div className="mt-4">
             <h2 className="text-2xl font-bold text-text-primary">{getFullName()}</h2>
             <p className="text-text-secondary">{getLifeSpan()}</p>
           </div>
         </div>
-      </>
-    );
-  };
 
-  const additionalDetails = () => {
-    return (
-      <>
+        {/* Bottom section: Additional Details */}
         <div className="border-t bg-background-secondary pt-4 space-y-2">
-          {/* {(spouseName != "N/A") && ( */}
-          <>
-            {/* Display Spouse */}
-            <div>
-              <span className="font-semibold text-text-primary">Spouse: </span>
-              <span className="text-text-secondary">{spouseName || 'N/A'}</span>
-            </div>
-          </>
-          {/* )} */}
-          {/* Display Profession */}
+          <div>
+            <span className="font-semibold text-text-primary">Spouse: </span>
+            <span className="text-text-secondary">{spouseName || 'N/A'}</span>
+          </div>
           <div>
             <span className="font-semibold text-text-primary">Profession: </span>
             <span className="text-text-secondary">{member.profession || 'N/A'}</span>
           </div>
-          {/* Display Birth Place */}
           <div>
             <span className="font-semibold text-text-primary">Born: </span>
             <span className="text-text-secondary">{member.birth_place || 'N/A'}</span>
@@ -131,29 +117,6 @@ export const PersonCard = ({ member, cardActionProps }: PersonCardProps) => {
             <span className="text-text-secondary italic">{member.notes || ''}</span>
           </div>
         </div>
-      </>
-    );
-  };
-
-  return (
-    <>
-      <div
-        onClick={(e) => {
-          e.stopPropagation();
-          cardActionProps.onSelect(memberId);
-        }}
-        className={`bg-background-secondary p-4 rounded-lg shadow-md border w-100 relative
-          ${member.spouses.length === 0 && member.children.length === 0 ? 'h-80' : 'h-80'}
-          `}
-      >
-        {/* Action buttons top right */}
-        {actionButtons()}
-
-        {/* Top section: Image and Name */}
-        {imageAndName()}
-
-        {/* Bottom section: Additional Details */}
-        {additionalDetails()}
       </div>
     </>
   );

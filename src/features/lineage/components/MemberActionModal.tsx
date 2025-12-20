@@ -1,4 +1,5 @@
 import { ModalDialog } from '../../../shared/components/ui';
+import type { Member } from '../../../shared/datamodels';
 import type { PersonCardActionType } from '../types';
 
 import { MemberForm } from './MemberForm';
@@ -9,18 +10,21 @@ export interface MemberActionModalProps {
 }
 
 function MemberActionModal({ refreshFamilyData, personCardActions }: MemberActionModalProps) {
-  const modalTitle = (): string => {
-    if (personCardActions.ui.modal.mode?.operationType === 'add-global') {
-      return 'Add New Member';
-    } else if (personCardActions.ui.modal.mode?.operationType === 'add-linked') {
-      return `Add ${personCardActions.ui.modal.mode.relationType} to ${personCardActions.data.contextMember?.first_name} ${
-        personCardActions.data.contextMember?.middle_name ? personCardActions.data.contextMember?.middle_name + ' ' : ''
-      } ${personCardActions.data.contextMember?.last_name}`;
-    } else if (personCardActions.ui.modal.mode?.operationType === 'edit') {
-      return `Edit ${personCardActions.data.member?.first_name} ${personCardActions.data.member?.middle_name} ${personCardActions.data.member?.last_name}`;
-    } else {
-      return 'Add New Member';
+  const getMemberName = (member: Member) => {
+    if (!member) return '';
+    return `${member.first_name} ${member.middle_name ? member.middle_name + ' ' : ''}${member.last_name}`;
+  };
+
+  const getModalTitle = (): string => {
+    const { mode } = personCardActions.ui.modal;
+    const { contextMember, member } = personCardActions.data;
+
+    if (mode?.operationType === 'add-linked') {
+      return `Add ${mode.relationType} to ${getMemberName(contextMember as Member)}`;
+    } else if (mode?.operationType === 'edit') {
+      return `Edit ${getMemberName(member as Member)}`;
     }
+    return 'Add New Member';
   };
 
   if (!personCardActions.handlers) return null;
@@ -29,7 +33,7 @@ function MemberActionModal({ refreshFamilyData, personCardActions }: MemberActio
     <ModalDialog
       open={personCardActions.ui.modal.isOpen}
       onClose={personCardActions.ui.modal.close}
-      title={modalTitle()}
+      title={getModalTitle()}
     >
       <MemberForm
         member={personCardActions.data.member!}

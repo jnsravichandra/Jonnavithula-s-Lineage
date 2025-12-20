@@ -1,17 +1,16 @@
-import type { TreeNode } from "../../models/SupabaseDataModel";
-import { useState } from "react";
-import ParentNodeGroup from "./ParentNodeGroup";
-import { TreeConnectors } from "./TreeConnectors";
-import type { CardActionProps } from "../../hooks/usePersonCardActions";
-
+import { useState } from 'react';
+import ParentNodeGroup from './ParentNodeGroup';
+import { TreeConnectors } from './TreeConnectors';
+import type { PersonCardActionType } from '../types';
+import type { TreeNode } from '../../../shared/datamodels';
 
 interface FamilyGroupProps {
   member: TreeNode;
-  cardActionProps: CardActionProps;
+  personCardActions: PersonCardActionType;
 }
 
-function FamilyGroup({ member, cardActionProps }: FamilyGroupProps) {
-  const [isExpanded, setIsExpanded] = useState(false);
+function FamilyGroup({ member, personCardActions }: FamilyGroupProps) {
+  const [isExpanded, setIsExpanded] = useState(true);
   const hasChildren = member.children.length > 0;
 
   return (
@@ -23,29 +22,34 @@ function FamilyGroup({ member, cardActionProps }: FamilyGroupProps) {
           isExpanded={isExpanded}
           hasChildren={hasChildren}
           onToggleExpand={() => setIsExpanded(!isExpanded)}
-          cardActionProps={cardActionProps}
+          personCardActions={personCardActions}
         />
 
         {/* 2. Children Renderer (Recursive Step, Conditional Rendering) */}
-        {hasChildren && isExpanded && (
-          <>
-            <div className="mt-8 pt-6 relative">
-              {/* Line 1: Vertical line from Parent to Children's Horizontal Line */}
-              <TreeConnectors type="parent-to-children" />
-
-              <div className="flex justify-center relative">
-                {/* Line 2: Horizontal Line connecting all siblings */}
-                <TreeConnectors type="sibling-connector" />
-                {member.children.map((child) => (
-                  <div key={child.member_id} className="pt-6 relative">
-                    {/* Line 3: Vertical Line from Sibling Line to Child's Group */}
-                    <TreeConnectors type="child-vertical" />
-                    <FamilyGroup member={child} cardActionProps={cardActionProps} />
-                  </div>
-                ))}
+        {hasChildren && (
+          <div
+            className={`grid transition-all duration-500 ease-in-out ${
+              isExpanded ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'
+            }`}
+          >
+            <div className=" p-4">
+              <div className="mt-8 pt-6 relative">
+                {/* Line 1: Vertical line from Parent to Children's Horizontal Line */}
+                <TreeConnectors type="parent-to-children" />
+                <div className="flex justify-center relative">
+                  {/* Line 2: Horizontal Line connecting all siblings */}
+                  <TreeConnectors type="sibling-connector" />
+                  {member.children.map((child: TreeNode) => (
+                    <div key={child.member_id} className="pt-6 relative">
+                      {/* Line 3: Vertical Line from Sibling Line to Child's Group */}
+                      <TreeConnectors type="child-vertical" />
+                      <FamilyGroup member={child} personCardActions={personCardActions} />
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
-          </>
+          </div>
         )}
       </div>
     </>

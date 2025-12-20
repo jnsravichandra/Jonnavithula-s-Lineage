@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 interface Tab {
   key: string;
   label: string;
@@ -11,12 +11,7 @@ interface TabbedLayoutProps {
   children: React.ReactNode;
 }
 
-function TabbedLayout({
-  tabs,
-  activeTabKey,
-  onTabChange,
-  children,
-}: TabbedLayoutProps) {
+function TabbedLayout({ tabs, activeTabKey, onTabChange, children }: TabbedLayoutProps) {
   return (
     <div className="bg-background-secondary rounded-xl shadow-lg p-4 ">
       <div className="flex border-b border-background-primary mb-4 ">
@@ -28,8 +23,8 @@ function TabbedLayout({
               py-2 px-4 text-xl focus:outline-none transition-colors duration-300
               ${
                 activeTabKey === tab.key
-                  ? "border-b-2 border-accent-primary text-accent-primary font-bold"
-                  : "border-b-2 font-medium border-transparent text-text-secondary hover:text-text-primary hover:background-primary-hover"
+                  ? 'border-b-2 border-accent-primary text-accent-primary font-bold'
+                  : 'border-b-2 font-medium border-transparent text-text-secondary hover:text-text-primary hover:background-primary-hover'
               }
             `}
           >
