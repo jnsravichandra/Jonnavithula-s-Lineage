@@ -8,7 +8,6 @@ import { MemberRelationsManagementService } from '../services/MemberRelationsMan
 import { MemberService } from '../services';
 import { StorageManagerService } from '../services/StorageManagerService';
 import type { PersonCardActionType } from '../types';
-import { AuthAPI, signInWithEmail_RC } from '../../../shared/api/AuthAPI';
 
 const initialFormState: Partial<Member> = {
   first_name: '',
@@ -124,7 +123,7 @@ export const MemberForm = ({ member, personCardActions, focussedMemberId, operat
     setError(null);
 
     try {
-      await signInWithEmail_RC()
+      // await signInWithEmail_RC()
       const memberDataPayload = { ...formData };
 
       if (profileImageFile) {
@@ -148,7 +147,7 @@ export const MemberForm = ({ member, personCardActions, focussedMemberId, operat
       setError(errorMessage);
     } finally {
       setIsLoading(false);
-      await AuthAPI.signOut();
+      // await AuthAPI.signOut();
     }
   };
 

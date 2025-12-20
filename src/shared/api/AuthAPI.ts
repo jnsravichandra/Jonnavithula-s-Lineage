@@ -29,10 +29,6 @@ const getSession = async () => {
   return data.session;
 };
 
-export const signInWithEmail_RC = async () => {
-  await signInWithEmail('ravichandra.uk9@gmail.com', 'Torrents9!');
-};
-
 export const AuthAPI = {
   signInWithGoogle,
   signInWithEmail,
