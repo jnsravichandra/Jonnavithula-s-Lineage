@@ -20,7 +20,7 @@ function TabbedLayout({ tabs, activeTabKey, onTabChange, children }: TabbedLayou
             key={tab.key}
             onClick={() => onTabChange(tab.key)}
             className={`
-              py-2 px-4 text-xl focus:outline-none transition-colors duration-300
+              py-2 px-4 text-lg focus:outline-none transition-colors duration-300
               ${
                 activeTabKey === tab.key
                   ? 'border-b-2 border-accent-primary text-accent-primary font-bold'

@@ -1,5 +1,5 @@
+import type { DescendantLinkage } from '../../../shared/datamodels';
 import { DescendantLinkageAPI } from '../api/descendant_linkage_api';
-import type { DescendantLinkage } from '../models/SupabaseDataModel';
 
 const getAllDescendantLinkages = async (): Promise<DescendantLinkage[]> => {
   try {
@@ -11,13 +11,13 @@ const getAllDescendantLinkages = async (): Promise<DescendantLinkage[]> => {
   }
 };
 
-const getDescendantLinkageById = async (linkageId: string): Promise<DescendantLinkage | null> => {
+const getDescendantLinkageById = async (linkageId: string): Promise<DescendantLinkage> => {
   try {
     const linkage = await DescendantLinkageAPI.getDescendantLinkageById(linkageId);
     return linkage;
   } catch (error) {
     console.log(error);
-    return null;
+    return {} as DescendantLinkage;
   }
 };
 

@@ -13,7 +13,7 @@ function FamilyTreeView({ rootNode, personCardActions, closeAddContextMenu }: Fa
     <>
       {rootNode && (
         <div
-          className="flex py-xl overflow-auto"
+          className="flex py-sm overflow-auto"
           onClick={() => {
             personCardActions.handlers.onSelect('');
             closeAddContextMenu();

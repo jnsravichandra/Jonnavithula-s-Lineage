@@ -10,7 +10,7 @@ function AddMember({ onAdd }: AddMemberProps) {
     <>
       <div>
         <button
-          className="bg-accent-primary text-background-primary font-semibold text-xl px-4 py-2 rounded-xl hover:bg-accent-secondary transition duration-150"
+          className="bg-accent-primary text-background-primary font-semibold text-lg px-4 py-2 rounded-xl hover:bg-accent-secondary transition duration-150"
           onClick={() => onAdd('')}
         >
           <span className="flex items-center gap-2">

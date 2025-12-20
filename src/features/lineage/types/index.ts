@@ -1,4 +1,4 @@
-import type { Member, TreeNode } from '../../../shared/datamodels/SupabaseDataModel';
+import type { Member } from '../../../shared/datamodels/SupabaseDataModel';
 
 // --- Member Details ---
 export interface MemberDetailsState {
@@ -50,14 +50,14 @@ export type DeleteResult = {
 };
 
 export interface DeleteMemberActions {
-  deleteMember: (member: TreeNode) => Promise<DeleteResult>;
+  deleteMember: (member: Member) => Promise<DeleteResult>;
 }
 
 // --- Person Card Handlers ---
 export interface PersonCardHandlers {
   onSelect: (memberId: string) => void;
   onEdit: (memberId: string) => void;
-  onDelete: (member: TreeNode) => Promise<DeleteResult>;
+  onDelete: (member: Member) => void;
   onAdd: (memberId?: string, event?: React.MouseEvent) => void;
   onClose?: () => void;
   onSuccess?: () => void;

@@ -1,23 +1,19 @@
-import { useEffect } from "react";
-import toast, { Toaster } from "react-hot-toast";
+import { useEffect } from 'react';
+import toast, { Toaster } from 'react-hot-toast';
 
 interface ToastNotificationProps {
   message: string;
-  type: "success" | "error" | "info" | "warning";
+  type: 'success' | 'error' | 'info' | 'warning';
   duration?: number;
 }
 
-function ToastNotification({
-  message,
-  type,
-  duration = 3000,
-}: ToastNotificationProps) {
+function ToastNotification({ message, type, duration = 3000 }: ToastNotificationProps) {
   useEffect(() => {
     switch (type) {
-      case "success":
+      case 'success':
         toast.success(message, { duration });
         break;
-      case "error":
+      case 'error':
         toast.error(message, { duration });
         break;
       default:

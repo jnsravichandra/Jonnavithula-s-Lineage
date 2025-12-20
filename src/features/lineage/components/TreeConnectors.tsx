@@ -10,7 +10,7 @@ export const TreeConnectors = ({ type }: TreeConnectorsProps) => {
             // Renders the vertical line connecting the parent group to the horizontal sibling line.
             return (
                 <div 
-                    className={`top-0 left-1/2 w-0 h-6 border-l-2 ${baseLineClasses}`}
+                    className={`top-0 left-1/2 w-0 h-4 border-l-2 ${baseLineClasses}`}
                     title="Parent-to-Children Vertical Connector"
                 ></div>
             );
@@ -29,7 +29,7 @@ export const TreeConnectors = ({ type }: TreeConnectorsProps) => {
             // Renders the vertical line that drops down to a specific child's family group.
             return (
                 <div 
-                    className={`top-0 left-1/2 w-0 h-16 border-l-2 ${baseLineClasses}`}
+                    className={`top-0 left-1/2 w-0 h-8 border-l-2 ${baseLineClasses}`}
                     title="Child Vertical Drop Line"
                 ></div>
             );

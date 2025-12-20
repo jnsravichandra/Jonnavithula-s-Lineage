@@ -33,8 +33,8 @@ export const PersonCard = ({ member, personCardActions, variant = 'default' }: P
           e.stopPropagation();
           personCardActions.handlers.onSelect(memberId);
         }}
-        className={`bg-background-secondary p-4 rounded-lg shadow-md w-100 relative transition-all
-          ${member.spouses.length === 0 && member.children.length === 0 ? 'h-80' : 'h-80'}
+        className={`bg-background-secondary p-4 rounded-lg shadow-md w-85 relative transition-all
+          ${member.spouses.length === 0 && member.children.length === 0 ? 'h-65' : 'h-65'}
           ${variant === 'spouse' ? 'border-2 border-dashed border-text-secondary/30' : 'border border-solid border-text-secondary/20'}
           ${isFocused ? 'ring-2 ring-accent-primary' : ''}`}
       >
@@ -86,35 +86,35 @@ export const PersonCard = ({ member, personCardActions, variant = 'default' }: P
         {/* Top section: Image and Name */}
         <div className="flex items-center gap-4 mb-4">
           <div
-            className={`w-24 h-24 bg-background-primary rounded-full shrink-0 
-            flex items-center justify-center text-4xl text-text-primary font-bold overflow-hidden
+            className={`w-18 h-18 bg-background-primary rounded-full shrink-0 
+            flex items-center justify-center text-2xl text-text-primary font-bold overflow-hidden
             ${isFocused ? 'border-6 border-accent-primary' : `border-4 ${member.gender === 'Female' ? 'border-pink-300' : 'border-blue-300'}`}`}
           >
             {member.profile_picture_url ? <img src={member.profile_picture_url} alt={member.first_name} className="w-full h-full object-cover" /> : getFullName().charAt(0)}
           </div>
           <div className="mt-4">
-            <h2 className="text-2xl font-bold text-text-primary">{getFullName()}</h2>
-            <p className="text-text-secondary">{getLifeSpan()}</p>
+            <h2 className="text-lg font-bold text-text-primary">{getFullName()}</h2>
+            <p className="text-sm text-text-secondary">{getLifeSpan()}</p>
           </div>
         </div>
 
         {/* Bottom section: Additional Details */}
-        <div className="border-t bg-background-secondary pt-4 space-y-2">
+        <div className="border-t bg-background-secondary pt-2 space-y-1">
           <div>
-            <span className="font-semibold text-text-primary">Spouse: </span>
-            <span className="text-text-secondary">{spouseName || 'N/A'}</span>
+            <span className="text-sm font-semibold text-text-primary">Spouse: </span>
+            <span className="text-sm text-text-secondary">{spouseName || 'N/A'}</span>
           </div>
           <div>
-            <span className="font-semibold text-text-primary">Profession: </span>
-            <span className="text-text-secondary">{member.profession || 'N/A'}</span>
+            <span className="text-sm font-semibold text-text-primary">Profession: </span>
+            <span className="text-sm text-text-secondary">{member.profession || 'N/A'}</span>
           </div>
           <div>
-            <span className="font-semibold text-text-primary">Born: </span>
-            <span className="text-text-secondary">{member.birth_place || 'N/A'}</span>
+            <span className="text-sm font-semibold text-text-primary">Born: </span>
+            <span className="text-sm text-text-secondary">{member.birth_place || 'N/A'}</span>
           </div>
           <div className="hidden">
-            <span className="font-semibold text-text-primary">Notes: </span>
-            <span className="text-text-secondary italic">{member.notes || ''}</span>
+            <span className="text-sm font-semibold text-text-primary">Notes: </span>
+            <span className="text-sm text-text-secondary italic">{member.notes || ''}</span>
           </div>
         </div>
       </div>

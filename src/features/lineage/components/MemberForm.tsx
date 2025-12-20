@@ -5,6 +5,7 @@ import toast from 'react-hot-toast';
 import Label from '../../../shared/components/ui/Label';
 import { MemberRelationsManagementService } from '../services/MemberRelationsManagementService';
 import { MemberService } from '../services';
+import type { PersonCardActionType } from '../types';
 
 const initialFormState: Partial<Member> = {
   first_name: '',
@@ -22,14 +23,13 @@ const initialFormState: Partial<Member> = {
 
 interface MemberFormProps {
   member: Member | null;
-  onSuccess: () => void;
-  onClose: () => void;
+  personCardActions: PersonCardActionType;
   focussedMemberId: string | null;
   operationType: string;
   relationType: string | null;
 }
 
-export const MemberForm = ({ member, onSuccess, onClose, focussedMemberId, operationType, relationType }: MemberFormProps) => {
+export const MemberForm = ({ member, personCardActions, focussedMemberId, operationType, relationType }: MemberFormProps) => {
   const [formData, setFormData] = useState<Partial<Member>>(initialFormState);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -79,6 +79,9 @@ export const MemberForm = ({ member, onSuccess, onClose, focussedMemberId, opera
       created_at: new Date(),
     };
     delete newMember.member_id;
+    
+    const insertedMember = await MemberService.insertMember(newMember as Member);
+    toast.success(`Member created successfully! Member ID: ${insertedMember.member_id}`);
   };
 
   const handleAddLinkedMember = async () => {
@@ -101,7 +104,8 @@ export const MemberForm = ({ member, onSuccess, onClose, focussedMemberId, opera
 
       }
       const contextMember = (await MemberService.getMemberById(focussedMemberId!)) as Member;
-      MemberRelationsManagementService.AddSiblingMember(newMember, contextMember);
+      await MemberRelationsManagementService.AddSiblingMember(newMember, contextMember);
+      
     }
   };
 
@@ -113,13 +117,12 @@ export const MemberForm = ({ member, onSuccess, onClose, focussedMemberId, opera
     try {
       if (operationType === 'edit') {
         await handleUpdateMember();
-      }
-      if (operationType === 'add-linked') {
+      } else if (operationType === 'add-linked') {
         await handleAddLinkedMember();
       } else {
         await handleCreateMember();
       }
-      onSuccess();
+      personCardActions.handlers.onSuccess!();
     } catch (error) {
       console.error('Failed to save member:', (error as Error).message);
       setError((error as Error).message);
@@ -303,7 +306,7 @@ export const MemberForm = ({ member, onSuccess, onClose, focussedMemberId, opera
 
         {/* --- Form Actions (Footer) --- */}
         <div className="flex justify-end gap-4 pt-4 border-t border-gray-200">
-          <button type="button" onClick={onClose} disabled={isLoading} className="py-2 px-4 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 transition disabled:opacity-50">
+          <button type="button" onClick={personCardActions.handlers.onClose} disabled={isLoading} className="py-2 px-4 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 transition disabled:opacity-50">
             Cancel
           </button>
           <button
