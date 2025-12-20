@@ -1,5 +1,5 @@
+import type { Story } from "../../../shared/datamodels";
 import { StoryAPI } from "../../stories/api/story_api";
-import type { Story } from "../models/SupabaseDataModel";
 
 const getAllStories = async (): Promise<Story[]> => {
     try {

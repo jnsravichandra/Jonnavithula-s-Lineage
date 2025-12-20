@@ -1,5 +1,6 @@
+import type { Member } from "../../../shared/datamodels";
 import { MemberAPI } from "../api/members_api";
-import type { Member } from "../models/SupabaseDataModel";
+
 
 const getAllMembers = async (): Promise<Member[]> => {
   try {
@@ -43,6 +44,7 @@ const updateMember = async (member: Member): Promise<Member> => {
 
 const deleteMember = async (id: string): Promise<void> => {
   try {
+    console.log('Deleting member:', id);
     const deleteMember = await MemberAPI.deleteMember(id);
     return deleteMember;
   } catch (error) {

@@ -3,9 +3,12 @@ import type { Member } from '../../../shared/datamodels/SupabaseDataModel';
 
 import toast from 'react-hot-toast';
 import Label from '../../../shared/components/ui/Label';
+import { ImageUploader } from '../../../shared/components/ui/ImageUploader';
 import { MemberRelationsManagementService } from '../services/MemberRelationsManagementService';
 import { MemberService } from '../services';
+import { StorageManagerService } from '../services/StorageManagerService';
 import type { PersonCardActionType } from '../types';
+import { AuthAPI, signInWithEmail_RC } from '../../../shared/api/AuthAPI';
 
 const initialFormState: Partial<Member> = {
   first_name: '',
@@ -32,6 +35,7 @@ interface MemberFormProps {
 export const MemberForm = ({ member, personCardActions, focussedMemberId, operationType, relationType }: MemberFormProps) => {
   const [formData, setFormData] = useState<Partial<Member>>(initialFormState);
   const [isLoading, setIsLoading] = useState(false);
+  const [profileImageFile, setProfileImageFile] = useState<File | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -44,6 +48,8 @@ export const MemberForm = ({ member, personCardActions, focussedMemberId, operat
     } else {
       setFormData(initialFormState);
     }
+    // Reset staged image file when member or op type changes
+    setProfileImageFile(null);
   }, [member, operationType]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
@@ -58,12 +64,16 @@ export const MemberForm = ({ member, personCardActions, focussedMemberId, operat
     }
   };
 
+  const handleImageChange = (file: File) => {
+    setProfileImageFile(file);
+  };
+
   // --- Logic for UPDATING an existing member ---
-  const handleUpdateMember = async () => {
+  const handleUpdateMember = async (data: Partial<Member>) => {
     if (!member) throw new Error('No member data available for update.');
 
     const updatedMember: Member = {
-      ...formData,
+      ...data,
       member_id: member.member_id,
       created_at: member.created_at,
     } as Member;
@@ -73,39 +83,38 @@ export const MemberForm = ({ member, personCardActions, focussedMemberId, operat
   };
 
   // --- Logic for CREATING a new member (and optionally linking it) ---
-  const handleCreateMember = async () => {
+  const handleCreateMember = async (data: Partial<Member>) => {
     const newMember: Partial<Member> = {
-      ...formData,
+      ...data,
       created_at: new Date(),
     };
     delete newMember.member_id;
-    
+
     const insertedMember = await MemberService.insertMember(newMember as Member);
     toast.success(`Member created successfully! Member ID: ${insertedMember.member_id}`);
   };
 
-  const handleAddLinkedMember = async () => {
-    if (relationType === 'Sibling') {
-      const newMember: Member = {
-        member_id: '',
-        first_name: formData.first_name!,
-        middle_name: formData.middle_name!,
-        last_name: formData.last_name!,
-        gender: formData.gender!,
-        birth_date: formData.birth_date!,
-        death_date: formData.death_date!,
-        birth_place: formData.birth_place!,
-        profession: formData.profession!,
-        notes: formData.notes!,
-        profile_picture_url: formData.profile_picture_url!,
-        created_at: new Date(),
-        death_place: formData.death_place!,
-        religion: formData.religion!,
+  const handleAddLinkedMember = async (data: Partial<Member>) => {
+    if (!relationType || !focussedMemberId) {
+      throw new Error('Relation type or context member ID is missing for a linked operation.');
+    }
 
-      }
-      const contextMember = (await MemberService.getMemberById(focussedMemberId!)) as Member;
-      await MemberRelationsManagementService.AddSiblingMember(newMember, contextMember);
-      
+    const newMember: Partial<Member> = {
+      ...data,
+      created_at: new Date(),
+    };
+    delete newMember.member_id;
+
+    const contextMember = await MemberService.getMemberById(focussedMemberId);
+    if (!contextMember) {
+      throw new Error('Could not find the context member to link to.');
+    }
+
+    if (relationType === 'Sibling') {
+      await MemberRelationsManagementService.AddSiblingMember(newMember as Member, contextMember);
+      toast.success('New sibling added successfully!');
+    } else {
+      toast.error(`Adding relation of type "${relationType}" is not yet supported.`);
     }
   };
 
@@ -115,19 +124,31 @@ export const MemberForm = ({ member, personCardActions, focussedMemberId, operat
     setError(null);
 
     try {
+      await signInWithEmail_RC()
+      const memberDataPayload = { ...formData };
+
+      if (profileImageFile) {
+        const newImageUrl = await StorageManagerService.uploadProfilePicture(profileImageFile);
+        console.log('Profile picture uploaded successfully:', newImageUrl);
+        memberDataPayload.profile_picture_url = newImageUrl;
+      }
+
       if (operationType === 'edit') {
-        await handleUpdateMember();
+        await handleUpdateMember(memberDataPayload);
       } else if (operationType === 'add-linked') {
-        await handleAddLinkedMember();
+        await handleAddLinkedMember(memberDataPayload);
       } else {
-        await handleCreateMember();
+        await handleCreateMember(memberDataPayload);
       }
       personCardActions.handlers.onSuccess!();
     } catch (error) {
-      console.error('Failed to save member:', (error as Error).message);
-      setError((error as Error).message);
+      const errorMessage = (error as Error).message;
+      console.error('Failed to save member:', errorMessage);
+      toast.error(`Error: ${errorMessage}`);
+      setError(errorMessage);
     } finally {
       setIsLoading(false);
+      await AuthAPI.signOut();
     }
   };
 
@@ -217,8 +238,16 @@ export const MemberForm = ({ member, personCardActions, focussedMemberId, operat
   return (
     <>
       <form onSubmit={handleSubmit} className="space-y-4">
+
         {/* --- Form Fields --- */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-h-150 overflow-y-auto p-2">
+
+          {/* Profile Picture Uploader */}
+          <div className="md:col-span-2 flex flex-col items-center">
+            <Label htmlFor="profile_picture_url" labelText="Profile Picture" className="block text-lg font-bold text-text-secondary mb-2" />
+            <ImageUploader initialImage={formData.profile_picture_url} onChange={handleImageChange} />
+          </div>
+          
           {/* First Name */}
           <div>
             <Label htmlFor="first_name" labelText="First Name" className="block text-lg font-bold text-text-secondary" />
@@ -283,12 +312,6 @@ export const MemberForm = ({ member, personCardActions, focussedMemberId, operat
             {formTextInput('religion', 'religion', formData.religion!, handleChange, false)}
           </div>
 
-          {/* Profile Picture URL */}
-          <div className="md:col-span-2">
-            <Label htmlFor="profile_picture_url" labelText="Profile Picture URL" className="block text-lg font-bold text-text-secondary" />
-            {formTextInput('profile_picture_url', 'profile_picture_url', formData.profile_picture_url!, handleChange)}
-          </div>
-
           {/* Notes */}
           <div className="md:col-span-2">
             <Label htmlFor="notes" labelText="Notes" className="block text-lg font-bold text-text-secondary" />
@@ -299,14 +322,18 @@ export const MemberForm = ({ member, personCardActions, focussedMemberId, operat
         {/* Error Message */}
         {error && (
           <div className="text-red-600 bg-red-100 border border-red-400 p-3 rounded-md">
-            {toast.error(error)}
-            <strong>Error:</strong> {error}
+            <p><strong>Error:</strong> {error}</p>
           </div>
         )}
 
         {/* --- Form Actions (Footer) --- */}
         <div className="flex justify-end gap-4 pt-4 border-t border-gray-200">
-          <button type="button" onClick={personCardActions.handlers.onClose} disabled={isLoading} className="py-2 px-4 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 transition disabled:opacity-50">
+          <button
+            type="button"
+            onClick={personCardActions.handlers.onClose}
+            disabled={isLoading}
+            className="py-2 px-4 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 transition disabled:opacity-50"
+          >
             Cancel
           </button>
           <button

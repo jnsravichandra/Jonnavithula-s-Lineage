@@ -38,10 +38,18 @@ const updateMember = async (member: Member): Promise<Member> => {
 };
 
 const deleteMember = async (id: string): Promise<void> => {
-  const { error } = await supabase.from("Member").delete().eq("member_id", id);
+  const { data: { session } } = await supabase.auth.getSession();
+  if (!session) {
+    throw new Error("User is not authenticated");
+  }
+
+  const { data, error } = await supabase.from("Member").delete().eq("member_id", id).select();
   if (error) {
     console.log(error);
     throw error;
+  }
+  if (!data || data.length === 0) {
+    throw new Error("Delete failed: Record not found or permission denied.");
   }
 };
 
