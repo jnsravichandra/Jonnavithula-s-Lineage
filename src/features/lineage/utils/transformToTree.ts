@@ -41,6 +41,7 @@ export function transformToTree(members: Member[], linkages: DescendantLinkage[]
             ...(member as TreeNode),
             spouses: [],
             children: [],
+            parents: [],
             isRoot: true, // Assume root until parent is found
         };
         nodeMap[member.member_id!] = node;
@@ -57,9 +58,11 @@ export function transformToTree(members: Member[], linkages: DescendantLinkage[]
         if ((parentNode_father || parentNode_mother) && childNode) {
             if (parentNode_father) {
                 parentNode_father.children.push(childNode);
+                childNode.parents.push(parentNode_father);
             }
             if (parentNode_mother) {
                 parentNode_mother.children.push(childNode);
+                childNode.parents.push(parentNode_mother);
             }
             // Mark the child as NOT a root
             hasParent.add(linkage.child_id);

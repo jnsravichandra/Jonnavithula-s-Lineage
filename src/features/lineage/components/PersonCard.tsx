@@ -11,7 +11,7 @@ interface PersonCardProps {
 export const PersonCard = ({ member, personCardActions, variant = 'default' }: PersonCardProps) => {
   const memberId = member.member_id;
   const isFocused = personCardActions.data.focusedMemberId === memberId;
-  const isUnlinkedMember = member.spouses.length === 0 && member.children.length === 0;
+  const isUnlinkedMember = member.parents.length === 0 && member.spouses.length === 0 && member.children.length === 0;
 
   const getFullName = () => {
     return [member.first_name, member.middle_name, member.last_name].filter(Boolean).join(' ');

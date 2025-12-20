@@ -62,7 +62,8 @@ export interface TreeNode {
   religion: string;
   notes: string;
   profile_picture_url: string;
-
+  
+  parents: TreeNode[];
   spouses: TreeNode[];
   children: TreeNode[];
 
