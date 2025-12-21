@@ -12,13 +12,13 @@ const getAllMembers = async (): Promise<Member[]> => {
   }
 };
 
-const getMemberById = async (id: string): Promise<Member | null> => {
+const getMemberById = async (id: string): Promise<Member> => {
   try {
     const member = await MemberAPI.getMemberById(id);
     return member;
   } catch (error) {
     console.log(error);
-    return null;
+    return {} as Member;
   }
 };
 
@@ -53,13 +53,13 @@ const deleteMember = async (id: string): Promise<void> => {
   }
 };
 
-const getMemberByBirthDate = async (birth_date: Date | null) => {
+const getMemberByBirthDate = async (birth_date: Date) => {
   try {
     const member = await MemberAPI.getMemberByBirthDate(birth_date);
     return member;
   } catch (error) {
     console.log(error);
-    return null;
+    return {} as Member;
   }
 };
 

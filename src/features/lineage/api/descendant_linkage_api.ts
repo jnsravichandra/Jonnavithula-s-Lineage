@@ -1,5 +1,5 @@
 import supabase, { SupabaseTables } from '../../../shared/services/SupabaseClient';
-import type { DescendantLinkage } from '../../../shared/datamodels/SupabaseDataModel';
+import type { DescendantLinkage, ErrorType } from '../../../shared/datamodels/SupabaseDataModel';
 
 const getAllDescendantLinkages = async (): Promise<DescendantLinkage[]> => {
   const { data, error } = await supabase.from(SupabaseTables.DescendantLinkage).select('*');
@@ -20,10 +20,11 @@ const getDescendantLinkageById = async (id: string): Promise<DescendantLinkage> 
 };
 
 const createDescendantLinkage = async (linkage: DescendantLinkage): Promise<DescendantLinkage> => {
-  const { data, error } = await supabase.from(SupabaseTables.DescendantLinkage).insert(linkage).maybeSingle();
+  const { data, error } = await supabase.from(SupabaseTables.DescendantLinkage).insert(linkage);
   if (error) {
     console.log(error);
-    throw error;
+    const errorResult: ErrorType = {message: error.message, code: error.code};
+    return {error: errorResult} as DescendantLinkage;
   }
   return data || ({} as DescendantLinkage);
 };

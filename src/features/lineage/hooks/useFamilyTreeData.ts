@@ -1,14 +1,7 @@
 import { useEffect, useState, useMemo } from "react";
-import type { TreeNode, Member, DescendantLinkage, Spouse } from "../../../shared/datamodels";
+import type { Member, DescendantLinkage, Spouse } from "../../../shared/datamodels";
 import { MemberService, DescendantLinkageService, SpouseService } from "../services";
-import { transformToTree } from "../utils/transformToTree";
-
-export interface TransformedTree {
-  rootNode: TreeNode | null;
-  roots: TreeNode[];
-  unlinkedNodes: TreeNode[];
-  linkedNodes: TreeNode[];
-}
+import { transformToTree, type TransformedTreeType } from "../utils/transformToTree";
 
 export interface FamilyData {
   members: Member[];
@@ -18,7 +11,7 @@ export interface FamilyData {
 
 export type FamilyTreeDataType = {
   familyData: FamilyData | null;
-  transformedTree: TransformedTree | null;
+  transformedTree: TransformedTreeType | null;
   loading: boolean;
   error: string | null;
   refreshFamilyData: () => void;
@@ -51,12 +44,13 @@ function useFamilyTreeData() {
 
   const transformedTree = useMemo(() => {
     if (!familyData) return null;
-    const { rootNode, roots, unlinkedNodes, allNodes } = transformToTree(familyData.members, familyData.linkages, familyData.spouses);
+    const { rootNode, roots, unlinkedNodes, allNodes, linkedNodes } = transformToTree(familyData.members, familyData.linkages, familyData.spouses);
     return {
       rootNode: rootNode,
       roots: roots,
       unlinkedNodes: unlinkedNodes,
-      linkedNodes: allNodes,
+      linkedNodes: linkedNodes,
+      allNodes: allNodes,
     };
   }, [familyData]);
 

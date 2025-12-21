@@ -45,25 +45,25 @@ const deleteSpouse = async (id: string): Promise<void> => {
   }
 };
 
-const getSpouseForMaleMember = async (member_id: string): Promise<Spouse | null> => {
+const getSpouseForMaleMember = async (member_id: string): Promise<Spouse> => {
   const { data, error } = await supabase.from(SupabaseTables.Spouse).select('*').eq('member_a_id', member_id).single();
   if (error) {
     console.log(error);
-    return null;
+    return {} as Spouse;
   }
-  return data || null;
+  return data || {} as Spouse;
 };
 
-const getSpouseForFemaleMember = async (member_id: string): Promise<Spouse | null> => {
+const getSpouseForFemaleMember = async (member_id: string): Promise<Spouse> => {
     const { data, error } = await supabase.from(SupabaseTables.Spouse).select('*').eq('member_b_id', member_id).single();
     if (error) {
       console.log(error);
-      return null;
+      return {} as Spouse;
     }
-    return data || null;
+    return data || {} as Spouse;
 }
 
-const getSpouseForMember = async (member_id: string): Promise<Spouse | null> => {
+const getSpouseForMember = async (member_id: string): Promise<Spouse> => {
   const { data, error } = await supabase
     .from(SupabaseTables.Spouse)
     .select('*')
@@ -71,7 +71,7 @@ const getSpouseForMember = async (member_id: string): Promise<Spouse | null> => 
     .single();
   if (error) {
     console.log(error);
-    return null;
+    return {} as Spouse;
   }
   return data;
 };

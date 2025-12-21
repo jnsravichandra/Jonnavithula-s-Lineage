@@ -30,8 +30,15 @@ const compareDates = (a: TreeNode, b: TreeNode): number => {
     return dateA! - dateB!;
 };
 
+export interface TransformedTreeType {
+    allNodes: TreeNode[];
+    rootNode: TreeNode | null;
+    roots: TreeNode[];
+    linkedNodes: TreeNode[];
+    unlinkedNodes: TreeNode[];
+}
 
-export function transformToTree(members: Member[], linkages: DescendantLinkage[], spouses: Spouse[]): {rootNode: TreeNode | null, roots: TreeNode[], unlinkedNodes: TreeNode[], allNodes: TreeNode[]} {
+export function transformToTree(members: Member[], linkages: DescendantLinkage[], spouses: Spouse[]): TransformedTreeType {
     const nodeMap: { [key: string]: TreeNode } = {};
     const rootCandidates: TreeNode[] = [];
 
@@ -124,7 +131,10 @@ export function transformToTree(members: Member[], linkages: DescendantLinkage[]
     // Unlinked nodes: Roots that have no children and no spouses (purely isolated)
     const unlinkedRootNodes = rootCandidates.filter((node) => !node.children.length && !node.spouses.length);
 
+    const unlinkedRootIds = new Set(unlinkedRootNodes.map(node => node.member_id));
     const allNodes = Object.values(nodeMap);
 
-    return { rootNode: primaryRoot, roots: mainTreeRoots, unlinkedNodes: unlinkedRootNodes, allNodes: allNodes };
+    const linkedNodes = allNodes.filter((node) => !unlinkedRootIds.has(node.member_id));
+
+    return { rootNode: primaryRoot, roots: mainTreeRoots, unlinkedNodes: unlinkedRootNodes, allNodes: allNodes, linkedNodes: linkedNodes};
 }

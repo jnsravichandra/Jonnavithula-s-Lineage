@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useState } from 'react';
-import type { TreeNode } from '../../../shared/datamodels/SupabaseDataModel';
+import type { Member } from '../../../shared/datamodels/SupabaseDataModel';
 import type {
   PersonCardHandlers,
   PersonCardState,
@@ -17,7 +17,7 @@ import type {
 interface UsePersonCardHandlersProps {
   memberDetails: { state: MemberDetailsState; actions: MemberDetailsActions };
   memberModal: { state: MemberModalState; actions: MemberModalActions };
-  deleteMember: (member: TreeNode) => Promise<DeleteResult>;
+  deleteMember: (member: Member) => Promise<DeleteResult>;
   contextMenu: { state: ContextMenuHookState; actions: ContextMenuActions };
 }
 
@@ -83,6 +83,15 @@ export function usePersonCardHandlers({ memberDetails, memberModal, deleteMember
     [getMemberDetails, openModal, openContextMenu, setFocusedMemberId]
   );
 
+  const handleLink = useCallback(
+    (memberId: string) => {
+      setFocusedMemberId(memberId);
+      openModal({ operationType: 'update-link', relationType: null });
+      getMemberDetails(memberId, '');
+    },
+    [getMemberDetails, openModal]
+  );
+
   const handleClose = useCallback(() => {
     closeModal();
     setFocusedMemberId(null);
@@ -100,10 +109,11 @@ export function usePersonCardHandlers({ memberDetails, memberModal, deleteMember
       onEdit: handleEdit,
       onDelete: deleteMember,
       onAdd: handleAdd,
+      onLink: handleLink,
       onClose: handleClose,
       onSuccess: handleSuccess,
     }),
-    [handleAdd, handleClose, deleteMember, handleEdit, handleSelect, handleSuccess]
+    [handleSelect, handleEdit, deleteMember, handleAdd, handleLink, handleClose, handleSuccess]
   );
 
   const addContextMenuOptions = useMemo(
@@ -111,7 +121,7 @@ export function usePersonCardHandlers({ memberDetails, memberModal, deleteMember
       { label: 'Add Spouse', action: () => openAddRelationModal('Spouse') },
       { label: 'Add Child', action: () => openAddRelationModal('Child') },
       { label: 'Add Sibling', action: () => openAddRelationModal('Sibling') },
-      { label: 'Add Parent', action: () => openAddRelationModal('Parent') },
+      // { label: 'Add Parent', action: () => openAddRelationModal('Parent') },
     ],
     [openAddRelationModal]
   );

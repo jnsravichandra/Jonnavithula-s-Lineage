@@ -112,6 +112,12 @@ export const MemberForm = ({ member, personCardActions, focussedMemberId, operat
     if (relationType === 'Sibling') {
       await MemberRelationsManagementService.AddSiblingMember(newMember as Member, contextMember);
       toast.success('New sibling added successfully!');
+    } else if (relationType === 'Child') {
+      await MemberRelationsManagementService.AddChildMember(newMember as Member, contextMember);
+      toast.success('New child added successfully!');
+    } else if (relationType === 'Spouse') {
+      await MemberRelationsManagementService.AddSpouseMember(newMember as Member, contextMember);
+      toast.success('New spouse added successfully!');
     } else {
       toast.error(`Adding relation of type "${relationType}" is not yet supported.`);
     }
@@ -237,16 +243,14 @@ export const MemberForm = ({ member, personCardActions, focussedMemberId, operat
   return (
     <>
       <form onSubmit={handleSubmit} className="space-y-4">
-
         {/* --- Form Fields --- */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-h-150 overflow-y-auto p-2">
-
           {/* Profile Picture Uploader */}
           <div className="md:col-span-2 flex flex-col items-center">
             <Label htmlFor="profile_picture_url" labelText="Profile Picture" className="block text-lg font-bold text-text-secondary mb-2" />
             <ImageUploader initialImage={formData.profile_picture_url} onChange={handleImageChange} />
           </div>
-          
+
           {/* First Name */}
           <div>
             <Label htmlFor="first_name" labelText="First Name" className="block text-lg font-bold text-text-secondary" />
@@ -321,7 +325,9 @@ export const MemberForm = ({ member, personCardActions, focussedMemberId, operat
         {/* Error Message */}
         {error && (
           <div className="text-red-600 bg-red-100 border border-red-400 p-3 rounded-md">
-            <p><strong>Error:</strong> {error}</p>
+            <p>
+              <strong>Error:</strong> {error}
+            </p>
           </div>
         )}
 

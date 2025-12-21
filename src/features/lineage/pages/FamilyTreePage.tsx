@@ -3,6 +3,7 @@ import TabbedLayout from "../../../shared/components/ui/TabbedLayout";
 import { ContextMenu } from "../../../shared/components/ui/ContextMenu";
 import Loading from "../../../shared/components/ui/Loading";
 import { useFamilyTreeData, usePersonCardActions } from "../hooks";
+import { useAuth } from "../../../shared/hooks/useAuth";
 import { AddMember, FamilyTreeView, MemberActionModal, MemberDirectory, UnlinkedMembers } from "../components";
 import type { Member } from "../../../shared/datamodels";
 import type { PersonCardActionType } from "../types";
@@ -18,9 +19,11 @@ const familyTreeTabs = [
 function FamilyTree() {
   const [activeTabKey, setActiveTabKey] = useState(familyTreeTabs[0].key);
   const [isLoading, setIsLoading] = useState(false);
+  const { isLoggedIn } = useAuth();
 
   const familyTreeData = useFamilyTreeData();
   const personCardActions = usePersonCardActions();
+  const { refreshFamilyData, transformedTree } = familyTreeData;
 
   // Wrap actions to inject refresh logic automatically
   const personCardActionsWithRefresh: PersonCardActionType = useMemo(() => {
@@ -33,7 +36,7 @@ function FamilyTree() {
           setIsLoading(true);
           try {
             personCardActions.handlers.onSuccess?.();
-            await familyTreeData.refreshFamilyData();
+            await refreshFamilyData();
           } finally {
             setIsLoading(false);
           }
@@ -42,14 +45,14 @@ function FamilyTree() {
           setIsLoading(true);
           try {
             await personCardActions.handlers.onDelete(member);
-            await familyTreeData.refreshFamilyData(); // Ensure we wait for refresh to complete
+            await refreshFamilyData(); // Ensure we wait for refresh to complete
           } finally {
             setIsLoading(false);
           }
         },
       },
     };
-  }, [personCardActions, familyTreeData]);
+  }, [personCardActions, refreshFamilyData]);
 
   const onTabChange = (tabKey: string) => {
     setActiveTabKey(tabKey);
@@ -60,9 +63,9 @@ function FamilyTree() {
       {isLoading && <Loading />}
       <div className="p-0 bg-background-secondary rounded-2xl shadow-2xl">
         <div className="p-2 float-end">
-          {personCardActionsWithRefresh.handlers && <AddMember onAdd={personCardActionsWithRefresh.handlers.onAdd} />}
+          {isLoggedIn && personCardActionsWithRefresh.handlers && <AddMember onAdd={personCardActionsWithRefresh.handlers.onAdd} />}
         </div>
-        <MemberActionModal refreshFamilyData={familyTreeData.refreshFamilyData} personCardActions={personCardActionsWithRefresh} />
+        <MemberActionModal transformedTree={transformedTree!} refreshFamilyData={familyTreeData.refreshFamilyData} personCardActions={personCardActionsWithRefresh} />
         {personCardActions.ui.contextMenu.state && (
           <ContextMenu
             x={personCardActions.ui.contextMenu.state.x}

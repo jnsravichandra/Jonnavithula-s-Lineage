@@ -1,4 +1,5 @@
 import { PencilIcon, UserPlusIcon, TrashIcon, LinkIcon } from '@heroicons/react/24/solid';
+import { useAuth } from '../../../shared/hooks/useAuth';
 import type { TreeNode } from '../../../shared/datamodels/SupabaseDataModel';
 import type { PersonCardActionType } from '../types';
 
@@ -9,6 +10,7 @@ interface PersonCardProps {
 }
 
 export const PersonCard = ({ member, personCardActions, variant = 'default' }: PersonCardProps) => {
+  const { isLoggedIn } = useAuth();
   const memberId = member.member_id;
   const isFocused = personCardActions.data.focusedMemberId === memberId;
   const isUnlinkedMember = member.parents.length === 0 && member.spouses.length === 0 && member.children.length === 0;
@@ -35,10 +37,11 @@ export const PersonCard = ({ member, personCardActions, variant = 'default' }: P
         }}
         className={`bg-background-secondary p-4 rounded-lg shadow-md w-85 relative transition-all
           ${member.spouses.length === 0 && member.children.length === 0 ? 'h-65' : 'h-65'}
-          ${variant === 'spouse' ? 'border-2 border-dashed border-text-secondary/30' : 'border border-solid border-text-secondary/20'}
+          ${variant === 'spouse' ? 'border-2 border-dashed' : 'border border-solid'}
           ${isFocused ? 'ring-2 ring-accent-primary' : ''}`}
       >
         {/* Action buttons top right */}
+        {isLoggedIn && (
         <div className="absolute top-2 right-2 flex gap-2">
           <button
             onClick={(e) => {
@@ -50,17 +53,21 @@ export const PersonCard = ({ member, personCardActions, variant = 'default' }: P
           >
             <PencilIcon className="h-5 w-5 text-text-secondary" />
           </button>
-          {isUnlinkedMember ? (
+
+          {isUnlinkedMember && (
             <button
               onClick={(e) => {
                 e.stopPropagation();
+                personCardActions.handlers.onLink(memberId);
               }}
               className="p-1 hover:bg-background-primary rounded-full"
               title="Link Member"
             >
               <LinkIcon className="h-5 w-5 text-text-secondary" />
             </button>
-          ) : (
+          )}
+
+          {!isUnlinkedMember && (
             <button
               onClick={(e) => {
                 e.stopPropagation();
@@ -71,7 +78,6 @@ export const PersonCard = ({ member, personCardActions, variant = 'default' }: P
               <UserPlusIcon className="h-5 w-5 text-text-secondary" />
             </button>
           )}
-
           <button
             onClick={(e) => {
               e.stopPropagation();
@@ -82,6 +88,7 @@ export const PersonCard = ({ member, personCardActions, variant = 'default' }: P
             <TrashIcon className="h-5 w-5 text-text-secondary" />
           </button>
         </div>
+        )}
 
         {/* Top section: Image and Name */}
         <div className="flex items-center gap-4 mb-4">

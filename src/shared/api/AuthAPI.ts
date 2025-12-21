@@ -1,4 +1,5 @@
 import supabase from '../services/SupabaseClient';
+import type { AuthChangeEvent, Session } from '@supabase/supabase-js';
 
 const signInWithGoogle = async () => {
   const { error } = await supabase.auth.signInWithOAuth({
@@ -29,9 +30,14 @@ const getSession = async () => {
   return data.session;
 };
 
+const onAuthStateChange = (callback: (event: AuthChangeEvent, session: Session | null) => void) => {
+  return supabase.auth.onAuthStateChange(callback);
+};
+
 export const AuthAPI = {
   signInWithGoogle,
   signInWithEmail,
   signOut,
   getSession,
+  onAuthStateChange,
 };

@@ -1,3 +1,8 @@
+export interface ErrorType {
+  message: string;
+  code: string;
+}
+
 export interface Member {
   member_id?: string;
   created_at: Date;
@@ -13,6 +18,8 @@ export interface Member {
   religion: string;
   notes: string;
   profile_picture_url: string;
+
+  error?: ErrorType;
 }
 
 export interface DescendantLinkage {
@@ -25,6 +32,8 @@ export interface DescendantLinkage {
   date_established: Date;
   date_terminated: Date | null;
   notes: string;
+
+  error?: ErrorType;
 }
 
 export interface Spouse {
@@ -37,6 +46,8 @@ export interface Spouse {
   end_date: Date | null;
   location: string;
   notes: string;
+
+  error?: ErrorType;
 }
 
 export interface Story {
@@ -45,6 +56,8 @@ export interface Story {
   title: string;
   content: string;
   author_id: string;
+
+  error?: ErrorType;
 }
 
 export interface TreeNode {
@@ -63,9 +76,11 @@ export interface TreeNode {
   notes: string;
   profile_picture_url: string;
   
+  
   parents: TreeNode[];
   spouses: TreeNode[];
   children: TreeNode[];
 
+  error?: ErrorType;
   isRoot?: boolean; // True if this person has no recorded parents
 }

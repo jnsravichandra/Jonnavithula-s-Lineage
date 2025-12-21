@@ -12,13 +12,13 @@ const getAllSpouses = async (): Promise<Spouse[]> => {
     }
 }
 
-const getSpouseById = async (id: string): Promise<Spouse | null> => {
+const getSpouseById = async (id: string): Promise<Spouse> => {
     try {
         const spouse = await SpouseAPI.getSpouseById(id);
         return spouse;
     } catch (error) {
         console.log(error);
-        return null;
+        return {} as Spouse;
     }
 }
 
@@ -51,23 +51,23 @@ const deleteSpouse = async (id: string): Promise<void> => {
     }
 }
 
-const getSpouseForMaleMember = async (member_id: string): Promise<Spouse | null> => {
+const getSpouseForMaleMember = async (member_id: string): Promise<Spouse> => {
     try {
         const spouse = await SpouseAPI.getSpouseForMaleMember(member_id);
         return spouse;
     } catch (error) {
         console.log(error);
-        return null;
+        return {} as Spouse;
     }
 }
 
-const getSpouseForFemaleMember = async (member_id: string): Promise<Spouse | null> => {
+const getSpouseForFemaleMember = async (member_id: string): Promise<Spouse> => {
     try {
         const spouse = await SpouseAPI.getSpouseForFemaleMember(member_id);
         return spouse;
     } catch (error) {
         console.log(error);
-        return null;
+        return {} as Spouse;
     }
 }
 

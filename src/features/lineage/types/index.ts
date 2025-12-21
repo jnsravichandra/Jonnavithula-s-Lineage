@@ -12,7 +12,7 @@ export interface MemberDetailsActions {
 
 // --- Member Modal ---
 export type ModalMode = {
-  operationType: 'add-global' | 'add-linked' | 'edit';
+  operationType: 'add-global' | 'add-linked' | 'edit' | 'update-link';
   relationType: 'Spouse' | 'Child' | 'Sibling' | 'Parent' | null;
 } | null;
 
@@ -59,6 +59,7 @@ export interface PersonCardHandlers {
   onEdit: (memberId: string) => void;
   onDelete: (member: Member) => void;
   onAdd: (memberId?: string, event?: React.MouseEvent) => void;
+  onLink: (memberId: string) => void;
   onClose?: () => void;
   onSuccess?: () => void;
 }

@@ -7,6 +7,9 @@ const Stories = lazy(() => import("../features/stories/pages/StoriesPage"));
 const Photos = lazy(() => import("../features/core/pages/PhotosPage"));
 const About = lazy(() => import("../features/core/pages/AboutPage"));
 const Contact = lazy(() => import("../features/core/pages/ContactPage"));
+const Login = lazy(() => import("../shared/components/core/Login"));
+const Logout = lazy(() => import("../shared/components/core/Logout"));
+
 
 export default function AppRoutes() {
   return (
@@ -18,6 +21,9 @@ export default function AppRoutes() {
         <Route path="/photos" element={<Photos />} />
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/logout" element={<Logout />} />
+        <Route path="*" element={<Home />} />
       </Routes>
     </div>
   );
