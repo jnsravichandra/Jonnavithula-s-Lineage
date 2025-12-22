@@ -16,7 +16,7 @@ const headerLogo = () => {
 
 const navItems = [
   { name: 'Home', path: '/' },
-  { name: 'Family Tree', path: '/tree' },
+  { name: 'Family Tree', path: '/family-tree' },
   { name: 'Stories', path: '/stories' },
   { name: 'Photos', path: '/photos' },
   { name: 'Contact', path: '/contact' },

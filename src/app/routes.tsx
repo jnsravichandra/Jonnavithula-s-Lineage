@@ -16,13 +16,16 @@ export default function AppRoutes() {
     <div className="h-full">
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/tree" element={<FamilyTree />} />
+        
+        <Route path="/family-tree/:tab?/:memberId?" element={<FamilyTree />} />
+
         <Route path="/stories" element={<Stories />} />
         <Route path="/photos" element={<Photos />} />
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/login" element={<Login />} />
         <Route path="/logout" element={<Logout />} />
+
         <Route path="*" element={<Home />} />
       </Routes>
     </div>

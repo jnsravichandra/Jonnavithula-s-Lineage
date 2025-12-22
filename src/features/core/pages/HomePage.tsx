@@ -20,7 +20,7 @@ function Home() {
           {/* Content */}
           <div className="relative flex flex-col items-center gap-lg">
             <h1 className="text-5xl font-heading font-bold text-accent-primary">Uncover Your Roots</h1>
-            <Link to="/tree">
+            <Link to="/family-tree">
               <button className="bg-accent-primary text-background-primary font-semibold text-lg py-md px-xl rounded-xl hover:bg-opacity-80 transition-colors duration-300">
                 Explore the Tree
               </button>

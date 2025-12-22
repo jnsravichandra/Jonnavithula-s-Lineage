@@ -1,4 +1,6 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { ListBulletIcon, UsersIcon, UserMinusIcon } from '@heroicons/react/24/solid';
 import TabbedLayout from "../../../shared/components/ui/TabbedLayout";
 import { ContextMenu } from "../../../shared/components/ui/ContextMenu";
 import Loading from "../../../shared/components/ui/Loading";
@@ -11,19 +13,41 @@ import type { PersonCardActionType } from "../types";
 
 
 const familyTreeTabs = [
-  { key: 'Family Tree', label: 'Family Tree' },
-  { key: 'Member Directory', label: 'Member Directory' },
-  { key: 'Unlinked Members', label: 'Unlinked Members' },
+  { key: 'Member Directory', label: 'Member Directory', icon: <ListBulletIcon className="w-5 h-5" /> },
+  { key: 'Family Tree', label: 'Family Tree', icon: <UsersIcon className="w-5 h-5" /> },
+  { key: 'Unlinked Members', label: 'Unlinked Members', icon: <UserMinusIcon className="w-5 h-5" /> },
 ];
 
+const TAB_SLUGS: Record<string, string> = {
+  'tree': 'Family Tree',
+  'directory': 'Member Directory',
+  'unlinked': 'Unlinked Members',
+};
+
+const SLUG_TABS: Record<string, string> = {
+  'Family Tree': 'tree',
+  'Member Directory': 'directory',
+  'Unlinked Members': 'unlinked',
+};
+
 function FamilyTree() {
-  const [activeTabKey, setActiveTabKey] = useState(familyTreeTabs[0].key);
+  const { tab } = useParams();
+  const navigate = useNavigate();
+  const activeTabKey = tab ? (TAB_SLUGS[tab] || familyTreeTabs[0].key) : familyTreeTabs[0].key;
   const [isLoading, setIsLoading] = useState(false);
   const { isLoggedIn } = useAuth();
 
   const familyTreeData = useFamilyTreeData();
   const personCardActions = usePersonCardActions();
   const { refreshFamilyData, transformedTree } = familyTreeData;
+
+  // Redirect to default tab if no tab is present in URL
+  useEffect(() => {
+    if (!tab) {
+      const defaultSlug = SLUG_TABS[familyTreeTabs[0].key];
+      navigate(`/family-tree/${defaultSlug}`, { replace: true });
+    }
+  }, [tab, navigate]);
 
   // Wrap actions to inject refresh logic automatically
   const personCardActionsWithRefresh: PersonCardActionType = useMemo(() => {
@@ -55,7 +79,8 @@ function FamilyTree() {
   }, [personCardActions, refreshFamilyData]);
 
   const onTabChange = (tabKey: string) => {
-    setActiveTabKey(tabKey);
+    const slug = SLUG_TABS[tabKey];
+    navigate(`/family-tree/${slug}`);
   };
 
   return (
@@ -86,7 +111,10 @@ function FamilyTree() {
               )}
             </>
           )}
-          {activeTabKey === 'Member Directory' && <MemberDirectory />}
+          {activeTabKey === 'Member Directory' &&
+            familyTreeData.transformedTree && (
+              <MemberDirectory familyTreeData={familyTreeData} />
+            )}
           {activeTabKey === 'Unlinked Members' && (
             <>
               {familyTreeData.transformedTree?.unlinkedNodes && (

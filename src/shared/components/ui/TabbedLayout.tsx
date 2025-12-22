@@ -2,6 +2,7 @@ import React from 'react';
 interface Tab {
   key: string;
   label: string;
+  icon?: React.ReactNode;
 }
 
 interface TabbedLayoutProps {
@@ -20,19 +21,34 @@ function TabbedLayout({ tabs, activeTabKey, onTabChange, children }: TabbedLayou
             key={tab.key}
             onClick={() => onTabChange(tab.key)}
             className={`
-              py-2 px-4 text-lg focus:outline-none transition-colors duration-300
+              py-2 px-4 text-lg focus:outline-none transition-colors duration-300 ease-in-out flex items-center gap-2
               ${
                 activeTabKey === tab.key
-                  ? 'border-b-2 border-accent-primary text-accent-primary font-bold'
+                  ? 'border-b-2 border-accent-primary text-accent-primary font-bold transition-colors'
                   : 'border-b-2 font-medium border-transparent text-text-secondary hover:text-text-primary hover:background-primary-hover'
               }
             `}
           >
+            {tab.icon}
             {tab.label}
           </button>
         ))}
       </div>
-      <div className="p-4 bg-background-primary rounded-b-xl">{children}</div>
+      <div 
+        key={activeTabKey}
+        className="p-4 bg-background-primary rounded-b-xl animate-tab-fade-in"
+      >
+        {children}
+      </div>
+      <style>{`
+        @keyframes tabFadeIn {
+          from { opacity: 0; transform: translateY(4px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-tab-fade-in {
+          animation: tabFadeIn 0.3s ease-out forwards;
+        }
+      `}</style>
     </div>
   );
 }

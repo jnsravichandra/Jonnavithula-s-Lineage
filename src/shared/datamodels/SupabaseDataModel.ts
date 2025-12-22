@@ -18,6 +18,8 @@ export interface Member {
   religion: string;
   notes: string;
   profile_picture_url: string;
+  current_location?: string;
+  is_alive?: boolean;
 
   error?: ErrorType;
 }
@@ -81,6 +83,16 @@ export interface TreeNode {
   spouses: TreeNode[];
   children: TreeNode[];
 
+  full_name?: string;
   error?: ErrorType;
   isRoot?: boolean; // True if this person has no recorded parents
+}
+
+export interface MemberNode {
+  id: string;
+  name: string;
+  avatar?: string;
+  children?: MemberNode[]; // Nested structure
+  // or
+  parentId?: string; // Flat structure to be stratified
 }
