@@ -1,0 +1,8 @@
+{
+  "name": "jonnavithula-s-lineage",
+  "main": "index.ts",
+  "compatibility_date": "2025-12-23",
+  "assets": {
+    "directory": "./dist"
+  }
+}
