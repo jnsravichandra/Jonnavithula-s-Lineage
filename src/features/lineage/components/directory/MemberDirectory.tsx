@@ -9,7 +9,7 @@ interface MemberDirectoryProps {
 }
 
 function MemberDirectory({ familyTreeData }: MemberDirectoryProps) {
-  const { hierarchy, selectedMember, handleMemberClick } = useMemberDirectory(familyTreeData);
+  const { hierarchy, selectedMember, setSelectedMember, handleMemberClick } = useMemberDirectory(familyTreeData);
 
   return (
     <div className="p-md flex gap-md">
@@ -18,7 +18,7 @@ function MemberDirectory({ familyTreeData }: MemberDirectoryProps) {
       </div>
 
       <div className="w-2/3">
-        {selectedMember ? <MemberDashboard member={selectedMember} /> : <EmptySelectionState />}
+        {selectedMember ? <MemberDashboard member={selectedMember} setSelectedMember = {setSelectedMember} /> : <EmptySelectionState />}
       </div>
     </div>
   );

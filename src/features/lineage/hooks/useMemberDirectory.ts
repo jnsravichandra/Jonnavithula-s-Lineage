@@ -54,6 +54,7 @@ export const useMemberDirectory = (familyTreeData: FamilyTreeDataType) => {
     hierarchy, // The D3 hierarchy for tree-like visualizations
     allMembers, // A flat array of all members (linked + unlinked)
     selectedMember,
+    setSelectedMember,
     handleMemberClick,
   };
 };

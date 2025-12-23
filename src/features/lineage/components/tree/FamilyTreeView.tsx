@@ -12,13 +12,15 @@ function FamilyTreeView({ rootNode, personCardActions, closeAddContextMenu }: Fa
   return (
     rootNode && (
       <div
-        className="flex py-sm overflow-auto"
+        className="flex py-xl overflow-auto w-full h-full"
         onClick={() => {
           personCardActions.handlers.onSelect('');
           closeAddContextMenu();
         }}
       >
-        <FamilyGroup member={rootNode} personCardActions={personCardActions} />
+        <div className="min-w-fit m-auto">
+          <FamilyGroup member={rootNode} personCardActions={personCardActions} />
+        </div>
       </div>
     )
   );

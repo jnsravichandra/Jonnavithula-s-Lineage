@@ -10,7 +10,7 @@ interface UnlinkedMemberProps {
 function UnlinkedMembers({ unlinkedNodes, personCardActions }: UnlinkedMemberProps) {
   return (
     <>
-      <div className="flex">
+      <div className="flex flex-wrap justify-center">
         {unlinkedNodes.length > 0 &&
           unlinkedNodes.map((node: TreeNode) => (
             <span key={node.member_id} className="p-2 ">
