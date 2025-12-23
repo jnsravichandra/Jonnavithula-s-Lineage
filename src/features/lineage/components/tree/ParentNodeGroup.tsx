@@ -1,8 +1,8 @@
 import { ChevronUpIcon } from '@heroicons/react/24/solid';
-import type { TreeNode } from '../../../shared/datamodels/SupabaseDataModel';
-import { PersonCard } from './PersonCard';
+import type { TreeNode } from '../../../../shared/datamodels/SupabaseDataModel';
 import { ChevronDownIcon, HeartIcon } from '@heroicons/react/24/solid';
-import type { PersonCardActionType } from '../types';
+import type { PersonCardActionType } from '../../types';
+import { PersonCard } from '..';
 
 interface ParentNodeGroupProps {
   member: TreeNode;

@@ -1,13 +1,11 @@
-import { useEffect, useState } from 'react';
-import type { Member } from '../../../shared/datamodels/SupabaseDataModel';
-
 import toast from 'react-hot-toast';
-import Label from '../../../shared/components/ui/Label';
-import { ImageUploader } from '../../../shared/components/ui/ImageUploader';
-import { MemberRelationsManagementService } from '../services/MemberRelationsManagementService';
-import { MemberService } from '../services';
-import { StorageManagerService } from '../services/StorageManagerService';
-import type { PersonCardActionType } from '../types';
+import { useEffect, useState } from 'react';
+import ImageUploader from '../../../../shared/components/ui/ImageUploader';
+import Label from '../../../../shared/components/ui/Label';
+import type { Member } from '../../../../shared/datamodels';
+import { MemberRelationsManagementService, MemberService } from '../../services';
+import { StorageManagerService } from '../../services/StorageManagerService';
+import type { PersonCardActionType } from '../../types';
 
 const initialFormState: Partial<Member> = {
   first_name: '',
@@ -36,6 +34,7 @@ export const MemberForm = ({ member, personCardActions, focussedMemberId, operat
   const [isLoading, setIsLoading] = useState(false);
   const [profileImageFile, setProfileImageFile] = useState<File | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [uploaderKey, setUploaderKey] = useState(0);
 
   useEffect(() => {
     if ((operationType === 'edit' || operationType === 'add-global') && member) {
@@ -49,15 +48,21 @@ export const MemberForm = ({ member, personCardActions, focussedMemberId, operat
     }
     // Reset staged image file when member or op type changes
     setProfileImageFile(null);
+    setUploaderKey((prev) => prev + 1);
   }, [member, operationType]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     if (e.target.type === 'date') {
-      setFormData((prev: Partial<Member>) => ({
-        ...prev,
-        [name]: new Date(value).toISOString(),
-      }));
+      const dateValue = value ? new Date(value) : null;
+      if (dateValue && !isNaN(dateValue.getTime())) {
+        setFormData((prev: Partial<Member>) => ({
+          ...prev,
+          [name]: dateValue.toISOString(),
+        }));
+      } else {
+        setFormData((prev: Partial<Member>) => ({ ...prev, [name]: null }));
+      }
     } else {
       setFormData((prev: Partial<Member>) => ({ ...prev, [name]: value }));
     }
@@ -109,6 +114,10 @@ export const MemberForm = ({ member, personCardActions, focussedMemberId, operat
       throw new Error('Could not find the context member to link to.');
     }
 
+    // console.log('relationship type: ', relationType);
+    // console.log('newMember: ', newMember);
+    // console.log('contextMember: ', contextMember);
+
     if (relationType === 'Sibling') {
       await MemberRelationsManagementService.AddSiblingMember(newMember as Member, contextMember);
       toast.success('New sibling added successfully!');
@@ -134,7 +143,7 @@ export const MemberForm = ({ member, personCardActions, focussedMemberId, operat
 
       if (profileImageFile) {
         const newImageUrl = await StorageManagerService.uploadProfilePicture(profileImageFile);
-        console.log('Profile picture uploaded successfully:', newImageUrl);
+        // console.log('Profile picture uploaded successfully:', newImageUrl);
         memberDataPayload.profile_picture_url = newImageUrl;
       }
 
@@ -145,7 +154,13 @@ export const MemberForm = ({ member, personCardActions, focussedMemberId, operat
       } else {
         await handleCreateMember(memberDataPayload);
       }
-      personCardActions.handlers.onSuccess!();
+
+      if (operationType !== 'edit') {
+        setFormData(initialFormState);
+      }
+      setProfileImageFile(null);
+      setUploaderKey((prev) => prev + 1);
+      await personCardActions.handlers.onSuccess!();
     } catch (error) {
       const errorMessage = (error as Error).message;
       console.error('Failed to save member:', errorMessage);
@@ -175,7 +190,7 @@ export const MemberForm = ({ member, personCardActions, focussedMemberId, operat
         type="text"
         name={name}
         id={id}
-        value={value!}
+        value={value ?? ''}
         onChange={onChange}
         className="mt-sm h-2xl p-sm text-2xl block w-full rounded-md border border-text-secondary shadow-sm focus:border-accent-primary focus:ring-accent-primary"
         required={isRequired}
@@ -211,7 +226,7 @@ export const MemberForm = ({ member, personCardActions, focussedMemberId, operat
         <select
           name={name}
           id={id}
-          value={value}
+          value={value ?? ''}
           onChange={onChange}
           className="mt-sm p-sm h-2xl text-2xl block w-full rounded-md border border-text-secondary shadow-sm focus:border-accent-primary focus:ring-accent-primary"
         >
@@ -232,7 +247,7 @@ export const MemberForm = ({ member, personCardActions, focussedMemberId, operat
           name={name}
           id={id}
           rows={rows}
-          value={value}
+          value={value ?? ''}
           onChange={onChange}
           className="mt-sm p-sm h-2xl text-2xl block w-full rounded-md border border-text-secondary  shadow-sm focus:border-accent-primary focus:ring-accent-primary"
         />
@@ -248,7 +263,7 @@ export const MemberForm = ({ member, personCardActions, focussedMemberId, operat
           {/* Profile Picture Uploader */}
           <div className="md:col-span-2 flex flex-col items-center">
             <Label htmlFor="profile_picture_url" labelText="Profile Picture" className="block text-lg font-bold text-text-secondary mb-2" />
-            <ImageUploader initialImage={formData.profile_picture_url} onChange={handleImageChange} />
+            <ImageUploader key={uploaderKey} initialImage={formData.profile_picture_url} onChange={handleImageChange} />
           </div>
 
           {/* First Name */}

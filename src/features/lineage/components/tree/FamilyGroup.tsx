@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
+import type { TreeNode } from '../../../../shared/datamodels';
+import type { PersonCardActionType } from '../../types';
 import ParentNodeGroup from './ParentNodeGroup';
-import { TreeConnectors } from './TreeConnectors';
-import type { PersonCardActionType } from '../types';
-import type { TreeNode } from '../../../shared/datamodels';
+import { TreeConnectors } from '..';
 
 interface FamilyGroupProps {
   member: TreeNode;
@@ -57,10 +57,10 @@ function FamilyGroup({ member, personCardActions, initialExpanded = true }: Fami
             <div className={`${isOverflowVisible ? 'overflow-visible' : 'overflow-hidden'} p-4 w-fit mx-auto`}>
               <div className="pt-4 relative">
                 {/* Line 1: Vertical line from Parent to Children's Horizontal Line */}
-                <TreeConnectors type="parent-to-children" />
+                <TreeConnectors type="parent-to-children" /> 
                 <div className="flex justify-center relative">
                   {/* Line 2: Horizontal Line connecting all siblings */}
-                  <TreeConnectors type="sibling-connector" />
+                  <TreeConnectors type="sibling-connector" /> 
                   {member.children.map((child: TreeNode) => (
                     <div key={child.member_id} className="pt-4 relative shrink-0">
                       {/* Line 3: Vertical Line from Sibling Line to Child's Group */}

@@ -1,5 +1,5 @@
 import type { TreeNode } from '../../../shared/datamodels/SupabaseDataModel';
-import { PersonCard } from './PersonCard';
+import { PersonCard } from '..';
 import type { PersonCardActionType } from '../types';
 
 interface UnlinkedMemberProps {

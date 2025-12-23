@@ -4,24 +4,30 @@ import { MemberService } from './MemberService';
 import { SpouseService } from './SpouseService';
 
 const AddSiblingMember = async (newMember: Member, contextMember: Member) => {
-  const insertedNewmember = await MemberService.insertMember(newMember);
-  const contextMemberParents: DescendantLinkage = await DescendantLinkageService.getParentsByMemberId(contextMember.member_id!);
-  if (contextMemberParents?.parent_a_id !== null && contextMemberParents?.parent_b_id !== null) {
-    if (contextMemberParents?.parent_a_id !== undefined && contextMemberParents?.parent_b_id !== undefined) {
+
+  const insertedNewMember = await MemberService.insertMember(newMember);
+
+  console.log('inserted newMember: ', insertedNewMember);
+
+  const contextMemberParents = await DescendantLinkageService.getParentsByMemberId(contextMember.member_id!);
+
+  console.log('context Member Parents', contextMemberParents);
+
+  if (contextMemberParents?.parent_a_id && contextMemberParents?.parent_b_id) {
       const newDescendantEntry: DescendantLinkage = {
-        child_id: insertedNewmember.member_id!,
+        child_id: insertedNewMember.member_id!,
         parent_a_id: contextMemberParents?.parent_a_id,
         parent_b_id: contextMemberParents?.parent_b_id,
         created_at: new Date(),
         relationship_type: '',
-        date_established: insertedNewmember.birth_date ? new Date(insertedNewmember.birth_date) : new Date(),
+        date_established: insertedNewMember.birth_date ? new Date(insertedNewMember.birth_date) : new Date(),
         date_terminated: null,
         notes: '',
         parent_child_id: '',
       };
       delete newDescendantEntry.parent_child_id;
+      console.log('new descendant entry: ', newDescendantEntry);
       await DescendantLinkageService.insertDescendantLinkage(newDescendantEntry);
-    }
   }
 };
 
@@ -52,6 +58,12 @@ const AddChildMember = async (newMember: Member, contextMember: Member) => {
 
 const AddSpouseMember = async (newMember: Member, contextMember: Member) => {
   const insertedNewmember = await MemberService.insertMember(newMember);
+
+  if (!insertedNewmember?.member_id) {
+    console.error('Error: insertedNewmember is missing member_id. Cannot link spouse.');
+    return;
+  }
+
   const father = insertedNewmember.gender === 'Male' ? insertedNewmember : contextMember;
   const mother = insertedNewmember.gender === 'Female' ? insertedNewmember : contextMember;
   const newSpouseEntry: Spouse = {

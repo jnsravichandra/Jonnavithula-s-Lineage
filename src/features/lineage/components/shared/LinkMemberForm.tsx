@@ -1,10 +1,10 @@
-import { useState, useMemo, useRef, useEffect } from 'react';
-import type { PersonCardActionType } from '../types';
-import type { TransformedTreeType } from '../utils/transformToTree';
-import type { TreeNode } from '../../../shared/datamodels/SupabaseDataModel';
-import Label from '../../../shared/components/ui/Label';
-import { MemberRelationsManagementService } from '../services';
 import toast from 'react-hot-toast';
+import { useState, useMemo, useRef, useEffect } from 'react';
+import Label from '../../../../shared/components/ui/Label';
+import type { TreeNode } from '../../../../shared/datamodels';
+import { MemberRelationsManagementService } from '../../services';
+import type { PersonCardActionType } from '../../types';
+import type { TransformedTreeType } from '../../utils/transformToTree';
 
 interface LinkMemberFormProps {
   transformedTree?: TransformedTreeType;
@@ -80,7 +80,7 @@ function LinkMemberForm({ transformedTree, personCardActions }: LinkMemberFormPr
       console.error('No target selected.');
     }
     setIsLoading(false);
-    personCardActions.handlers.onSuccess!();
+    await personCardActions.handlers.onSuccess!();
   };
 
   return (

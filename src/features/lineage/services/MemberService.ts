@@ -24,8 +24,8 @@ const getMemberById = async (id: string): Promise<Member> => {
 
 const insertMember = async (member: Member): Promise<Member> => {
   try {
-    const newMember = await MemberAPI.createMember(member);
-    return newMember;
+    const newMember: Member = await MemberAPI.createMember(member);
+    return newMember as Member;
   } catch (error) {
     console.log(error);
     throw error;
@@ -44,7 +44,7 @@ const updateMember = async (member: Member): Promise<Member> => {
 
 const deleteMember = async (id: string): Promise<void> => {
   try {
-    console.log('Deleting member:', id);
+    // console.log('Deleting member:', id);
     const deleteMember = await MemberAPI.deleteMember(id);
     return deleteMember;
   } catch (error) {

@@ -20,17 +20,22 @@ const getDescendantLinkageById = async (id: string): Promise<DescendantLinkage> 
 };
 
 const createDescendantLinkage = async (linkage: DescendantLinkage): Promise<DescendantLinkage> => {
-  const { data, error } = await supabase.from(SupabaseTables.DescendantLinkage).insert(linkage);
+  const { data, error } = await supabase.from(SupabaseTables.DescendantLinkage).insert(linkage).select().maybeSingle();
   if (error) {
     console.log(error);
-    const errorResult: ErrorType = {message: error.message, code: error.code};
-    return {error: errorResult} as DescendantLinkage;
+    const errorResult: ErrorType = { message: error.message, code: error.code };
+    return { error: errorResult } as DescendantLinkage;
   }
   return data || ({} as DescendantLinkage);
 };
 
 const updateDescendantLinkage = async (linkage: DescendantLinkage): Promise<DescendantLinkage> => {
-  const { data, error } = await supabase.from(SupabaseTables.DescendantLinkage).update(linkage).eq('parent_child_id', linkage.parent_child_id).maybeSingle();
+  const { data, error } = await supabase
+    .from(SupabaseTables.DescendantLinkage)
+    .update(linkage)
+    .eq('parent_child_id', linkage.parent_child_id)
+    .select()
+    .maybeSingle();
   if (error) {
     console.log(error);
     throw error;

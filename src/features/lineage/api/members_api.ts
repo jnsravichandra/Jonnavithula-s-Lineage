@@ -20,7 +20,7 @@ const getMemberById = async (id: string): Promise<Member> => {
 };
 
 const createMember = async (member: Member): Promise<Member> => {
-  const { data, error } = await supabase.from("Member").insert(member).single();
+  const { data, error } = await supabase.from("Member").insert(member).select().single();
   if (error) {
     console.log(error);
     throw error;
@@ -29,7 +29,7 @@ const createMember = async (member: Member): Promise<Member> => {
 };
 
 const updateMember = async (member: Member): Promise<Member> => {
-  const { data, error } = await supabase.from("Member").update(member).eq("member_id", member.member_id).single();
+  const { data, error } = await supabase.from("Member").update(member).eq("member_id", member.member_id).select().single();
   if (error) {
     console.log(error);
     throw error;

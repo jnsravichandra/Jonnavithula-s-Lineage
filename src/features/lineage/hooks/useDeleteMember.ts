@@ -8,7 +8,7 @@ import toast from 'react-hot-toast';
 export function useDeleteMember(): { actions: DeleteMemberActions } {
   const deleteMember = useCallback(async (member: Member): Promise<DeleteResult> => {
     try {
-      console.log('Deleting member:', member);
+      // console.log('Deleting member:', member);
       // Orchestrate the deletion across multiple services
       await DescendantLinkageService.deleteDescendantLinkageByMemberId(member.member_id!);
       await SpouseService.deleteSpouseForMember(member.member_id!);

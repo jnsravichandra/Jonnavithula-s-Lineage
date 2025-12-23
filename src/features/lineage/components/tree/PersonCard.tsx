@@ -1,7 +1,7 @@
 import { PencilIcon, UserPlusIcon, TrashIcon, LinkIcon } from '@heroicons/react/24/solid';
-import { useAuth } from '../../../shared/hooks/useAuth';
-import type { TreeNode } from '../../../shared/datamodels/SupabaseDataModel';
-import type { PersonCardActionType } from '../types';
+import type { TreeNode } from '../../../../shared/datamodels';
+import { useAuth } from '../../../../shared/hooks/useAuth';
+import type { PersonCardActionType } from '../../types';
 
 interface PersonCardProps {
   member: TreeNode;
@@ -42,52 +42,52 @@ export const PersonCard = ({ member, personCardActions, variant = 'default' }: P
       >
         {/* Action buttons top right */}
         {isLoggedIn && (
-        <div className="absolute top-2 right-2 flex gap-2">
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              personCardActions.handlers.onEdit(memberId);
-            }}
-            className="p-1 hover:bg-background-primary rounded-full"
-            title="Edit Member Details"
-          >
-            <PencilIcon className="h-5 w-5 text-text-secondary" />
-          </button>
-
-          {isUnlinkedMember && (
+          <div className="absolute top-2 right-2 flex gap-2">
             <button
               onClick={(e) => {
                 e.stopPropagation();
-                personCardActions.handlers.onLink(memberId);
+                personCardActions.handlers.onEdit(memberId);
               }}
               className="p-1 hover:bg-background-primary rounded-full"
-              title="Link Member"
+              title="Edit Member Details"
             >
-              <LinkIcon className="h-5 w-5 text-text-secondary" />
+              <PencilIcon className="h-5 w-5 text-text-secondary" />
             </button>
-          )}
 
-          {!isUnlinkedMember && (
+            {isUnlinkedMember && (
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  personCardActions.handlers.onLink(memberId);
+                }}
+                className="p-1 hover:bg-background-primary rounded-full"
+                title="Link Member"
+              >
+                <LinkIcon className="h-5 w-5 text-text-secondary" />
+              </button>
+            )}
+
+            {!isUnlinkedMember && (
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  personCardActions.handlers.onAdd(memberId, e);
+                }}
+                className="p-1 hover:bg-background-primary rounded-full"
+              >
+                <UserPlusIcon className="h-5 w-5 text-text-secondary" />
+              </button>
+            )}
             <button
               onClick={(e) => {
                 e.stopPropagation();
-                personCardActions.handlers.onAdd(memberId, e);
+                personCardActions.handlers.onDelete(member);
               }}
               className="p-1 hover:bg-background-primary rounded-full"
             >
-              <UserPlusIcon className="h-5 w-5 text-text-secondary" />
+              <TrashIcon className="h-5 w-5 text-text-secondary" />
             </button>
-          )}
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              personCardActions.handlers.onDelete(member);
-            }}
-            className="p-1 hover:bg-background-primary rounded-full"
-          >
-            <TrashIcon className="h-5 w-5 text-text-secondary" />
-          </button>
-        </div>
+          </div>
         )}
 
         {/* Top section: Image and Name */}
@@ -97,7 +97,11 @@ export const PersonCard = ({ member, personCardActions, variant = 'default' }: P
             flex items-center justify-center text-2xl text-text-primary font-bold overflow-hidden
             ${isFocused ? 'border-6 border-accent-primary' : `border-4 ${member.gender === 'Female' ? 'border-pink-300' : 'border-blue-300'}`}`}
           >
-            {member.profile_picture_url ? <img src={member.profile_picture_url} alt={member.first_name} className="w-full h-full object-cover" /> : getFullName().charAt(0)}
+            {member.profile_picture_url ? (
+              <img src={member.profile_picture_url} alt={member.first_name} className="w-full h-full object-cover" />
+            ) : (
+              getFullName().charAt(0)
+            )}
           </div>
           <div className="mt-4">
             <h2 className="text-lg font-bold text-text-primary">{getFullName()}</h2>

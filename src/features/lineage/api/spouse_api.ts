@@ -20,7 +20,7 @@ const getSpouseById = async (id: string): Promise<Spouse> => {
 };
 
 const createSpouse = async (spouse: Spouse): Promise<Spouse> => {
-  const { data, error } = await supabase.from(SupabaseTables.Spouse).insert(spouse).single();
+  const { data, error } = await supabase.from(SupabaseTables.Spouse).insert(spouse).select().single();
   if (error) {
     console.log(error);
     throw error;
@@ -29,7 +29,7 @@ const createSpouse = async (spouse: Spouse): Promise<Spouse> => {
 };
 
 const updateSpouse = async (spouse: Spouse): Promise<Spouse> => {
-  const { data, error } = await supabase.from(SupabaseTables.Spouse).update(spouse).eq('spouse_id', spouse.spouse_id).single();
+  const { data, error } = await supabase.from(SupabaseTables.Spouse).update(spouse).eq('spouse_id', spouse.spouse_id).select().single();
   if (error) {
     console.log(error);
     throw error;

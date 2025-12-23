@@ -1,9 +1,8 @@
-import { ModalDialog } from '../../../shared/components/ui';
-import type { Member } from '../../../shared/datamodels';
-import type { PersonCardActionType } from '../types';
-import type { TransformedTreeType } from '../utils/transformToTree';
-import LinkMemberForm from './LinkMemberForm';
-import { MemberForm } from './MemberForm';
+import { ModalDialog } from '../../../../shared/components/ui';
+import type { Member } from '../../../../shared/datamodels';
+import type { PersonCardActionType } from '../../types';
+import type { TransformedTreeType } from '../../utils/transformToTree';
+import { LinkMemberForm, MemberForm } from '..';
 
 export interface MemberActionModalProps {
   refreshFamilyData?: () => void;

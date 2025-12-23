@@ -2,7 +2,7 @@ interface TreeConnectorsProps {
   type: 'parent-to-children' | 'sibling-connector' | 'child-vertical';
 }
 
-export const TreeConnectors = ({ type }: TreeConnectorsProps) => {
+export function TreeConnectors ({ type }: TreeConnectorsProps)  {
 
     const baseLineClasses = "absolute border-gray-500 transform -translate-x-1/2";
     switch (type) {
