@@ -1,4 +1,4 @@
-import { ChevronRightIcon, ChevronDownIcon } from '@heroicons/react/24/solid';
+import { ChevronRightIcon, ChevronDownIcon, LinkIcon } from '@heroicons/react/24/solid';
 import type { HierarchyNode } from 'd3';
 import type { Member, TreeNode } from '../../../../shared/datamodels/SupabaseDataModel';
 
@@ -13,7 +13,7 @@ interface MemberTreeNodeProps {
 const MemberTree = ({ node, expandedNodes, toggleExpand, selectedMember, handleMemberClick }: MemberTreeNodeProps) => {
   const member = node.data;
   const memberId = member.member_id;
-  const fullName = [member.first_name, member.middle_name, member.last_name].filter(Boolean).join(' ');
+  const fullName = member.full_name;
   const hasChildren = node.children && node.children.length > 0;
   const isExpanded = expandedNodes.has(memberId);
 
@@ -33,13 +33,35 @@ const MemberTree = ({ node, expandedNodes, toggleExpand, selectedMember, handleM
         ) : (
           <span className="w-6 mr-1"></span>
         )}
-        <div
-          onClick={() => handleMemberClick(memberId)}
-          className={`cursor-pointer px-sm py-sm rounded hover:bg-accent-primary hover:text-background-primary transition-colors duration-300 flex-grow ${
-            selectedMember?.member_id === member.member_id ? 'bg-accent-primary text-background-primary font-bold hover:text-text-primary' : ''
-          }`}
-        >
-          {fullName}
+        <div className="flex flex-col items-start gap-2">
+          <div
+            onClick={() => handleMemberClick(memberId)}
+            className={`cursor-pointer px-sm py-sm rounded hover:bg-accent-primary hover:text-background-primary transition-colors duration-300 ${
+              selectedMember?.member_id === member.member_id ? 'bg-accent-primary text-background-primary font-bold hover:text-text-primary' : ''
+            }`}
+          >
+            {fullName === 'Root' ? "Jonnavithula's" : <p>{fullName}</p>}
+          </div>
+          {member.spouses && member.spouses.length > 0 && (
+            <>
+            <LinkIcon className="w-5 h-5 self-center" />
+              <div className=" ">
+                {member.spouses.map((spouse) => (
+                  <div
+                    key={spouse.member_id + spouse.full_name}
+                    onClick={() => handleMemberClick(spouse.member_id)}
+                    className={`cursor-pointer px-sm py-sm rounded hover:bg-accent-primary hover:text-background-primary transition-colors duration-300 ${
+                      selectedMember?.member_id === spouse.member_id
+                        ? 'bg-accent-primary text-background-primary font-bold hover:text-text-primary'
+                        : ''
+                    }`}
+                  >
+                    {spouse.full_name}
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
         </div>
       </div>
       {hasChildren && (

@@ -1,14 +1,10 @@
-export interface ErrorType {
-  message: string;
-  code: string;
-}
-
 export interface Member {
   member_id?: string;
   created_at: Date;
   first_name: string;
   middle_name: string | null;
   last_name: string;
+  full_name?: string;
   gender: string;
   birth_date: Date;
   death_date: Date | null;
@@ -18,10 +14,9 @@ export interface Member {
   religion: string;
   notes: string;
   profile_picture_url: string;
+  isInLineage?: boolean;
   current_location?: string;
   is_alive?: boolean;
-
-  error?: ErrorType;
 }
 
 export interface DescendantLinkage {
@@ -34,8 +29,6 @@ export interface DescendantLinkage {
   date_established: Date;
   date_terminated: Date | null;
   notes: string;
-
-  error?: ErrorType;
 }
 
 export interface Spouse {
@@ -48,8 +41,6 @@ export interface Spouse {
   end_date: Date | null;
   location: string;
   notes: string;
-
-  error?: ErrorType;
 }
 
 export interface Story {
@@ -58,41 +49,16 @@ export interface Story {
   title: string;
   content: string;
   author_id: string;
-
-  error?: ErrorType;
 }
 
 export interface TreeNode {
   member_id: string;
-  created_at: Date;
-  first_name: string;
-  middle_name: string;
-  last_name: string;
-  gender: string;
-  birth_date: Date;
-  death_date: Date | null;
-  birth_place: string;
-  death_place: string | null;
-  profession: string;
-  religion: string;
-  notes: string;
-  profile_picture_url: string;
   
-  
-  parents: TreeNode[];
-  spouses: TreeNode[];
-  children: TreeNode[];
+  member?: Member;
+  parents?: TreeNode[];
+  spouses?: TreeNode[];
+  children?: TreeNode[];
 
   full_name?: string;
-  error?: ErrorType;
   isRoot?: boolean; // True if this person has no recorded parents
-}
-
-export interface MemberNode {
-  id: string;
-  name: string;
-  avatar?: string;
-  children?: MemberNode[]; // Nested structure
-  // or
-  parentId?: string; // Flat structure to be stratified
 }

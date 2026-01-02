@@ -81,7 +81,8 @@ const AddSpouseMember = async (newMember: Member, contextMember: Member) => {
   await SpouseService.insertSpouse(newSpouseEntry);
 };
 
-const AddRelationship_Parent = async (sourceMember: Member, targetMember: Member) => {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const AddRelationship_Parent = async (sourceMember: Member, targetMember: Member, payload: any) => {
   const spouseEntry: Spouse =
     sourceMember.gender === 'Male' ? await SpouseService.getSpouseForMaleMember(sourceMember.member_id!) : await SpouseService.getSpouseForFemaleMember(sourceMember.member_id!);
   const father: Member = await MemberService.getMemberById(spouseEntry.member_a_id);
@@ -93,10 +94,10 @@ const AddRelationship_Parent = async (sourceMember: Member, targetMember: Member
     parent_a_id: father.member_id!,
     parent_b_id: mother.member_id!,
     created_at: new Date(),
-    relationship_type: '',
+    relationship_type: payload.relationType,
     date_established: sourceMember.birth_date ? sourceMember.birth_date : new Date(),
     date_terminated: null,
-    notes: '',
+    notes: payload.notes ? payload.notes : '',
     parent_child_id: '',
   };
   delete newDescendantEntry.parent_child_id;
@@ -105,7 +106,8 @@ const AddRelationship_Parent = async (sourceMember: Member, targetMember: Member
   return result;
 };
 
-const AddRelationship_Spouse = async (sourceMember: Member, targetMember: Member) => {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const AddRelationship_Spouse = async (sourceMember: Member, targetMember: Member, payload: any) => {
   const husband: Member = targetMember.gender === 'Male' ? targetMember : sourceMember;
   const wife: Member = targetMember.gender === 'Female' ? targetMember : sourceMember;
 
@@ -113,21 +115,22 @@ const AddRelationship_Spouse = async (sourceMember: Member, targetMember: Member
     created_at: new Date(),
     member_a_id: husband.member_id!,
     member_b_id: wife.member_id!,
-    relationship_status: '',
+    relationship_status: payload.relationshipStatus,
     start_date: new Date(),
-    end_date: null,
-    location: '',
-    notes: '',
+    end_date: payload.endDate ? new Date(payload.endDate) : null,
+    location: payload.location ? payload.location : '',
+    notes: payload.notes ? payload.notes : '',
   };
 
   const result = await SpouseService.insertSpouse(newSpouseEntry);
   return result;
 };
 
-const AddRelationship_Child = async (sourceMember: Member, targetMember: Member) => {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const AddRelationship_Child = async (sourceMember: Member, targetMember: Member, payload: any) => {
   console.log('Source Member: ', sourceMember);
   console.log('Target Member: ', targetMember);
-  const result = await AddRelationship_Parent(targetMember, sourceMember);
+  const result = await AddRelationship_Parent(targetMember, sourceMember, payload);
   return result;
 };
 

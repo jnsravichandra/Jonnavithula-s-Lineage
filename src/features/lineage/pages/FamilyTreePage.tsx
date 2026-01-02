@@ -1,16 +1,18 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ListBulletIcon, UsersIcon, UserMinusIcon } from '@heroicons/react/24/solid';
 import TabbedLayout from '../../../shared/components/ui/TabbedLayout';
 import { ContextMenu } from '../../../shared/components/ui/ContextMenu';
 import Loading from '../../../shared/components/ui/Loading';
 import { useFamilyTreeData, useFamilyTreeRouting, usePersonCardActions, useRefreshedActions } from '../hooks';
 import { useAuth } from '../../../shared/hooks/useAuth';
-import { AddMember, FamilyTreeView, MemberActionModal, MemberDirectory, UnlinkedMembers } from '../components';
+import { AddMemberButton, FamilyTreeView, MemberActionModal, MemberDirectory, UnlinkedMembers } from '../components';
+import FamilyTreeView1 from '../components/tree1/FamilyTree';
 
-const familyTreeTabs = [
-  { key: 'Member Directory', label: 'Member Directory', icon: <ListBulletIcon className="w-5 h-5" /> },
-  { key: 'Family Tree', label: 'Family Tree', icon: <UsersIcon className="w-5 h-5" /> },
-  { key: 'Unlinked Members', label: 'Unlinked Members', icon: <UserMinusIcon className="w-5 h-5" /> },
+let familyTreeTabs = [
+  { key: 'Member Directory', label: 'Member Directory', icon: <ListBulletIcon className="w-5 h-5" />, isSecured: false },
+  // { key: 'Family Tree', label: 'Family Tree', icon: <UsersIcon className="w-5 h-5" /> , isSecured: false},
+  { key: 'Family Tree D3', label: 'Family Tree', icon: <UsersIcon className="w-5 h-5" /> , isSecured: false},
+  { key: 'Unlinked Members', label: 'Unlinked Members', icon: <UserMinusIcon className="w-5 h-5" /> , isSecured: true},
 ];
 
 function FamilyTree() {
@@ -20,21 +22,25 @@ function FamilyTree() {
 
   const familyTreeData = useFamilyTreeData();
   const personCardActions = usePersonCardActions();
-  const { refreshFamilyData, transformedTree } = familyTreeData;
+  const { refreshFamilyData } = familyTreeData;
 
   // Wrap actions to inject refresh logic automatically
   const personCardActionsWithRefresh = useRefreshedActions(personCardActions, refreshFamilyData, setIsLoading);
+
+  useEffect(() => {
+    familyTreeTabs = familyTreeTabs.filter((tab) => isLoggedIn ? true : !tab.isSecured );
+  });
 
   return (
     <>
       {isLoading && <Loading />}
       <div className="p-0 bg-background-secondary rounded-2xl shadow-2xl">
         <div className="p-2 float-end">
-          {isLoggedIn && personCardActionsWithRefresh.handlers && <AddMember onAdd={personCardActionsWithRefresh.handlers.onAdd} />}
+          {isLoggedIn && personCardActionsWithRefresh.handlers && <AddMemberButton onAdd={personCardActionsWithRefresh.handlers.onAdd} />}
         </div>
-        {transformedTree && (
+        {familyTreeData.hierarchy?.data && (
           <MemberActionModal
-            transformedTree={transformedTree}
+            familyTreeData={familyTreeData}
             refreshFamilyData={familyTreeData.refreshFamilyData}
             personCardActions={personCardActionsWithRefresh}
           />
@@ -47,21 +53,25 @@ function FamilyTree() {
             onClose={personCardActions.ui.contextMenu.close}
           />
         )}
-        <TabbedLayout tabs={familyTreeTabs} activeTabKey={activeTabKey} onTabChange={onTabChange}>
-          {activeTabKey === 'Family Tree' &&
-            familyTreeData.transformedTree?.rootNode && (
+        
+          <TabbedLayout tabs={familyTreeTabs} activeTabKey={activeTabKey} onTabChange={onTabChange}>
+            {activeTabKey === 'Family Tree' && familyTreeData.hierarchy?.data && (
               <FamilyTreeView
-                rootNode={familyTreeData.transformedTree?.rootNode}
+                familyTreeData={familyTreeData}
                 personCardActions={personCardActionsWithRefresh}
-                closeAddContextMenu={personCardActions.ui.contextMenu.close}
               />
             )}
-          {activeTabKey === 'Member Directory' && familyTreeData.transformedTree && <MemberDirectory familyTreeData={familyTreeData} />}
-          {activeTabKey === 'Unlinked Members' &&
-            familyTreeData.transformedTree?.unlinkedNodes && (
-              <UnlinkedMembers unlinkedNodes={familyTreeData.transformedTree?.unlinkedNodes} personCardActions={personCardActionsWithRefresh} />
+            {activeTabKey === 'Member Directory' && familyTreeData.hierarchy && <MemberDirectory familyTreeData={familyTreeData} />}
+            {activeTabKey === 'Unlinked Members' && familyTreeData.hierarchy && (
+              <UnlinkedMembers familyTreeData={familyTreeData} personCardActions={personCardActionsWithRefresh} />
             )}
-        </TabbedLayout>
+            {activeTabKey === 'Family Tree D3' && familyTreeData.hierarchy?.data && (
+              <FamilyTreeView1
+                familyTreeData={familyTreeData}
+                personCardActions={personCardActionsWithRefresh}
+              />
+            )}
+          </TabbedLayout>
       </div>
     </>
   );

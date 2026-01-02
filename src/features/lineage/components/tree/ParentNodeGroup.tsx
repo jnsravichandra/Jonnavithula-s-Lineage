@@ -21,7 +21,7 @@ function ParentNodeGroup({ member, isExpanded, hasChildren, onToggleExpand, pers
         <div className="flex items-start justify-center relative pr-xl pl-xl">
           {/* 1. Primary Member Card */}
           <div className="z-10">
-            <PersonCard member={member} personCardActions={personCardActions} />
+            <PersonCard person={member} personCardActions={personCardActions} />
           </div>
 
           {/* 2. Marriage Connector */}
@@ -36,7 +36,7 @@ function ParentNodeGroup({ member, isExpanded, hasChildren, onToggleExpand, pers
           {/* 3. Spouse Card */}
           {primarySpouse && (
             <div className="z-10">
-              <PersonCard member={primarySpouse} personCardActions={personCardActions} variant="spouse" />
+              <PersonCard person={primarySpouse} personCardActions={personCardActions} variant="spouse" />
             </div>
           )}
         </div>

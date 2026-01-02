@@ -1,4 +1,4 @@
-export { default as AddMember } from './shared/AddMember';
+export { default as AddMemberButton } from './shared/AddMemberButton';
 export { default as LinkMemberForm } from './shared/LinkMemberForm';
 export * from './shared/MemberForm';
 export * from './tree/TreeConnectors';
@@ -20,6 +20,6 @@ export { default as MemberTreeContainer } from './directory/MemberTreeContainer'
 //tree
 export { default as FamilyGroup } from './tree/FamilyGroup';
 export { default as FamilyTreeView } from './tree/FamilyTreeView';
-export * from './tree/MemberActionModal';
-export { default as MemberActionModal } from './tree/MemberActionModal';
+export * from './shared/MemberActionModal';
+export { default as MemberActionModal } from './shared/MemberActionModal';
 export * from './tree/PersonCard';

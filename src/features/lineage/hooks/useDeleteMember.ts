@@ -4,11 +4,9 @@ import { MemberService, DescendantLinkageService, SpouseService } from '../servi
 import type { DeleteResult, DeleteMemberActions } from '../types';
 import toast from 'react-hot-toast';
 
-
 export function useDeleteMember(): { actions: DeleteMemberActions } {
   const deleteMember = useCallback(async (member: Member): Promise<DeleteResult> => {
     try {
-      // console.log('Deleting member:', member);
       // Orchestrate the deletion across multiple services
       await DescendantLinkageService.deleteDescendantLinkageByMemberId(member.member_id!);
       await SpouseService.deleteSpouseForMember(member.member_id!);

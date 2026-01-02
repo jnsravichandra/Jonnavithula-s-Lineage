@@ -1,11 +1,15 @@
 import toast from 'react-hot-toast';
 import { useEffect, useState } from 'react';
 import ImageUploader from '../../../../shared/components/ui/ImageUploader';
-import Label from '../../../../shared/components/ui/Label';
+import Label from '../../../../shared/components/ui/shared/Label';
 import type { Member } from '../../../../shared/datamodels';
 import { MemberRelationsManagementService, MemberService } from '../../services';
 import { StorageManagerService } from '../../services/StorageManagerService';
 import type { PersonCardActionType } from '../../types';
+import FormInput from '../../../../shared/components/ui/shared/FormInput';
+import FormSelect from '../../../../shared/components/ui/shared/FormSelect';
+import FormTextArea from '../../../../shared/components/ui/shared/FormTextArea';
+import { toTitleCase } from '../../../../shared/utils/utils';
 
 const initialFormState: Partial<Member> = {
   first_name: '',
@@ -19,6 +23,7 @@ const initialFormState: Partial<Member> = {
   notes: '',
   profile_picture_url: '',
   member_id: '',
+  is_alive: true,
 };
 
 interface MemberFormProps {
@@ -28,6 +33,8 @@ interface MemberFormProps {
   operationType: string;
   relationType: string | null;
 }
+
+// --- Reusable Form Components (Candidates for shared/components/ui) ---
 
 export const MemberForm = ({ member, personCardActions, focussedMemberId, operationType, relationType }: MemberFormProps) => {
   const [formData, setFormData] = useState<Partial<Member>>(initialFormState);
@@ -42,6 +49,7 @@ export const MemberForm = ({ member, personCardActions, focussedMemberId, operat
         ...member,
         birth_date: member.birth_date ? new Date(member.birth_date) : new Date(),
         death_date: member.death_date ? new Date(member.death_date) : null,
+        is_alive: member.is_alive ?? !member.death_date,
       });
     } else {
       setFormData(initialFormState);
@@ -70,6 +78,15 @@ export const MemberForm = ({ member, personCardActions, focussedMemberId, operat
 
   const handleImageChange = (file: File) => {
     setProfileImageFile(file);
+  };
+
+  const handleIsAliveChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const checked = e.target.checked;
+    setFormData((prev) => ({
+      ...prev,
+      is_alive: checked,
+      ...(checked ? { death_date: null, death_place: '' } : {}),
+    }));
   };
 
   // --- Logic for UPDATING an existing member ---
@@ -141,6 +158,26 @@ export const MemberForm = ({ member, personCardActions, focussedMemberId, operat
       // await signInWithEmail_RC()
       const memberDataPayload = { ...formData };
 
+      memberDataPayload.first_name = memberDataPayload.first_name ? toTitleCase(memberDataPayload.first_name?.trim()) : memberDataPayload.first_name;
+      memberDataPayload.middle_name = memberDataPayload.middle_name
+        ? toTitleCase(memberDataPayload.middle_name?.trim())
+        : memberDataPayload.middle_name;
+      memberDataPayload.last_name = memberDataPayload.last_name ? toTitleCase(memberDataPayload.last_name?.trim()) : memberDataPayload.last_name;
+      memberDataPayload.birth_place = memberDataPayload.birth_place
+        ? toTitleCase(memberDataPayload.birth_place?.trim())
+        : memberDataPayload.birth_place;
+      memberDataPayload.death_place = memberDataPayload.death_place
+        ? toTitleCase(memberDataPayload.death_place?.trim())
+        : memberDataPayload.death_place;
+      memberDataPayload.profession = memberDataPayload.profession ? toTitleCase(memberDataPayload.profession?.trim()) : memberDataPayload.profession;
+      memberDataPayload.current_location = memberDataPayload.current_location
+        ? toTitleCase(memberDataPayload.current_location?.trim())
+        : memberDataPayload.current_location;
+      memberDataPayload.religion = memberDataPayload.religion ? toTitleCase(memberDataPayload.religion?.trim()) : memberDataPayload.religion;
+      // memberDataPayload.notes = memberDataPayload.notes? toTitleCase(memberDataPayload.notes?.trim()) : memberDataPayload.notes;
+      memberDataPayload.full_name = memberDataPayload.full_name ? toTitleCase(memberDataPayload.full_name?.trim()) : memberDataPayload.full_name;
+      memberDataPayload.gender = memberDataPayload.gender ? toTitleCase(memberDataPayload.gender?.trim()) : memberDataPayload.gender;
+
       if (profileImageFile) {
         const newImageUrl = await StorageManagerService.uploadProfilePicture(profileImageFile);
         // console.log('Profile picture uploaded successfully:', newImageUrl);
@@ -168,91 +205,19 @@ export const MemberForm = ({ member, personCardActions, focussedMemberId, operat
       setError(errorMessage);
     } finally {
       setIsLoading(false);
-      // await AuthAPI.signOut();
     }
   };
 
   // Determine if the form is in "edit" mode to control button text
   const isEditing = operationType === 'edit';
 
-  const formatDateForInput = (date: Date | null) => {
+  const formatDateForInput = (date: Date | string | null | undefined) => {
     if (!date) return '';
     try {
       return new Date(date).toISOString().split('T')[0];
     } catch {
       return '';
     }
-  };
-
-  const formTextInput = (name: string, id: string, value: string, onChange: (e: React.ChangeEvent<HTMLInputElement>) => void, isRequired = false) => {
-    return (
-      <input
-        type="text"
-        name={name}
-        id={id}
-        value={value ?? ''}
-        onChange={onChange}
-        className="mt-sm h-2xl p-sm text-2xl block w-full rounded-md border border-text-secondary shadow-sm focus:border-accent-primary focus:ring-accent-primary"
-        required={isRequired}
-      />
-    );
-  };
-
-  const formDateInput = (name: string, id: string, value: string, onChange: (e: React.ChangeEvent<HTMLInputElement>) => void, isRequired = false) => {
-    return (
-      <>
-        <input
-          type="date"
-          name={name}
-          id={id}
-          value={value}
-          onChange={onChange}
-          className="mt-sm p-sm h-2xl text-2xl block w-full rounded-md border border-text-secondary  shadow-sm focus:border-accent-primary focus:ring-accent-primary"
-          required={isRequired}
-        />
-      </>
-    );
-  };
-
-  const formDropdownInput = (
-    name: string,
-    id: string,
-    value: string,
-    onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => void,
-    options: { label: string; value: string }[]
-  ) => {
-    return (
-      <>
-        <select
-          name={name}
-          id={id}
-          value={value ?? ''}
-          onChange={onChange}
-          className="mt-sm p-sm h-2xl text-2xl block w-full rounded-md border border-text-secondary shadow-sm focus:border-accent-primary focus:ring-accent-primary"
-        >
-          {options.map((option) => (
-            <option className="bg-background-secondary" key={option.value} value={option.value}>
-              {option.label}
-            </option>
-          ))}
-        </select>
-      </>
-    );
-  };
-
-  const formTextAreaInput = (name: string, id: string, value: string, rows: number, onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void) => {
-    return (
-      <>
-        <textarea
-          name={name}
-          id={id}
-          rows={rows}
-          value={value ?? ''}
-          onChange={onChange}
-          className="mt-sm p-sm h-2xl text-2xl block w-full rounded-md border border-text-secondary  shadow-sm focus:border-accent-primary focus:ring-accent-primary"
-        />
-      </>
-    );
   };
 
   return (
@@ -266,75 +231,54 @@ export const MemberForm = ({ member, personCardActions, focussedMemberId, operat
             <ImageUploader key={uploaderKey} initialImage={formData.profile_picture_url} onChange={handleImageChange} />
           </div>
 
-          {/* First Name */}
-          <div>
-            <Label htmlFor="first_name" labelText="First Name" className="block text-lg font-bold text-text-secondary" />
-            {formTextInput('first_name', 'first_name', formData.first_name!, handleChange, true)}
-          </div>
+          <FormInput label="First Name" name="first_name" value={formData.first_name} onChange={handleChange} required />
+          <FormInput label="Middle Name" name="middle_name" value={formData.middle_name} onChange={handleChange} />
+          <FormInput label="Last Name" name="last_name" value={formData.last_name} onChange={handleChange} />
 
-          {/* Middle Name */}
-          <div>
-            <Label htmlFor="middle_name" labelText="Middle Name" className="block text-lg font-bold text-text-secondary" />
-            {formTextInput('middle_name', 'middle_name', formData.middle_name!, handleChange, false)}
-          </div>
-
-          {/* Last Name */}
-          <div>
-            <Label htmlFor="last_name" labelText="Last Name" className="block text-lg font-bold text-text-secondary" />
-            {formTextInput('last_name', 'last_name', formData.last_name!, handleChange, true)}
-          </div>
-
-          {/* Gender */}
-          <div>
-            <Label htmlFor="gender" labelText="Gender" className="block text-lg font-bold text-text-secondary" />
-            {formDropdownInput('gender', 'gender', formData.gender!, handleChange, [
+          <FormSelect
+            label="Gender"
+            name="gender"
+            value={formData.gender}
+            onChange={handleChange}
+            options={[
               { label: 'Male', value: 'Male' },
               { label: 'Female', value: 'Female' },
               { label: 'Other', value: 'Other' },
-            ])}
+            ]}
+          />
+
+          <FormInput
+            label="Birth Date"
+            name="birth_date"
+            type="date"
+            value={formatDateForInput(formData.birth_date)}
+            onChange={handleChange}
+            required
+          />
+          <FormInput label="Birth Place" name="birth_place" value={formData.birth_place} onChange={handleChange} />
+
+          <div className="flex items-center h-full pt-4 md:col-span-2">
+            <input
+              type="checkbox"
+              id="is_alive"
+              checked={formData.is_alive ?? true}
+              onChange={handleIsAliveChange}
+              className="w-6 h-6 text-accent-primary border-gray-300 rounded focus:ring-accent-primary"
+            />
+            <label htmlFor="is_alive" className="ml-2 text-xl font-bold text-text-secondary cursor-pointer">
+              Is Alive?
+            </label>
           </div>
 
-          {/* Birth Date */}
-          <div>
-            <Label htmlFor="birth_date" labelText="Birth Date" className="block text-lg font-bold text-text-secondary" />
-            {formDateInput('birth_date', 'birth_date', formatDateForInput(formData.birth_date!), handleChange, true)}
-          </div>
+          {!formData.is_alive && (
+            <FormInput label="Death Date" name="death_date" type="date" value={formatDateForInput(formData.death_date)} onChange={handleChange} />
+          )}
+          {!formData.is_alive && <FormInput label="Death Place" name="death_place" value={formData.death_place} onChange={handleChange} />}
 
-          {/* Death Date */}
-          <div>
-            <Label htmlFor="death_date" labelText="Death Date" className="block text-lg font-bold text-text-secondary" />
-            {formDateInput('death_date', 'death_date', formatDateForInput(formData.death_date!), handleChange, false)}
-          </div>
+          <FormInput label="Profession" name="profession" value={formData.profession} onChange={handleChange} />
+          <FormInput label="Religion" name="religion" value={formData.religion} onChange={handleChange} />
 
-          {/* Birth Place */}
-          <div>
-            <Label htmlFor="birth_place" labelText="Birth Place" className="block text-lg font-bold text-text-secondary" />
-            {formTextInput('birth_place', 'birth_place', formData.birth_place!, handleChange, false)}
-          </div>
-
-          {/* Death Place */}
-          <div>
-            <Label htmlFor="death_place" labelText="Death Place" className="block text-lg font-bold text-text-secondary" />
-            {formTextInput('death_place', 'death_place', formData.death_place!, handleChange, false)}
-          </div>
-
-          {/* Profession */}
-          <div>
-            <Label htmlFor="profession" labelText="Profession" className="block text-lg font-bold text-text-secondary" />
-            {formTextInput('profession', 'profession', formData.profession!, handleChange, false)}
-          </div>
-
-          {/* Religion */}
-          <div>
-            <Label htmlFor="religion" labelText="Religion" className="block text-lg font-bold text-text-secondary" />
-            {formTextInput('religion', 'religion', formData.religion!, handleChange, false)}
-          </div>
-
-          {/* Notes */}
-          <div className="md:col-span-2">
-            <Label htmlFor="notes" labelText="Notes" className="block text-lg font-bold text-text-secondary" />
-            {formTextAreaInput('notes', 'notes', formData.notes!, 3, handleChange)}
-          </div>
+          <FormTextArea label="Notes" name="notes" value={formData.notes} onChange={handleChange} rows={3} className="md:col-span-2" />
         </div>
 
         {/* Error Message */}

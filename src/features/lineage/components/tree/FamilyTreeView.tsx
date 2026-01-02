@@ -1,25 +1,24 @@
 import { FamilyGroup } from '..';
-import type { TreeNode } from '../../../../shared/datamodels/SupabaseDataModel';
+import type { FamilyTreeDataType } from '../../hooks';
 import type { PersonCardActionType } from '../../types';
 
 interface FamilyTreeViewProps {
-  rootNode: TreeNode | null;
+  familyTreeData: FamilyTreeDataType
   personCardActions: PersonCardActionType;
-  closeAddContextMenu: () => void;
 }
 
-function FamilyTreeView({ rootNode, personCardActions, closeAddContextMenu }: FamilyTreeViewProps) {
+function FamilyTreeView({ familyTreeData, personCardActions }: FamilyTreeViewProps) {
   return (
-    rootNode && (
+    familyTreeData.hierarchy?.data && (
       <div
         className="flex py-xl overflow-auto w-full h-full"
         onClick={() => {
           personCardActions.handlers.onSelect('');
-          closeAddContextMenu();
+          personCardActions.ui.contextMenu.close();
         }}
       >
         <div className="min-w-fit m-auto">
-          <FamilyGroup member={rootNode} personCardActions={personCardActions} />
+          <FamilyGroup hierarchyData={familyTreeData.hierarchy} personCardActions={personCardActions} />
         </div>
       </div>
     )

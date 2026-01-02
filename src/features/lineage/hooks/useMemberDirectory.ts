@@ -1,7 +1,7 @@
 import { useState, useMemo, useCallback, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { transformToD3Tree } from '../utils/transformToD3Tree';
-import type { Member, MemberNode, TreeNode } from '../../../shared/datamodels/SupabaseDataModel';
+// import { transformToD3Tree } from '../utils/transformToD3Tree';
+import type { Member, TreeNode } from '../../../shared/datamodels/SupabaseDataModel';
 import type { FamilyTreeDataType } from './useFamilyTreeData';
 import { MemberService } from '../services';
 
@@ -10,14 +10,15 @@ export const useMemberDirectory = (familyTreeData: FamilyTreeDataType) => {
   const navigate = useNavigate();
   const selectedMemberId = memberId || null;
   const [selectedMember, setSelectedMember] = useState<Member | null>(null);
-  const { transformedTree, familyData } = familyTreeData;
+  const { familyData } = familyTreeData;
+
 
   // 1. Transform Data
   // Memoize this to prevent D3 from recalculating the hierarchy on every render
-  const hierarchy: d3.HierarchyNode<TreeNode> | null = useMemo(() => {
-    if (!transformedTree?.rootNode) return null;
-    return transformToD3Tree(transformedTree.rootNode);
-  }, [transformedTree]);
+  // const hierarchy: d3.HierarchyNode<TreeNode> | null = useMemo(() => {
+  //   if (!transformedTree?.rootNode) return null;
+  //   return transformToD3Tree(transformedTree.rootNode);
+  // }, [transformedTree]);
 
   const allMembers = useMemo(() => {
     if (!familyData?.members) return [];
@@ -25,7 +26,7 @@ export const useMemberDirectory = (familyTreeData: FamilyTreeDataType) => {
       ...member,
       id: member.member_id,
       name: [member.first_name, member.middle_name, member.last_name].filter(Boolean).join(' '),
-    })) as unknown as MemberNode[];
+    })) as unknown as TreeNode[];
   }, [familyData]);
 
   // 2. Derive Selected Member from the full list of members
@@ -51,7 +52,6 @@ export const useMemberDirectory = (familyTreeData: FamilyTreeDataType) => {
   }, [navigate]);
 
   return {
-    hierarchy, // The D3 hierarchy for tree-like visualizations
     allMembers, // A flat array of all members (linked + unlinked)
     selectedMember,
     setSelectedMember,

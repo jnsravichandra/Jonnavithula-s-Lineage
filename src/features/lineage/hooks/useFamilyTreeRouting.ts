@@ -3,12 +3,14 @@ import { useNavigate, useParams } from 'react-router-dom';
 
 const TAB_SLUGS: Record<string, string> = {
   tree: 'Family Tree',
+  d3tree: 'Family Tree D3',
   directory: 'Member Directory',
   unlinked: 'Unlinked Members',
 };
 
 const SLUG_TABS: Record<string, string> = {
   'Family Tree': 'tree',
+  'Family Tree D3': 'd3tree',
   'Member Directory': 'directory',
   'Unlinked Members': 'unlinked',
 };

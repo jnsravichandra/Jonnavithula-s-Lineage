@@ -1,16 +1,16 @@
 import { ModalDialog } from '../../../../shared/components/ui';
 import type { Member } from '../../../../shared/datamodels';
 import type { PersonCardActionType } from '../../types';
-import type { TransformedTreeType } from '../../utils/transformToTree';
 import { LinkMemberForm, MemberForm } from '..';
+import type { FamilyTreeDataType } from '../../hooks';
 
 export interface MemberActionModalProps {
   refreshFamilyData?: () => void;
-  transformedTree: TransformedTreeType;
+  familyTreeData: FamilyTreeDataType;
   personCardActions: PersonCardActionType;
 }
 
-function MemberActionModal({ personCardActions, transformedTree }: MemberActionModalProps) {
+function MemberActionModal({ personCardActions, familyTreeData }: MemberActionModalProps) {
   const getMemberName = (member: Member) => {
     if (!member) return '';
     return `${member.first_name} ${member.middle_name ? member.middle_name + ' ' : ''}${member.last_name}`;
@@ -36,7 +36,7 @@ function MemberActionModal({ personCardActions, transformedTree }: MemberActionM
     <>
       <ModalDialog open={personCardActions.ui.modal.isOpen} onClose={personCardActions.ui.modal.close} title={getModalTitle()}>
         {personCardActions.ui.modal.mode?.operationType === 'update-link' ? (
-          <LinkMemberForm personCardActions={personCardActions} transformedTree={transformedTree} />
+          <LinkMemberForm personCardActions={personCardActions} familyTreeData={familyTreeData} />
         ) : (
           <MemberForm
             member={personCardActions.data.member!}

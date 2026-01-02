@@ -1,23 +1,53 @@
 import toast from 'react-hot-toast';
-import { useState, useMemo, useRef, useEffect } from 'react';
-import Label from '../../../../shared/components/ui/Label';
-import type { TreeNode } from '../../../../shared/datamodels';
+import { useState, useRef, useEffect } from 'react';
+import Label from '../../../../shared/components/ui/shared/Label';
+import type { Member } from '../../../../shared/datamodels';
 import { MemberRelationsManagementService } from '../../services';
 import type { PersonCardActionType } from '../../types';
-import type { TransformedTreeType } from '../../utils/transformToTree';
+import type { FamilyTreeDataType } from '../../hooks';
+import FormInput from '../../../../shared/components/ui/shared/FormInput';
+import FormSelect from '../../../../shared/components/ui/shared/FormSelect';
+import FormTextArea from '../../../../shared/components/ui/shared/FormTextArea';
 
 interface LinkMemberFormProps {
-  transformedTree?: TransformedTreeType;
+  familyTreeData: FamilyTreeDataType;
   personCardActions: PersonCardActionType;
 }
 
-function LinkMemberForm({ transformedTree, personCardActions }: LinkMemberFormProps) {
+function LinkMemberForm({ familyTreeData, personCardActions }: LinkMemberFormProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedTarget, setSelectedTarget] = useState<TreeNode | null>(null);
+  const [selectedTarget, setSelectedTarget] = useState<Member>({} as Member);
   const [relationship, setRelationship] = useState<'parent' | 'spouse' | 'child'>('parent');
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [sourceMember, setSourceMember] = useState<Member | null>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
+
+  const [linkageDetails, setLinkageDetails] = useState({
+    relationship_type: 'Biological',
+    date_established: '',
+    date_terminated: '',
+    notes: '',
+    relationship_status: '', // Initialize relationship_status
+  });
+
+  const [spouseDetails, setSpouseDetails] = useState({
+    relationship_status: '',
+    start_date: '',
+    end_date: '',
+    location: '',
+    notes: '',
+  });
+
+  const handleLinkageChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setLinkageDetails((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSpouseDetailsChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setSpouseDetails((prev) => ({ ...prev, [name]: value }));
+  };
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -25,30 +55,23 @@ function LinkMemberForm({ transformedTree, personCardActions }: LinkMemberFormPr
         setIsDropdownOpen(false);
       }
     };
+    setSourceMember(personCardActions.data.member!);
 
     document.addEventListener('mousedown', handleClickOutside);
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, []);
+  }, [personCardActions.data.member]);
 
-  const filteredMembers = useMemo(() => {
-    const linkedMembers = transformedTree?.linkedNodes || [];
-    if (!searchTerm) return linkedMembers;
-    const lowerTerm = searchTerm.toLowerCase();
-    return linkedMembers.filter((m) => {
-      const fullName = [m.first_name, m.middle_name, m.last_name].filter(Boolean).join(' ').toLowerCase();
-      return fullName.includes(lowerTerm);
-    });
-  }, [transformedTree, searchTerm]);
+  const linkedMembers: Member[] | undefined = familyTreeData.familyData?.members.filter((m) => {
+    const isNotUnassociated = !familyTreeData.unassociatedMembers.includes(m);
+    const fullName = [m.first_name, m.middle_name, m.last_name].filter(Boolean).join(' ');
+    return isNotUnassociated && fullName.toLowerCase().includes(searchTerm.toLowerCase());
+  });
 
-  const sourceMember = useMemo(() => {
-    return transformedTree?.allNodes.find((n) => n.member_id === personCardActions.data.focusedMemberId);
-  }, [transformedTree, personCardActions.data.focusedMemberId]);
-
-  const handleSelectMember = (member: TreeNode) => {
+  const handleSelectMember = (member: Member) => {
     setSelectedTarget(member);
-    setSearchTerm([member.first_name, member.middle_name, member.last_name].filter(Boolean).join(' '));
+    setSearchTerm(member.full_name!);
     setIsDropdownOpen(false);
   };
 
@@ -56,31 +79,32 @@ function LinkMemberForm({ transformedTree, personCardActions }: LinkMemberFormPr
     setIsLoading(true);
     let result;
     if (selectedTarget) {
+      const payload = {
+        ...linkageDetails,
+        ...spouseDetails,
+      };
+
       try {
         if (relationship === 'parent') {
-          result = await MemberRelationsManagementService.AddRelationship_Parent(sourceMember!, selectedTarget);
+          result = await MemberRelationsManagementService.AddRelationship_Parent(sourceMember!, selectedTarget, payload);
         } else if (relationship === 'spouse') {
-          result = await MemberRelationsManagementService.AddRelationship_Spouse(sourceMember!, selectedTarget);
+          result = await MemberRelationsManagementService.AddRelationship_Spouse(sourceMember!, selectedTarget, payload);
         } else if (relationship === 'child') {
-          result = await MemberRelationsManagementService.AddRelationship_Child(sourceMember!, selectedTarget);
+          result = await MemberRelationsManagementService.AddRelationship_Child(sourceMember!, selectedTarget, payload);
         }
-        console.log('Result: ',result);
-        const message = `${[sourceMember?.first_name, sourceMember?.last_name].filter(Boolean).join(' ')} will be linked as the ${relationship} of ${[
-          selectedTarget?.first_name,
-          selectedTarget?.last_name,
-        ]
-          .filter(Boolean)
-          .join(' ')}`;
 
+        const message = `${sourceMember?.full_name} will be linked as the ${relationship} of ${selectedTarget.full_name}`;
+        console.log('result: ', result);
         toast.success(message);
+        await personCardActions.handlers.onSuccess!();
       } catch (e) {
         console.error('Error updating relationship:', e as Error);
+        toast.error('Failed to update relationship.');
       }
     } else {
       console.error('No target selected.');
     }
     setIsLoading(false);
-    await personCardActions.handlers.onSuccess!();
   };
 
   return (
@@ -96,22 +120,23 @@ function LinkMemberForm({ transformedTree, personCardActions }: LinkMemberFormPr
           onChange={(e) => {
             setSearchTerm(e.target.value);
             setIsDropdownOpen(true);
-            if (selectedTarget) setSelectedTarget(null);
+            if (selectedTarget) setSelectedTarget(selectedTarget);
           }}
           onFocus={() => setIsDropdownOpen(true)}
         />
-        {isDropdownOpen && filteredMembers.length > 0 && (
+        {isDropdownOpen && linkedMembers && linkedMembers.length > 0 && (
           <ul className="absolute z-10 w-full mt-sm max-h-60 overflow-auto bg-background-secondary border border-text-primary rounded shadow-lg">
-            {filteredMembers.map((member) => (
-              <li
-                key={member.member_id}
-                className="p-sm text-xl hover:bg-background-primary cursor-pointer text-text-primary border-b border-text-primary last:border-0"
-                onClick={() => handleSelectMember(member)}
-              >
-                {[member.first_name, member.middle_name, member.last_name].filter(Boolean).join(' ')}
-                <span className="text-sm text-text-secondary ml-2">({new Date(member.birth_date).getFullYear()})</span>
-              </li>
-            ))}
+            {linkedMembers &&
+              linkedMembers.map((member) => (
+                <li
+                  key={member.member_id}
+                  className="p-sm text-xl hover:bg-background-primary cursor-pointer text-text-primary border-b border-text-primary last:border-0"
+                  onClick={() => handleSelectMember(member)}
+                >
+                  {[member.first_name, member.middle_name, member.last_name].filter(Boolean).join(' ')}
+                  <span className="text-sm text-text-secondary ml-2">({new Date(member.birth_date).getFullYear()})</span>
+                </li>
+              ))}
           </ul>
         )}
       </div>
@@ -140,15 +165,82 @@ function LinkMemberForm({ transformedTree, personCardActions }: LinkMemberFormPr
       {selectedTarget && sourceMember && (
         <div className="p-sm bg-background-secondary border border-accent-primary rounded-md text-center">
           <p className="text-text-primary">
-            <span className="font-bold">{[sourceMember.first_name, sourceMember.last_name].filter(Boolean).join(' ')}</span>
+            <span className="font-bold">{sourceMember.full_name}</span>
             {' will be linked as the '}
             <span className="font-bold text-accent-primary uppercase">{relationship}</span>
             {' of '}
-            <span className="font-bold">{[selectedTarget.first_name, selectedTarget.last_name].filter(Boolean).join(' ')}</span>
+            <span className="font-bold">{selectedTarget.full_name}</span>
           </p>
         </div>
       )}
 
+      {/* Additional Info */}
+      {(relationship === 'parent' || relationship === 'child') && (
+        <div>
+          <h4 className="text-lg font-bold text-text-primary mb-2 capitalize">Additional Info for {relationship}</h4>
+          <FormSelect
+            label="Relationship Type"
+            name="relationship_type"
+            value={linkageDetails.relationship_type}
+            onChange={handleLinkageChange}
+            options={[
+              { label: 'Biological', value: 'Biological' },
+              { label: 'Adopted', value: 'Adopted' },
+              // { label: 'Step', value: 'Step' },
+              { label: 'Foster', value: 'Foster' },
+            ]}
+          />
+          <FormInput
+            label="Date Established"
+            name="date_established"
+            type="date"
+            value={linkageDetails.date_established}
+            onChange={handleLinkageChange}
+          />
+          <FormInput
+            label="Date Terminated"
+            name="date_terminated"
+            type="date"
+            value={linkageDetails.date_terminated}
+            onChange={handleLinkageChange}
+          />
+          <FormTextArea label="Notes" name="notes" value={linkageDetails.notes} onChange={handleLinkageChange} rows={3} />
+        </div>
+      )}
+      {relationship.toLowerCase() === 'spouse' && (
+        <div>
+          <h4 className="text-lg font-bold text-text-primary mb-2 capitalize">Additonal info for Spouse</h4>
+          <FormSelect
+            label="Relationship Status"
+            name="relationship_status"
+            value={spouseDetails.relationship_status || ''} // Ensure value is a string
+            onChange={handleSpouseDetailsChange}
+            options={[
+              { label: 'Married', value: 'Married' },
+              { label: 'Divorced', value: 'Divorced' },
+              { label: 'Separated', value: 'Separated' },
+              { label: 'Engaged', value: 'Engaged' },
+              { label: 'Partnered', value: 'Partnered' },
+            ]}
+          />
+          <FormInput
+            label="Start Date"
+            name="start_date"
+            type="date"
+            value={spouseDetails.start_date} // Reusing date_established for start_date
+            onChange={handleSpouseDetailsChange}
+          />
+          <FormInput
+            label="End Date"
+            name="end_date"
+            type="date"
+            value={spouseDetails.end_date} // Reusing date_terminated for end_date
+            onChange={handleSpouseDetailsChange}
+          />
+          <FormInput label="Location" name="location" value={spouseDetails.location} onChange={handleSpouseDetailsChange} />
+          <FormTextArea label="Notes" name="notes" value={spouseDetails.notes} onChange={handleSpouseDetailsChange} rows={3} />
+        </div>
+      )}
       {/* --- Form Actions (Footer) --- */}
       <div className="flex justify-end gap-4 pt-4 border-t border-gray-200">
         <button

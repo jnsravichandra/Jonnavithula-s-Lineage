@@ -4,8 +4,7 @@ export interface AddMemberProps {
   onAdd: (memberId?: string, event?: React.MouseEvent) => void;
 }
 
-function AddMember({ onAdd }: AddMemberProps) {
- 
+function AddMemberButton({ onAdd }: AddMemberProps) {
   return (
     <>
       <div>
@@ -23,4 +22,4 @@ function AddMember({ onAdd }: AddMemberProps) {
   );
 }
 
-export default AddMember;
+export default AddMemberButton;

@@ -3,19 +3,20 @@ import type { TreeNode } from '../../../../shared/datamodels';
 import type { PersonCardActionType } from '../../types';
 import ParentNodeGroup from './ParentNodeGroup';
 import { TreeConnectors } from '..';
+import type { HierarchyNode } from 'd3-hierarchy';
 
 interface FamilyGroupProps {
-  member: TreeNode;
+  hierarchyData: HierarchyNode<TreeNode>;
   personCardActions: PersonCardActionType;
   initialExpanded?: boolean;
 }
 
-function FamilyGroup({ member, personCardActions, initialExpanded = false }: FamilyGroupProps) {
+function FamilyGroup({ hierarchyData, personCardActions, initialExpanded = false }: FamilyGroupProps) {
   const [isExpanded, setIsExpanded] = useState(initialExpanded);
   const [isOverflowVisible, setIsOverflowVisible] = useState(initialExpanded);
   const [resetKey, setResetKey] = useState(0);
   const [childExpanded, setChildExpanded] = useState(initialExpanded);
-  const hasChildren = member.children && member.children.length > 0;
+  const hasChildren = hierarchyData.children && hierarchyData?.children && hierarchyData?.children.length > 0;
 
   useEffect(() => {
     let timer: ReturnType<typeof setTimeout>;
@@ -43,9 +44,9 @@ function FamilyGroup({ member, personCardActions, initialExpanded = false }: Fam
     <div className="flex flex-col items-center w-full">
       {/* 1. Parent Node */}
       <ParentNodeGroup
-        member={member}
+        member = {hierarchyData.data}
         isExpanded={isExpanded}
-        hasChildren={hasChildren}
+        hasChildren={hasChildren ? true : false}
         onToggleExpand={onToggleExpand}
         personCardActions={personCardActions}
       />
@@ -69,12 +70,12 @@ function FamilyGroup({ member, personCardActions, initialExpanded = false }: Fam
               <div className="flex justify-center relative gap-x-4">
                 <TreeConnectors type="sibling-connector" /> 
                 
-                {member.children.map((child: TreeNode) => (
-                  <div key={child.member_id} className="pt-4 relative shrink-0">
+                {hierarchyData?.children && hierarchyData.children.map((child: HierarchyNode<TreeNode>) => (
+                  <div key={child.data.member_id} className="pt-4 relative shrink-0">
                     <TreeConnectors type="child-vertical" />
                     <FamilyGroup
-                      key={`${child.member_id}-${resetKey}`}
-                      member={child}
+                      key={`${child.data.member_id}-${resetKey}`}
+                      hierarchyData={child}
                       personCardActions={personCardActions}
                       initialExpanded={childExpanded}
                     />

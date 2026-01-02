@@ -1,10 +1,13 @@
-import type { Member } from "../../../shared/datamodels";
-import { MemberAPI } from "../api/members_api";
-
+import type { Member } from '../../../shared/datamodels';
+import { MemberAPI } from '../api/members_api';
 
 const getAllMembers = async (): Promise<Member[]> => {
   try {
     const members = await MemberAPI.getAllMembers();
+    members.forEach((member) => {
+      member.full_name = [member.first_name, member.middle_name, member.last_name].filter(Boolean).join(' ').trim();
+    });
+    // console.log('Members:', members);
     return members;
   } catch (error) {
     console.log(error);
@@ -15,6 +18,11 @@ const getAllMembers = async (): Promise<Member[]> => {
 const getMemberById = async (id: string): Promise<Member> => {
   try {
     const member = await MemberAPI.getMemberById(id);
+    if (member) {
+      if (member.full_name === null || member.full_name === undefined) {
+        member.full_name = [member.first_name, member.middle_name, member.last_name].filter(Boolean).join(' ').trim();
+      }
+    }
     return member;
   } catch (error) {
     console.log(error);

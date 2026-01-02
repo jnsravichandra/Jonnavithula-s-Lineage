@@ -1,15 +1,14 @@
-import { EmptySelectionState } from "..";
-import type { FamilyTreeDataType } from "../../hooks";
-import { useMemberDirectory } from "../../hooks/useMemberDirectory";
-import MemberDashboard from "../dashboard/MemberDashboard";
-import MemberTreeContainer from "./MemberTreeContainer";
+import { EmptySelectionState } from '..';
+import type { FamilyTreeDataType } from '../../hooks';
+import MemberDashboard from '../dashboard/MemberDashboard';
+import MemberTreeContainer from './MemberTreeContainer';
 
 interface MemberDirectoryProps {
   familyTreeData: FamilyTreeDataType;
 }
 
 function MemberDirectory({ familyTreeData }: MemberDirectoryProps) {
-  const { hierarchy, selectedMember, setSelectedMember, handleMemberClick } = useMemberDirectory(familyTreeData);
+  const { hierarchy, selectedMember, handleMemberClick, setSelectedMember } = familyTreeData;
 
   return (
     <div className="p-md flex gap-md">
@@ -18,7 +17,7 @@ function MemberDirectory({ familyTreeData }: MemberDirectoryProps) {
       </div>
 
       <div className="w-2/3">
-        {selectedMember ? <MemberDashboard member={selectedMember} setSelectedMember = {setSelectedMember} /> : <EmptySelectionState />}
+        {selectedMember ? <MemberDashboard member={selectedMember} setSelectedMember={setSelectedMember} /> : <EmptySelectionState />}
       </div>
     </div>
   );
