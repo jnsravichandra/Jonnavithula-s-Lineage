@@ -1,4 +1,15 @@
-import { EllipsisVerticalIcon, ShareIcon, PencilSquareIcon, UserPlusIcon, LinkIcon, ChevronRightIcon, HeartIcon, UserIcon, FaceSmileIcon } from '@heroicons/react/24/solid';
+import {
+  EllipsisVerticalIcon,
+  ShareIcon,
+  PencilSquareIcon,
+  UserPlusIcon,
+  LinkIcon,
+  ChevronRightIcon,
+  HeartIcon,
+  UserIcon,
+  FaceSmileIcon,
+  TrashIcon,
+} from '@heroicons/react/24/solid';
 import { useState, useRef, useEffect } from 'react';
 import type { Member } from '../../../../shared/datamodels';
 import { useAuth } from '../../../../shared/hooks/useAuth';
@@ -12,9 +23,19 @@ interface MemberQuickActionsProps {
   onAddSpouse?: (memberId: string) => void;
   onAddChild?: (memberId: string) => void;
   onLink?: (memberId: string) => void;
+  onDelete?: (member: Member) => void;
 }
 
-export default function MemberQuickActions({ member, onEdit, onAddParent, onAddSpouse, onAddChild, onShare, onLink }: MemberQuickActionsProps) {
+export default function MemberQuickActions({
+  member,
+  onEdit,
+  onAddParent,
+  onAddSpouse,
+  onAddChild,
+  onShare,
+  onLink,
+  onDelete,
+}: MemberQuickActionsProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isAddMenuOpen, setIsAddMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -23,6 +44,12 @@ export default function MemberQuickActions({ member, onEdit, onAddParent, onAddS
 
   const handleAction = (action?: (memberId: string) => void) => {
     if (action) action(member.member_id!);
+    setIsMenuOpen(false);
+    setIsAddMenuOpen(false);
+  };
+
+  const handleAction1 = (action?: (member: Member) => void) => {
+    if (action) action(member);
     setIsMenuOpen(false);
     setIsAddMenuOpen(false);
   };
@@ -103,6 +130,15 @@ export default function MemberQuickActions({ member, onEdit, onAddParent, onAddS
                     </div>
                   )}
                 </div>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleAction1(onDelete);
+                  }}
+                  className="w-full text-left px-4 py-2 text-sm text-text-primary hover:bg-background-secondary flex items-center gap-3"
+                >
+                  <TrashIcon className="h-4 w-4" /> Delete Member
+                </button>
               </div>
             )}
           </div>

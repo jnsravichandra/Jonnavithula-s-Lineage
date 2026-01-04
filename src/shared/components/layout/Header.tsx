@@ -116,8 +116,8 @@ function Header() {
 
   return (
     <>
-      <header className=" bg-background-secondary p-sm shadow-md ">
-        <div className="mx-auto flex justify-between items-center h-[60px] p-sm">
+      <header className=" bg-background-secondary shadow-md ">
+        <div className="mx-auto flex justify-between items-center h-[60px] px-md">
           {headerLogo()}
           <div className="flex justify-end items-center gap-4 p-sm">
             <div className="hidden sm:flex">

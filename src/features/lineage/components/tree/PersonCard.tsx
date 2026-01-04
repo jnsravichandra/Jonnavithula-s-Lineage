@@ -53,6 +53,7 @@ export const PersonCard = ({ person, personCardActions, variant = 'default' }: P
                 onAddSpouse={() => personCardActions.handlers.onAdd1('Spouse', memberId)}
                 onAddChild={() => personCardActions.handlers.onAdd1('Child', memberId)}
                 onAddParent={() => personCardActions.handlers.onAdd1('Parent', memberId)}
+                onDelete={() => personCardActions.handlers.onDelete(person.member!)}
               />
               {/* 
               // Edit Member Details Button

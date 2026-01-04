@@ -36,9 +36,11 @@ const MemberTree = ({ node, expandedNodes, toggleExpand, selectedMember, handleM
         <div className="flex flex-col items-start gap-2 p-2 rounded-md border-b border-dashed border-text-secondary">
           <div
             onClick={() => handleMemberClick(memberId)}
-            className={`cursor-pointer px-sm py-sm rounded hover:bg-accent-primary hover:text-background-primary transition-colors duration-300 ${
+            className={`cursor-pointer px-sm py-sm rounded hover:bg-accent-primary hover:text-background-primary transition-colors duration-300 border ${
               selectedMember?.member_id === member.member_id ? 'bg-accent-primary text-background-primary font-bold hover:text-text-primary' : 'bg-background-secondary text-text-primary'
-            }`}
+            } 
+            ${member.member?.gender === 'Male' ? 'border-blue-500' : member.member?.gender === 'Female' ? 'border-pink-500' : 'border-text-primary'}
+            `}
           >
             {fullName === 'Root' ? "Jonnavithula's" : <p>{fullName}</p>}
           </div>
@@ -50,11 +52,13 @@ const MemberTree = ({ node, expandedNodes, toggleExpand, selectedMember, handleM
                   <div
                     key={spouse.member_id + spouse.full_name}
                     onClick={() => handleMemberClick(spouse.member_id)}
-                    className={`cursor-pointer px-sm py-sm rounded hover:bg-accent-primary hover:text-background-primary transition-colors duration-300 ${
+                    className={`cursor-pointer px-sm py-sm rounded hover:bg-accent-primary hover:text-background-primary transition-colors duration-300 border ${
                       selectedMember?.member_id === spouse.member_id
                         ? 'bg-accent-primary text-background-primary font-bold hover:text-text-primary'
                         : 'bg-background-secondary text-text-primary'
-                    }`}
+                    }
+                    ${spouse.member?.gender === 'Male' ? 'border-blue-500' : spouse.member?.gender === 'Female' ? 'border-pink-500' : 'border-text-primary'}
+                    `}
                   >
                     {spouse.full_name}
                   </div>

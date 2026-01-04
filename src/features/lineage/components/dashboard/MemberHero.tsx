@@ -11,19 +11,24 @@ interface MemberHeroProps {
   onAddSpouse?: (memberId: string) => void;
   onAddChild?: (memberId: string) => void;
   onLink?: (memberId: string) => void;
+  onDelete?: (member: Member) => void;
 }
 
-export function MemberHero({ member, setSelectedMember, onEdit, onShare, onAddParent, onAddSpouse, onAddChild, onLink}: MemberHeroProps) {
-    
-  
+export function MemberHero({ member, setSelectedMember, onEdit, onShare, onAddParent, onAddSpouse, onAddChild, onLink, onDelete }: MemberHeroProps) {
   return (
     <div className="relative bg-gradient-to-r from-accent-primary via-highlight to-accent-primary p-6 flex items-center gap-6 border-b border-text-primary">
       <div className="absolute top-4 right-4 flex items-center gap-2">
-        <MemberQuickActions member={member} onEdit={onEdit} onShare={onShare} onAddParent={onAddParent} onAddSpouse={onAddSpouse} onAddChild={onAddChild} onLink={onLink}/>
-        <button
-          onClick={() => setSelectedMember(null)}
-          className="p-2 hover:bg-accent-secondary rounded-full transition-colors"
-        >
+        <MemberQuickActions
+          member={member}
+          onEdit={onEdit}
+          onShare={onShare}
+          onAddParent={onAddParent}
+          onAddSpouse={onAddSpouse}
+          onAddChild={onAddChild}
+          onLink={onLink}
+          onDelete={onDelete}
+        />
+        <button onClick={() => setSelectedMember(null)} className="p-2 hover:bg-accent-secondary rounded-full transition-colors">
           <XMarkIcon className="text-background-primary h-6 w-6" />
         </button>
       </div>
