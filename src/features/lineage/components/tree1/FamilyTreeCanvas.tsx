@@ -56,12 +56,20 @@ export default function FamilyTreeCanvas({ rootData, onSelect, width: initialWid
     });
   }, []);
 
-  // zoom with wheel
-  const handleWheel: React.WheelEventHandler<HTMLDivElement> = (e) => {
-    // e.preventDefault();
-    const delta = e.deltaY * 0.001;
-    setZoom((prevZoom) => Math.max(0.3, Math.min(2.5, prevZoom + delta)));
-  };
+  // zoom with wheel (non-passive listener to prevent default page scroll)
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const onWheel = (e: WheelEvent) => {
+      e.preventDefault();
+      const delta = e.deltaY * 0.001;
+      setZoom((prevZoom) => Math.max(0.3, Math.min(2.5, prevZoom + delta)));
+    };
+
+    container.addEventListener('wheel', onWheel, { passive: false });
+    return () => container.removeEventListener('wheel', onWheel);
+  }, []);
 
   //pan with drag
   const handleMouseDown: React.MouseEventHandler<HTMLDivElement> = (e) => {
@@ -84,20 +92,19 @@ export default function FamilyTreeCanvas({ rootData, onSelect, width: initialWid
   };
 
   const cardWidth = 160;
-  const cardHeight = 60;
+  const cardHeight = 80;
 
   return (
     <>
       <div
         ref={containerRef}
-        className="w-full h-full overflow-hidden bg-background-secondary"
-        onWheel={handleWheel}
+        className="w-full h-full overflow-hidden bg-background-secondary cursor-move"
         onMouseDown={handleMouseDown}
         onMouseUp={handleMouseUp}
         onMouseLeave={handleMouseLeave}
         onMouseMove={handleMouseMove}
       >
-        <svg width="100%" height="100%" viewBox={`${-width / 2 - pan.x} ${-height / 2 - pan.y} ${width / zoom} ${height / zoom}`}>
+        <svg width="100%" height="100%" viewBox={`${-width / 2 - pan.x} ${-height / 2 - pan.y} ${width / zoom} ${height / zoom }`}>
           <g>
             {/* links */}
             {links.map((link, i) => (

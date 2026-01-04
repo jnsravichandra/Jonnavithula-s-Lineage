@@ -1,4 +1,4 @@
-import { BriefcaseIcon, CalendarIcon } from '@heroicons/react/24/solid';
+import { BriefcaseIcon, CalendarIcon, MapPinIcon, HomeIcon, BookOpenIcon } from '@heroicons/react/24/solid';
 import type { Member } from '../../../../shared/datamodels';
 
 interface PersonalInfoViewProps {
@@ -30,11 +30,47 @@ export function PersonalInfoView({ member }: PersonalInfoViewProps) {
           </div>
         </div>
 
+        {!member.is_alive && (
+          <div className="space-y-1">
+            <label className="text-xs font-semibold text-text-secondary uppercase tracking-wider">Death Date</label>
+            <div className="flex items-center text-text-primary">
+              <CalendarIcon className="w-4 h-4 mr-2 text-text-secondary" />
+              {formatDate(member.death_date?.toString())}
+            </div>
+          </div>
+        )}
+
         <div className="space-y-1">
-          <label className="text-xs font-semibold text-text-secondary uppercase tracking-wider">Death Date</label>
+          <label className="text-xs font-semibold text-text-secondary uppercase tracking-wider">Birth Place</label>
           <div className="flex items-center text-text-primary">
-            <CalendarIcon className="w-4 h-4 mr-2 text-text-secondary" />
-            {member.is_alive ? 'Living' : formatDate(member.death_date?.toString())}
+            <MapPinIcon className="w-4 h-4 mr-2 text-text-secondary" />
+            {member.birth_place || 'Unknown'}
+          </div>
+        </div>
+
+        {!member.is_alive && (
+          <div className="space-y-1">
+            <label className="text-xs font-semibold text-text-secondary uppercase tracking-wider">Death Place</label>
+            <div className="flex items-center text-text-primary">
+              <MapPinIcon className="w-4 h-4 mr-2 text-text-secondary" />
+              {member.death_place || 'Unknown'}
+            </div>
+          </div>
+        )}
+
+        <div className="space-y-1">
+          <label className="text-xs font-semibold text-text-secondary uppercase tracking-wider">Current Location</label>
+          <div className="flex items-center text-text-primary">
+            <HomeIcon className="w-4 h-4 mr-2 text-text-secondary" />
+            {member.current_location || 'Unknown'}
+          </div>
+        </div>
+
+        <div className="space-y-1">
+          <label className="text-xs font-semibold text-text-secondary uppercase tracking-wider">Religion</label>
+          <div className="flex items-center text-text-primary">
+            <BookOpenIcon className="w-4 h-4 mr-2 text-text-secondary" />
+            {member.religion || 'Not specified'}
           </div>
         </div>
       </div>
@@ -43,7 +79,7 @@ export function PersonalInfoView({ member }: PersonalInfoViewProps) {
       <div className="pt-4 border-t border-gray-100">
         <label className="text-xs font-semibold text-text-secondary uppercase tracking-wider mb-2 block">Biography / Notes</label>
         <p className="text-text-secondary text-sm leading-relaxed whitespace-pre-wrap">
-          No additional notes available for this member.
+          {member.notes || 'No additional notes available for this member.'}
         </p>
       </div>
     </div>

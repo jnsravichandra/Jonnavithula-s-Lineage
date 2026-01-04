@@ -4,30 +4,29 @@ import { MemberService } from './MemberService';
 import { SpouseService } from './SpouseService';
 
 const AddSiblingMember = async (newMember: Member, contextMember: Member) => {
-
   const insertedNewMember = await MemberService.insertMember(newMember);
 
-  console.log('inserted newMember: ', insertedNewMember);
+  // console.log('inserted newMember: ', insertedNewMember);
 
   const contextMemberParents = await DescendantLinkageService.getParentsByMemberId(contextMember.member_id!);
 
-  console.log('context Member Parents', contextMemberParents);
+  // console.log('context Member Parents', contextMemberParents);
 
   if (contextMemberParents?.parent_a_id && contextMemberParents?.parent_b_id) {
-      const newDescendantEntry: DescendantLinkage = {
-        child_id: insertedNewMember.member_id!,
-        parent_a_id: contextMemberParents?.parent_a_id,
-        parent_b_id: contextMemberParents?.parent_b_id,
-        created_at: new Date(),
-        relationship_type: '',
-        date_established: insertedNewMember.birth_date ? new Date(insertedNewMember.birth_date) : new Date(),
-        date_terminated: null,
-        notes: '',
-        parent_child_id: '',
-      };
-      delete newDescendantEntry.parent_child_id;
-      console.log('new descendant entry: ', newDescendantEntry);
-      await DescendantLinkageService.insertDescendantLinkage(newDescendantEntry);
+    const newDescendantEntry: DescendantLinkage = {
+      child_id: insertedNewMember.member_id!,
+      parent_a_id: contextMemberParents?.parent_a_id,
+      parent_b_id: contextMemberParents?.parent_b_id,
+      created_at: new Date(),
+      relationship_type: '',
+      date_established: insertedNewMember.birth_date ? new Date(insertedNewMember.birth_date) : new Date(),
+      date_terminated: null,
+      notes: '',
+      parent_child_id: '',
+    };
+    delete newDescendantEntry.parent_child_id;
+    // console.log('new descendant entry: ', newDescendantEntry);
+    await DescendantLinkageService.insertDescendantLinkage(newDescendantEntry);
   }
 };
 
@@ -84,9 +83,14 @@ const AddSpouseMember = async (newMember: Member, contextMember: Member) => {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const AddRelationship_Parent = async (sourceMember: Member, targetMember: Member, payload: any) => {
   const spouseEntry: Spouse =
-    sourceMember.gender === 'Male' ? await SpouseService.getSpouseForMaleMember(sourceMember.member_id!) : await SpouseService.getSpouseForFemaleMember(sourceMember.member_id!);
+    sourceMember.gender === 'Male'
+      ? await SpouseService.getSpouseForMaleMember(sourceMember.member_id!)
+      : await SpouseService.getSpouseForFemaleMember(sourceMember.member_id!);
+
   const father: Member = await MemberService.getMemberById(spouseEntry.member_a_id);
+
   const mother: Member = await MemberService.getMemberById(spouseEntry.member_b_id);
+
   const child: Member = targetMember;
 
   const newDescendantEntry: DescendantLinkage = {
@@ -128,8 +132,8 @@ const AddRelationship_Spouse = async (sourceMember: Member, targetMember: Member
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const AddRelationship_Child = async (sourceMember: Member, targetMember: Member, payload: any) => {
-  console.log('Source Member: ', sourceMember);
-  console.log('Target Member: ', targetMember);
+  // console.log('Source Member: ', sourceMember);
+  // console.log('Target Member: ', targetMember);
   const result = await AddRelationship_Parent(targetMember, sourceMember, payload);
   return result;
 };

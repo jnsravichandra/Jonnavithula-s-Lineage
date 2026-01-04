@@ -27,11 +27,8 @@ export default function FamilyTreeView1({ familyTreeData }: FamilyTreeViewProps)
     return () => resizeObserver.disconnect();
   }, []);
 
-  console.log(familyTreeData);
-
   return (
-    <div ref={containerRef} className="w-full h-full">
-      <h1>Family Tree View 1</h1>
+    <div ref={containerRef} className="h-[75vh] w-full overflow-hidden">
       {familyTreeData.hierarchy && <FamilyTreeCanvas rootData={familyTreeData.hierarchy?.data} width={width} height={height} />}
     </div>
   );

@@ -59,15 +59,31 @@ export function usePersonCardHandlers({ memberDetails, memberModal, deleteMember
   );
 
   const openAddRelationModal = useCallback(
-    (relationType: 'Spouse' | 'Child' | 'Sibling' | 'Parent') => {
-      if (addContextMenu) {
-        setFocusedMemberId(addContextMenu.memberId);
+    (relationType: 'Spouse' | 'Child' | 'Sibling' | 'Parent', memberId?: string) => {
+      const targetId = memberId || addContextMenu?.memberId;
+      if (targetId) {
+        setFocusedMemberId(targetId);
         openModal({ operationType: 'add-linked', relationType });
-        getMemberDetails('', addContextMenu.memberId);
-        closeAddContextMenu();
+        getMemberDetails('', targetId);
+        if (addContextMenu) closeAddContextMenu();
       }
     },
     [addContextMenu, closeAddContextMenu, getMemberDetails, openModal, setFocusedMemberId]
+  );
+
+  const handleAdd1 = useCallback(
+    (relationType: 'Spouse' | 'Child' | 'Sibling' | 'Parent' | 'Global', memberId: string) => {
+      if (relationType === 'Global') {
+        setFocusedMemberId(null);
+        openModal({ operationType: 'add-global', relationType: null });
+        getMemberDetails('', '');
+      } else {
+        setFocusedMemberId(memberId);
+        openModal({ operationType: 'add-linked', relationType });
+        getMemberDetails('', memberId);
+      }
+    },
+    [getMemberDetails, openModal]
   );
 
   const handleAdd = useCallback(
@@ -92,6 +108,26 @@ export function usePersonCardHandlers({ memberDetails, memberModal, deleteMember
     [getMemberDetails, openModal]
   );
 
+  const handleShare = useCallback(async (memberId: string) => {
+    const url = new URL(window.location.href);
+    // url.searchParams.set('focusedMemberId', memberId);
+    const shareUrl = url.toString();
+
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: 'Family Tree Member',
+          url: shareUrl,
+        });
+      } catch (err) {
+        console.error('Error sharing:', err, memberId);
+      }
+    } else {
+      await navigator.clipboard.writeText(shareUrl);
+      alert('Link copied to clipboard!');
+    }
+  }, []);
+
   const handleClose = useCallback(() => {
     closeModal();
     setFocusedMemberId(null);
@@ -109,11 +145,14 @@ export function usePersonCardHandlers({ memberDetails, memberModal, deleteMember
       onEdit: handleEdit,
       onDelete: deleteMember,
       onAdd: handleAdd,
+      onAdd1: handleAdd1,
       onLink: handleLink,
+      onShare: handleShare,
       onClose: handleClose,
       onSuccess: handleSuccess,
+      onAddRelation: openAddRelationModal,
     }),
-    [handleSelect, handleEdit, deleteMember, handleAdd, handleLink, handleClose, handleSuccess]
+    [handleSelect, handleEdit, deleteMember, handleAdd, handleAdd1, handleLink, handleShare, handleClose, handleSuccess, openAddRelationModal]
   );
 
   const addContextMenuOptions = useMemo(

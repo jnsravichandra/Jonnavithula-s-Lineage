@@ -11,12 +11,12 @@ import FormSelect from '../../../../shared/components/ui/shared/FormSelect';
 import FormTextArea from '../../../../shared/components/ui/shared/FormTextArea';
 import { toTitleCase } from '../../../../shared/utils/utils';
 
-const initialFormState: Partial<Member> = {
+const initialFormState: Member = {
   first_name: '',
   middle_name: '',
   last_name: '',
   gender: 'Male',
-  birth_date: new Date(), // Default to today's date
+  birth_date: null, // Default to today's date
   death_date: null, // Default to null
   birth_place: '',
   profession: '',
@@ -24,6 +24,10 @@ const initialFormState: Partial<Member> = {
   profile_picture_url: '',
   member_id: '',
   is_alive: true,
+  created_at: new Date(),
+  current_location: '',
+  death_place: '',
+  religion: ''
 };
 
 interface MemberFormProps {
@@ -47,7 +51,7 @@ export const MemberForm = ({ member, personCardActions, focussedMemberId, operat
     if ((operationType === 'edit' || operationType === 'add-global') && member) {
       setFormData({
         ...member,
-        birth_date: member.birth_date ? new Date(member.birth_date) : new Date(),
+        birth_date: member.birth_date ? new Date(member.birth_date) : null,
         death_date: member.death_date ? new Date(member.death_date) : null,
         is_alive: member.is_alive ?? !member.death_date,
       });
@@ -97,7 +101,20 @@ export const MemberForm = ({ member, personCardActions, focussedMemberId, operat
       ...data,
       member_id: member.member_id,
       created_at: member.created_at,
-    } as Member;
+    } as Member;    
+    
+    updatedMember.first_name = updatedMember.first_name ? toTitleCase(updatedMember.first_name.trim()) : updatedMember.first_name;
+    updatedMember.middle_name = updatedMember.middle_name ? toTitleCase(updatedMember.middle_name.trim()) : updatedMember.middle_name;
+    updatedMember.last_name = updatedMember.last_name ? toTitleCase(updatedMember.last_name.trim()) : updatedMember.last_name;
+    updatedMember.birth_place = updatedMember.birth_place ? toTitleCase(updatedMember.birth_place.trim()) : updatedMember.birth_place;
+    updatedMember.death_place = updatedMember.death_place ? toTitleCase(updatedMember.death_place.trim()) : updatedMember.death_place;
+    updatedMember.profession = updatedMember.profession ? toTitleCase(updatedMember.profession.trim()) : updatedMember.profession;
+    updatedMember.current_location = updatedMember.current_location ? toTitleCase(updatedMember.current_location.trim()) : updatedMember.current_location;
+    updatedMember.religion = updatedMember.religion ? toTitleCase(updatedMember.religion.trim()) : updatedMember.religion;
+    // updatedMember.notes = updatedMember.notes ? toTitleCase(updatedMember.notes.trim()) : updatedMember.notes;
+    updatedMember.full_name = updatedMember.full_name ? toTitleCase(updatedMember.full_name.trim()) : updatedMember.full_name;
+    updatedMember.gender = updatedMember.gender ? toTitleCase(updatedMember.gender.trim()) : updatedMember.gender;
+
 
     await MemberService.updateMember(updatedMember);
     toast.success('Member updated successfully!');
@@ -109,6 +126,19 @@ export const MemberForm = ({ member, personCardActions, focussedMemberId, operat
       ...data,
       created_at: new Date(),
     };
+
+    newMember.first_name = newMember.first_name ? toTitleCase(newMember.first_name.trim()) : newMember.first_name;
+    newMember.middle_name = newMember.middle_name ? toTitleCase(newMember.middle_name.trim()) : newMember.middle_name;
+    newMember.last_name = newMember.last_name ? toTitleCase(newMember.last_name.trim()) : newMember.last_name;
+    newMember.birth_place = newMember.birth_place ? toTitleCase(newMember.birth_place.trim()) : newMember.birth_place;
+    newMember.death_place = newMember.death_place ? toTitleCase(newMember.death_place.trim()) : newMember.death_place;
+    newMember.profession = newMember.profession ? toTitleCase(newMember.profession.trim()) : newMember.profession;
+    newMember.current_location = newMember.current_location ? toTitleCase(newMember.current_location.trim()) : newMember.current_location;
+    newMember.religion = newMember.religion ? toTitleCase(newMember.religion.trim()) : newMember.religion;
+    // newMember.notes = newMember.notes ? toTitleCase(newMember.notes.trim()) : newMember.notes;
+    newMember.full_name = newMember.full_name ? toTitleCase(newMember.full_name.trim()) : toTitleCase([newMember.first_name, newMember.middle_name, newMember.last_name].filter(Boolean).join(' '));
+    newMember.gender = newMember.gender ? toTitleCase(newMember.gender.trim()) : newMember.gender;
+
     delete newMember.member_id;
 
     const insertedMember = await MemberService.insertMember(newMember as Member);
@@ -246,6 +276,8 @@ export const MemberForm = ({ member, personCardActions, focussedMemberId, operat
               { label: 'Other', value: 'Other' },
             ]}
           />
+          <FormInput label="Current Location" name="current_location" value={formData.current_location} onChange={handleChange} />
+          <FormInput label="Occupation" name="profession" value={formData.profession} onChange={handleChange} />
 
           <FormInput
             label="Birth Date"
@@ -253,7 +285,7 @@ export const MemberForm = ({ member, personCardActions, focussedMemberId, operat
             type="date"
             value={formatDateForInput(formData.birth_date)}
             onChange={handleChange}
-            required
+            // required
           />
           <FormInput label="Birth Place" name="birth_place" value={formData.birth_place} onChange={handleChange} />
 

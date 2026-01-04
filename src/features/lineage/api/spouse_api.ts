@@ -11,7 +11,7 @@ const getAllSpouses = async (): Promise<Spouse[]> => {
 };
 
 const getSpouseById = async (id: string): Promise<Spouse> => {
-  const { data, error } = await supabase.from(SupabaseTables.Spouse).select('*').eq('spouse_id', id).single();
+  const { data, error } = await supabase.from(SupabaseTables.Spouse).select('*').eq('spouse_id', id).maybeSingle();
   if (error) {
     console.log(error);
     throw error;
@@ -20,7 +20,7 @@ const getSpouseById = async (id: string): Promise<Spouse> => {
 };
 
 const createSpouse = async (spouse: Spouse): Promise<Spouse> => {
-  const { data, error } = await supabase.from(SupabaseTables.Spouse).insert(spouse).select().single();
+  const { data, error } = await supabase.from(SupabaseTables.Spouse).insert(spouse).select().maybeSingle();
   if (error) {
     console.log(error);
     throw error;
@@ -29,7 +29,7 @@ const createSpouse = async (spouse: Spouse): Promise<Spouse> => {
 };
 
 const updateSpouse = async (spouse: Spouse): Promise<Spouse> => {
-  const { data, error } = await supabase.from(SupabaseTables.Spouse).update(spouse).eq('spouse_id', spouse.spouse_id).select().single();
+  const { data, error } = await supabase.from(SupabaseTables.Spouse).update(spouse).eq('spouse_id', spouse.spouse_id).select().maybeSingle();
   if (error) {
     console.log(error);
     throw error;
@@ -46,7 +46,7 @@ const deleteSpouse = async (id: string): Promise<void> => {
 };
 
 const getSpouseForMaleMember = async (member_id: string): Promise<Spouse> => {
-  const { data, error } = await supabase.from(SupabaseTables.Spouse).select('*').eq('member_a_id', member_id).single();
+  const { data, error } = await supabase.from(SupabaseTables.Spouse).select('*').eq('member_a_id', member_id).maybeSingle();
   if (error) {
     console.log(error);
     return {} as Spouse;
@@ -55,7 +55,7 @@ const getSpouseForMaleMember = async (member_id: string): Promise<Spouse> => {
 };
 
 const getSpouseForFemaleMember = async (member_id: string): Promise<Spouse> => {
-    const { data, error } = await supabase.from(SupabaseTables.Spouse).select('*').eq('member_b_id', member_id).single();
+    const { data, error } = await supabase.from(SupabaseTables.Spouse).select('*').eq('member_b_id', member_id).maybeSingle();
     if (error) {
       console.log(error);
       return {} as Spouse;
@@ -68,7 +68,7 @@ const getSpouseForMember = async (member_id: string): Promise<Spouse> => {
     .from(SupabaseTables.Spouse)
     .select('*')
     .or(`member_a_id.eq.${member_id},member_b_id.eq.${member_id}`)
-    .single();
+    .maybeSingle();
   if (error) {
     console.log(error);
     return {} as Spouse;

@@ -59,6 +59,8 @@ export interface PersonCardHandlers {
   onEdit: (memberId: string) => void;
   onDelete: (member: Member) => void;
   onAdd: (memberId?: string, event?: React.MouseEvent) => void;
+  onAdd1: (relationType: 'Spouse' | 'Child' | 'Sibling' | 'Parent' | 'Global', memberId: string) => void;
+  onShare: (memberId: string) => void;
   onLink: (memberId: string) => void;
   onClose?: () => void;
   onSuccess?: () => void;

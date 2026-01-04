@@ -61,7 +61,7 @@ function FamilyTree() {
                 personCardActions={personCardActionsWithRefresh}
               />
             )}
-            {activeTabKey === 'Member Directory' && familyTreeData.hierarchy && <MemberDirectory familyTreeData={familyTreeData} />}
+            {activeTabKey === 'Member Directory' && familyTreeData.hierarchy && <MemberDirectory familyTreeData={familyTreeData} personCardActions={personCardActionsWithRefresh} />}
             {activeTabKey === 'Unlinked Members' && familyTreeData.hierarchy && (
               <UnlinkedMembers familyTreeData={familyTreeData} personCardActions={personCardActionsWithRefresh} />
             )}

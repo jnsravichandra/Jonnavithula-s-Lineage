@@ -53,7 +53,7 @@ function useFamilyTreeData() {
   };
 
   const hierarchy: d3.HierarchyNode<TreeNode> | null = useMemo(() => {
-    console.log('Building hierarchy...');
+    // console.log('Building hierarchy...');
     // console.log('Family Data:', familyData);
     const rootNode = buildHierarchyForD3(familyData?.members || [], familyData?.linkages || [], familyData?.spouses || []);
     // console.log('Root Node:', rootNode);
@@ -80,10 +80,11 @@ function useFamilyTreeData() {
 
   const handleMemberClick = useCallback(
     (memberId: string) => {
-      setSelectedMember(familyData?.members.find((member) => member.member_id === memberId) || null);
+      const foundMember = familyData?.members.find((member) => String(member.member_id) === String(memberId));
+      setSelectedMember(foundMember || null);
       navigate(`/family-tree/directory/${memberId}`);
     },
-    [familyData?.members, navigate]
+    [familyData, navigate]
   );
 
   const familyTreeData: FamilyTreeDataType = {

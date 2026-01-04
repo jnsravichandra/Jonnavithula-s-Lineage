@@ -18,7 +18,7 @@ const MemberTree = ({ node, expandedNodes, toggleExpand, selectedMember, handleM
   const isExpanded = expandedNodes.has(memberId);
 
   return (
-    <li className="my-sm">
+    <li className="my-sm w-fit">
       <div className="flex items-center">
         {hasChildren ? (
           <button
@@ -31,20 +31,20 @@ const MemberTree = ({ node, expandedNodes, toggleExpand, selectedMember, handleM
             {isExpanded ? <ChevronDownIcon className="w-6 h-6" /> : <ChevronRightIcon className="w-6 h-6" />}
           </button>
         ) : (
-          <span className="w-6 mr-1"></span>
+          <span className="w-2 mr-1"></span>
         )}
-        <div className="flex flex-col items-start gap-2">
+        <div className="flex flex-col items-start gap-2 p-2 rounded-md border-b border-dashed border-text-secondary">
           <div
             onClick={() => handleMemberClick(memberId)}
             className={`cursor-pointer px-sm py-sm rounded hover:bg-accent-primary hover:text-background-primary transition-colors duration-300 ${
-              selectedMember?.member_id === member.member_id ? 'bg-accent-primary text-background-primary font-bold hover:text-text-primary' : ''
+              selectedMember?.member_id === member.member_id ? 'bg-accent-primary text-background-primary font-bold hover:text-text-primary' : 'bg-background-secondary text-text-primary'
             }`}
           >
             {fullName === 'Root' ? "Jonnavithula's" : <p>{fullName}</p>}
           </div>
           {member.spouses && member.spouses.length > 0 && (
             <>
-            <LinkIcon className="w-5 h-5 self-center" />
+            <LinkIcon className="w-3 h-3 self-center" />
               <div className=" ">
                 {member.spouses.map((spouse) => (
                   <div
@@ -53,7 +53,7 @@ const MemberTree = ({ node, expandedNodes, toggleExpand, selectedMember, handleM
                     className={`cursor-pointer px-sm py-sm rounded hover:bg-accent-primary hover:text-background-primary transition-colors duration-300 ${
                       selectedMember?.member_id === spouse.member_id
                         ? 'bg-accent-primary text-background-primary font-bold hover:text-text-primary'
-                        : ''
+                        : 'bg-background-secondary text-text-primary'
                     }`}
                   >
                     {spouse.full_name}
@@ -66,7 +66,7 @@ const MemberTree = ({ node, expandedNodes, toggleExpand, selectedMember, handleM
       </div>
       {hasChildren && (
         <div className={`grid transition-[grid-template-rows] duration-300 ease-in-out ${isExpanded ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'}`}>
-          <div className="overflow-hidden">
+          <div className="overflow-hidden min-w-max">
             <ul className="pl-4 border-l-2 border-text-secondary ml-sm list-none">
               {node.children!.map((child) => (
                 <MemberTree

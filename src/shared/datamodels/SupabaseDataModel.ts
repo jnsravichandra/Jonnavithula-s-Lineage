@@ -6,7 +6,7 @@ export interface Member {
   last_name: string;
   full_name?: string;
   gender: string;
-  birth_date: Date;
+  birth_date: Date | null;
   death_date: Date | null;
   birth_place: string;
   death_place: string | null;

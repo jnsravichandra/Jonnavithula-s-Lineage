@@ -94,7 +94,11 @@ function LinkMemberForm({ familyTreeData, personCardActions }: LinkMemberFormPro
         }
 
         const message = `${sourceMember?.full_name} will be linked as the ${relationship} of ${selectedTarget.full_name}`;
-        console.log('result: ', result);
+        // console.log('result: ', result);
+        if(!result) {
+          toast.error('Failed to update relationship.');
+          return;
+        }
         toast.success(message);
         await personCardActions.handlers.onSuccess!();
       } catch (e) {
@@ -134,7 +138,7 @@ function LinkMemberForm({ familyTreeData, personCardActions }: LinkMemberFormPro
                   onClick={() => handleSelectMember(member)}
                 >
                   {[member.first_name, member.middle_name, member.last_name].filter(Boolean).join(' ')}
-                  <span className="text-sm text-text-secondary ml-2">({new Date(member.birth_date).getFullYear()})</span>
+                  <span className="text-sm text-text-secondary ml-2">({new Date(member.birth_date!).getFullYear()})</span>
                 </li>
               ))}
           </ul>

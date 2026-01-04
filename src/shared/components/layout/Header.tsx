@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import logo from '../../../assets/Logo1-nobackground.png';
 import { Link, NavLink } from 'react-router-dom';
 import { SunIcon, MoonIcon, Bars3Icon, XMarkIcon } from '@heroicons/react/24/solid';
@@ -6,10 +6,10 @@ import { SunIcon, MoonIcon, Bars3Icon, XMarkIcon } from '@heroicons/react/24/sol
 const headerLogo = () => {
   return (
     <Link to="/" className="flex items-center gap-4 cursor-pointer">
-      <div className="flex items-center">
-        <img src={logo} alt="Jonnavithula's Lineage Logo" className="h-[60px] block" />
+      <div className="flex items-center shrink-0">
+        <img src={logo} alt="Jonnavithula's Lineage Logo" className="w-auto h-auto max-h-[45px] block" />
       </div>
-      <h1 className="text-2xl font-heading font-bold text-primary hover:text-accent-primary">Jonnavithula's Lineage</h1>
+      <h1 className="text-xl font-heading font-bold text-primary hover:text-accent-primary">Jonnavithula's Lineage</h1>
     </Link>
   );
 };
@@ -26,7 +26,7 @@ function DesktopNavigation() {
   return (
     <nav className="flex items-center gap-4 p-md">
       {navItems.map((item) => (
-        <NavLink key={item.name} to={item.path} className="text-primary no-underline text-lg font-semibold hover:text-accent-primary transition-colors duration-300">
+        <NavLink key={item.name} to={item.path} className="text-primary no-underline text-md font-semibold hover:text-accent-primary transition-colors duration-300">
           {item.name}
         </NavLink>
       ))}
@@ -81,11 +81,23 @@ function MobileNavigation() {
 }
 
 function Header() {
-  const [isDarkMode, setIsDarkMode] = useState(document.documentElement.classList.contains('dark') ? 'dark' : 'light');
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme) return savedTheme;
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  });
+
+  useEffect(() => {
+    if (isDarkMode === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+    localStorage.setItem('theme', isDarkMode);
+  }, [isDarkMode]);
 
   const toggleTheme = () => {
     setIsDarkMode((prevMode: string) => (prevMode === 'light' ? 'dark' : 'light'));
-    document.documentElement.classList.toggle('dark');
   };
 
   const themeToggleButton = () => {
