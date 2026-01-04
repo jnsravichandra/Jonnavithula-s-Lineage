@@ -13,7 +13,7 @@ interface ParentNodeGroupProps {
 }
 
 function ParentNodeGroup({ member, isExpanded, hasChildren, onToggleExpand, personCardActions }: ParentNodeGroupProps) {
-  const primarySpouse = member.spouses.length > 0 ? member.spouses[0] : null;
+  const primarySpouse = member.spouses!.length > 0 ? member.spouses![0] : null;
 
   return (
     <>
