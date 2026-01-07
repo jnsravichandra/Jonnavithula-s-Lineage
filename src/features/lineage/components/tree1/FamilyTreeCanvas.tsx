@@ -133,7 +133,9 @@ export default function FamilyTreeCanvas({ rootData, onSelect, width: initialWid
                 <g key={d.member_id} transform={`translate(${y},${x})`}>
                   <foreignObject x={-cardWidth / 2} y={-cardHeight / 2} width={cardWidth} height={cardHeight}>
                     <div
-                      className="bg-background-primary text-text-primary rounded-md shadow-sm border border-text-primary px-sm py-sm text-xs cursor-pointer"
+                      className={` text-text-primary rounded-md shadow-sm border border-text-primary px-sm py-sm text-xs cursor-pointer
+                        ${node.data.member?.gender === 'Female' ? 'bg-member-female' : node.data.member?.gender === 'Male' ? 'bg-member-male' : 'bg-highlight'}
+                        `}
                       onClick={(e) => {
                         e.stopPropagation();
                         onSelect?.(d);
@@ -152,7 +154,7 @@ export default function FamilyTreeCanvas({ rootData, onSelect, width: initialWid
                         <span>{d.member?.profession ?? ''}</span>
                         {hasChildren && (
                           <button
-                            className="text-accent-primary hover:text-accent-secondary "
+                            className="text-action-primary hover:text-action-secondary "
                             onClick={(e) => {
                               e.stopPropagation();
                               handleToggle(node);

@@ -115,10 +115,9 @@ function LinkMemberForm({ familyTreeData, personCardActions }: LinkMemberFormPro
     <div className="flex flex-col gap-6">
       {/* Searchable Dropdown */}
       <div className="relative" ref={dropdownRef}>
-        <Label htmlFor={''} labelText={'Select Family Member'} />
-        <input
-          type="text"
-          className="w-full mt-sm p-sm h-2xl text-2xl rounded-md shadow-sm focus:border-accent-primary bg-background-primary focus:ring-2 outline-none text-text-primary"
+        <FormInput
+          label="Select Family Member"
+          name="search_member"
           placeholder="Search for a member..."
           value={searchTerm}
           onChange={(e) => {
@@ -127,9 +126,10 @@ function LinkMemberForm({ familyTreeData, personCardActions }: LinkMemberFormPro
             if (selectedTarget) setSelectedTarget(selectedTarget);
           }}
           onFocus={() => setIsDropdownOpen(true)}
+          autoComplete="off"
         />
         {isDropdownOpen && linkedMembers && linkedMembers.length > 0 && (
-          <ul className="absolute z-10 w-full mt-sm max-h-60 overflow-auto bg-background-secondary border border-text-primary rounded shadow-lg">
+          <ul className={`absolute z-20 w-full mt-sm max-h-60 overflow-auto bg-background-secondary border border-text-primary rounded shadow-lg`}>
             {linkedMembers &&
               linkedMembers.map((member) => (
                 <li
@@ -147,8 +147,8 @@ function LinkMemberForm({ familyTreeData, personCardActions }: LinkMemberFormPro
 
       {/* Relationship Radio Group */}
       <div>
-        <Label htmlFor={''} labelText={'Relationship'} />
-        <div className="flex gap-4">
+        <Label htmlFor={''} labelText={'Relationship'} className="block text-lg font-bold text-text-secondary mb-2" />
+        <div className="flex gap-4 bg-background-primary p-2 rounded-md">
           {['parent', 'spouse', 'child'].map((rel) => (
             <label key={rel} className="flex items-center gap-2 cursor-pointer text-xl">
               <input
@@ -157,7 +157,7 @@ function LinkMemberForm({ familyTreeData, personCardActions }: LinkMemberFormPro
                 value={rel}
                 checked={relationship === rel}
                 onChange={() => setRelationship(rel as 'parent' | 'spouse' | 'child')}
-                className="text-accent-primary focus:ring-accent-primary"
+                className="w-5 h-5 text-accent-primary border-text-secondary focus:ring-accent-primary"
               />
               <span className="text-text-primary capitalize">{rel}</span>
             </label>
@@ -167,7 +167,7 @@ function LinkMemberForm({ familyTreeData, personCardActions }: LinkMemberFormPro
 
       {/* Relationship Summary */}
       {selectedTarget && sourceMember && (
-        <div className="p-sm bg-background-secondary border border-accent-primary rounded-md text-center">
+        <div className="p-sm bg-background-primary border border-accent-primary rounded-md text-center">
           <p className="text-text-primary">
             <span className="font-bold">{sourceMember.full_name}</span>
             {' will be linked as the '}
@@ -180,7 +180,7 @@ function LinkMemberForm({ familyTreeData, personCardActions }: LinkMemberFormPro
 
       {/* Additional Info */}
       {(relationship === 'parent' || relationship === 'child') && (
-        <div>
+        <div className=''>
           <h4 className="text-lg font-bold text-text-primary mb-2 capitalize">Additional Info for {relationship}</h4>
           <FormSelect
             label="Relationship Type"
@@ -246,23 +246,27 @@ function LinkMemberForm({ familyTreeData, personCardActions }: LinkMemberFormPro
         </div>
       )}
       {/* --- Form Actions (Footer) --- */}
-      <div className="flex justify-end gap-4 pt-4 border-t border-gray-200">
+      <div className="flex justify-end gap-4 py-4 border-t border-border-secondary">
         <button
           type="button"
           onClick={personCardActions.handlers.onClose}
           disabled={isLoading}
-          className="py-2 px-4 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 transition disabled:opacity-50"
+          className={`py-2 px-4 text-xl
+            bg-background-secondary text-text-primary hover:bg-action-secondary
+            rounded-md transition disabled:opacity-50`}
         >
           Cancel
         </button>
         <button
           onClick={handleSubmit}
           disabled={isLoading}
-          className="py-2 px-4 bg-accent-primary text-background-primary rounded-md hover:bg-accent-secondary transition disabled:opacity-50"
+          className={`py-2 px-4 text-xl 
+            bg-action-secondary text-text-primary hover:bg-accent-secondary
+            rounded-md transition disabled:opacity-50`}
         >
           {isLoading ? 'Saving...' : 'Update Relationship'}
         </button>
-      </div>
+    </div>
     </div>
   );
 }

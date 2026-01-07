@@ -24,8 +24,8 @@ function TabbedLayout({ tabs, activeTabKey, onTabChange, children }: TabbedLayou
               py-2 px-4 text-lg focus:outline-none transition-colors duration-300 ease-in-out flex items-center gap-2
               ${
                 activeTabKey === tab.key
-                  ? 'border-b-2 border-accent-primary text-accent-primary font-bold transition-colors'
-                  : 'border-b-2 font-medium border-transparent text-text-secondary hover:text-text-primary hover:background-primary-hover'
+                  ? 'border-b-2 border-action-primary text-action-primary font-bold transition-colors'
+                  : 'border-b-2 font-medium border-transparent text-text-primary hover:text-text-primary hover:background-primary-hover'
               }
             `}
           >

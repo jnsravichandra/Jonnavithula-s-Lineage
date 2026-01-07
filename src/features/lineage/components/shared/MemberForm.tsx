@@ -27,7 +27,7 @@ const initialFormState: Member = {
   created_at: new Date(),
   current_location: '',
   death_place: '',
-  religion: ''
+  religion: '',
 };
 
 interface MemberFormProps {
@@ -101,20 +101,21 @@ export const MemberForm = ({ member, personCardActions, focussedMemberId, operat
       ...data,
       member_id: member.member_id,
       created_at: member.created_at,
-    } as Member;    
-    
+    } as Member;
+
     updatedMember.first_name = updatedMember.first_name ? toTitleCase(updatedMember.first_name.trim()) : updatedMember.first_name;
     updatedMember.middle_name = updatedMember.middle_name ? toTitleCase(updatedMember.middle_name.trim()) : updatedMember.middle_name;
     updatedMember.last_name = updatedMember.last_name ? toTitleCase(updatedMember.last_name.trim()) : updatedMember.last_name;
     updatedMember.birth_place = updatedMember.birth_place ? toTitleCase(updatedMember.birth_place.trim()) : updatedMember.birth_place;
     updatedMember.death_place = updatedMember.death_place ? toTitleCase(updatedMember.death_place.trim()) : updatedMember.death_place;
     updatedMember.profession = updatedMember.profession ? toTitleCase(updatedMember.profession.trim()) : updatedMember.profession;
-    updatedMember.current_location = updatedMember.current_location ? toTitleCase(updatedMember.current_location.trim()) : updatedMember.current_location;
+    updatedMember.current_location = updatedMember.current_location
+      ? toTitleCase(updatedMember.current_location.trim())
+      : updatedMember.current_location;
     updatedMember.religion = updatedMember.religion ? toTitleCase(updatedMember.religion.trim()) : updatedMember.religion;
     // updatedMember.notes = updatedMember.notes ? toTitleCase(updatedMember.notes.trim()) : updatedMember.notes;
     updatedMember.full_name = updatedMember.full_name ? toTitleCase(updatedMember.full_name.trim()) : updatedMember.full_name;
     updatedMember.gender = updatedMember.gender ? toTitleCase(updatedMember.gender.trim()) : updatedMember.gender;
-
 
     await MemberService.updateMember(updatedMember);
     toast.success('Member updated successfully!');
@@ -136,7 +137,9 @@ export const MemberForm = ({ member, personCardActions, focussedMemberId, operat
     newMember.current_location = newMember.current_location ? toTitleCase(newMember.current_location.trim()) : newMember.current_location;
     newMember.religion = newMember.religion ? toTitleCase(newMember.religion.trim()) : newMember.religion;
     // newMember.notes = newMember.notes ? toTitleCase(newMember.notes.trim()) : newMember.notes;
-    newMember.full_name = newMember.full_name ? toTitleCase(newMember.full_name.trim()) : toTitleCase([newMember.first_name, newMember.middle_name, newMember.last_name].filter(Boolean).join(' '));
+    newMember.full_name = newMember.full_name
+      ? toTitleCase(newMember.full_name.trim())
+      : toTitleCase([newMember.first_name, newMember.middle_name, newMember.last_name].filter(Boolean).join(' '));
     newMember.gender = newMember.gender ? toTitleCase(newMember.gender.trim()) : newMember.gender;
 
     delete newMember.member_id;
@@ -254,15 +257,15 @@ export const MemberForm = ({ member, personCardActions, focussedMemberId, operat
     <>
       <form onSubmit={handleSubmit} className="space-y-4">
         {/* --- Form Fields --- */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-h-150 overflow-y-auto p-2">
+        <div className="grid grid-cols-1 bg-background-secondary md:grid-cols-2 gap-4 overflow-y-auto p-2">
           {/* Profile Picture Uploader */}
           <div className="md:col-span-2 flex flex-col items-center">
-            <Label htmlFor="profile_picture_url" labelText="Profile Picture" className="block text-lg font-bold text-text-secondary mb-2" />
+            <Label htmlFor="profile_picture_url" labelText="Profile Picture" />
             <ImageUploader key={uploaderKey} initialImage={formData.profile_picture_url} onChange={handleImageChange} />
           </div>
 
           <FormInput label="First Name" name="first_name" value={formData.first_name} onChange={handleChange} required />
-          <FormInput label="Middle Name" name="middle_name" value={formData.middle_name} onChange={handleChange} />
+          <FormInput label="Middle Name" name="middle_name" value={formData.middle_name!} onChange={handleChange} />
           <FormInput label="Last Name" name="last_name" value={formData.last_name} onChange={handleChange} />
 
           <FormSelect
@@ -295,7 +298,7 @@ export const MemberForm = ({ member, personCardActions, focussedMemberId, operat
               id="is_alive"
               checked={formData.is_alive ?? true}
               onChange={handleIsAliveChange}
-              className="w-6 h-6 text-accent-primary border-gray-300 rounded focus:ring-accent-primary"
+              className="w-6 h-6 text-accent-primary border-text-secondary rounded focus:ring-accent-primary"
             />
             <label htmlFor="is_alive" className="ml-2 text-xl font-bold text-text-secondary cursor-pointer">
               Is Alive?
@@ -305,7 +308,7 @@ export const MemberForm = ({ member, personCardActions, focussedMemberId, operat
           {!formData.is_alive && (
             <FormInput label="Death Date" name="death_date" type="date" value={formatDateForInput(formData.death_date)} onChange={handleChange} />
           )}
-          {!formData.is_alive && <FormInput label="Death Place" name="death_place" value={formData.death_place} onChange={handleChange} />}
+          {!formData.is_alive && <FormInput label="Death Place" name="death_place" value={formData.death_place!} onChange={handleChange} />}
 
           <FormInput label="Profession" name="profession" value={formData.profession} onChange={handleChange} />
           <FormInput label="Religion" name="religion" value={formData.religion} onChange={handleChange} />
@@ -323,19 +326,23 @@ export const MemberForm = ({ member, personCardActions, focussedMemberId, operat
         )}
 
         {/* --- Form Actions (Footer) --- */}
-        <div className="flex justify-end gap-4 pt-4 border-t border-gray-200">
+        <div className="flex justify-end gap-4 pt-4 border-t border-border-secondary">
           <button
             type="button"
             onClick={personCardActions.handlers.onClose}
             disabled={isLoading}
-            className="py-2 px-4 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 transition disabled:opacity-50"
+            className={`py-2 px-4 text-xl
+            bg-background-secondary text-text-primary hover:bg-action-secondary
+            rounded-md transition disabled:opacity-50`}
           >
             Cancel
           </button>
           <button
             type="submit"
             disabled={isLoading}
-            className="py-2 px-4 bg-accent-primary text-background-primary rounded-md hover:bg-accent-secondary transition disabled:opacity-50"
+            className={`py-2 px-4 text-xl 
+            bg-action-secondary text-text-primary hover:bg-accent-secondary
+            rounded-md transition disabled:opacity-50`}
           >
             {isLoading ? 'Saving...' : isEditing ? 'Save Changes' : 'Create Member'}
           </button>

@@ -9,7 +9,7 @@ const headerLogo = () => {
       <div className="flex items-center shrink-0">
         <img src={logo} alt="Jonnavithula's Lineage Logo" className="w-auto h-auto max-h-[45px] block" />
       </div>
-      <h1 className="text-xl font-heading font-bold text-primary hover:text-accent-primary">Jonnavithula's Lineage</h1>
+      <h1 className="text-xl font-heading font-bold text-primary hover:text-action-primary">Jonnavithula's Lineage</h1>
     </Link>
   );
 };
@@ -26,7 +26,13 @@ function DesktopNavigation() {
   return (
     <nav className="flex items-center gap-4 p-md">
       {navItems.map((item) => (
-        <NavLink key={item.name} to={item.path} className="text-primary no-underline text-md font-semibold hover:text-accent-primary transition-colors duration-300">
+        <NavLink
+          key={item.name}
+          to={item.path}
+          className={`text-text-primary no-underline text-md font-semibold 
+            hover:m-1 hover:border-b-2 hover:border-action-primary 
+            transition-colors duration-300`}
+        >
           {item.name}
         </NavLink>
       ))}
@@ -47,11 +53,14 @@ function MobileNavigation() {
 
   return (
     <>
-      <div className="sm:hidden">
+      <div className="sm:hidden flex items-center justify-end rounded-full bg-background-secondary">
         <button onClick={toggleMenu}>
-          <Bars3Icon className="h-7 w-9 hover:bg-accent-primary rounded-md" />
+          <Bars3Icon className="h-9 w-9" />
         </button>
-        <div className={`fixed inset-0 z-40 transition-opacity duration-500 ${isOpen ? 'opacity-90' : 'opacity-0 pointer-events-none'}`} onClick={closeMenu}>
+        <div
+          className={`fixed inset-0 z-40 transition-opacity duration-500 ${isOpen ? 'opacity-90' : 'opacity-0 pointer-events-none'}`}
+          onClick={closeMenu}
+        >
           <div
             className={`fixed right-0 top-0 h-full w-1/2 bg-background-secondary shadow-lg p-4 transform transition-transform duration-500 ease-in-out z-50 ${
               isOpen ? 'translate-x-0' : 'translate-x-full'
@@ -66,7 +75,7 @@ function MobileNavigation() {
                 <NavLink
                   key={item.name}
                   to={item.path}
-                  className="text-primary no-underline text-lg font-semibold hover:text-accent-primary transition-colors duration-300"
+                  className={`text-text-primary no-underline text-md font-semibold transition-colors duration-300`}
                   onClick={closeMenu}
                 >
                   {item.name}
@@ -104,8 +113,8 @@ function Header() {
     return (
       <button
         onClick={toggleTheme}
-        className="p-2 rounded-full bg-background-primary text-accent-primary 
-        hover:bg-accent-secondary hover:text-background-primary 
+        className="p-2 rounded-full bg-background-primary text-action-primary 
+        hover:bg-action-secondary hover:text-background-primary 
         transition-colors duration-300"
         aria-label="Toggle theme"
       >

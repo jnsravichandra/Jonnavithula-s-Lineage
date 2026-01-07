@@ -1,5 +1,4 @@
-@import "tailwindcss";
-
+@import 'tailwindcss';
 
 :root {
   /* Breakpoints */
@@ -21,13 +20,11 @@
   --spacing-5xl: 192px;
 
   /* Typography */
-  --font-heading: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-    Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
-    "Segoe UI Symbol";
-  --font-body: Roboto, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica,
-    Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-  --font-code: "Fira Code", SFMono-Regular, Consolas, "Liberation Mono", Menlo,
-    Courier, monospace;
+  --font-heading: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol';
+  --font-body: Roboto, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol';
+  --font-code: 'Fira Code', SFMono-Regular, Consolas, 'Liberation Mono', Menlo, Courier, monospace;
 
   --text-xs: 0.75rem;
   --text-sm: 0.875rem;
@@ -51,18 +48,39 @@
   --color-background-primary: #f8f4ed;
   --color-background-secondary: #e7e1d8;
   --color-text-primary: #2c3e50;
-  /* --color-text-secondary: #a19a8c; */
   --color-text-secondary: #4c4c4b;
-  /* --color-accent-primary: #3a5c4f; */
   --color-accent-primary: #5a8d79;
   --color-accent-secondary: #8c6b3b;
-  --color-highlight: #8cb380;
+  --color-highlight: #b3d4a9;
   --color-success: #10b981;
   --color-error: #ef4444;
 
   /* Borders & Transitions */
   --radius: 8px;
   --transition: 0.3s ease-in-out;
+
+  /* Architecture Palette Foundations - Light Mode */
+    --color-background-primary: #ffffff;
+    --color-background-secondary: #f2eeee;
+    
+    --color-text-primary: #211b1e;      /* Deep Dark #211B1E */
+    --color-text-secondary: #7a8175;    /* Stone Grey #7A8175 */
+    
+    --color-border-primary: #e5e5e5;
+    --color-border-secondary: #7a8175;  /* Stone Grey #7A8175 */
+
+    /* Action & Identity Colors */
+    --color-action-primary: #647ab7;    /* Deep Blue #647AB7 */
+    --color-action-secondary: #c2b579;  /* Muted Gold #C2B579 */
+    
+    /* Member Gender Palette */
+    --color-member-male: #93a7dc;      /* Using Deep Blue */
+    --color-member-female: #e094c6;    /* Using Sage Green #69C483 */
+    
+    /* Status Colors */
+    --color-status-success: #69c483;
+    --color-status-warning: #c2b579;
+    --color-status-error: #b76464;
 }
 
 .dark {
@@ -72,9 +90,27 @@
   --color-text-secondary: #8a9a9a;
   --color-accent-primary: #c8a461;
   --color-accent-secondary: #5e8472;
-  --color-highlight: #a9d19e;
+  --color-highlight: #356b26;
   --color-success: #10b981;
   --color-error: #ef4444;
+
+  /* Architecture Palette foundations - Dark Mode */
+    --color-background-primary: #211b1e;   /* Deep Dark #211B1E */
+    --color-background-secondary: #41393c; 
+    
+    --color-text-primary: #f2f2f2;
+    --color-text-secondary: #a1a89c;
+    
+    --color-border-primary: #3d3437;
+    --color-border-secondary: #7a8175;
+
+    /* Adjusting Action Colors for readability in Dark Mode */
+    --color-action-primary: #7a8ec9;    
+    --color-action-secondary: #988016;
+    
+    /* Gender Specifics for Dark Mode Contrast */
+    --color-member-male: #2c489f;
+    --color-member-female: #7a2b53;
 }
 
 @theme {
@@ -121,9 +157,24 @@
   --color-text-secondary: var(--color-text-secondary);
   --color-accent-primary: var(--color-accent-primary);
   --color-accent-secondary: var(--color-accent-secondary);
+
+  --color-action-primary: var(--color-action-primary);
+  --color-action-secondary: var(--color-action-secondary);
+
+  --color-member-male: var(--color-member-male);
+  --color-member-female: var(--color-member-female);
+
+  --color-status-success: var(--color-status-success);
+  --color-status-warning: var(--color-status-warning);
+  --color-status-error: var(--color-status-error);
+
+  --color-border-primary: var(--color-border-primary);
+  --color-border-secondary: var(--color-border-secondary);
+
   --color-highlight: var(--color-highlight);
   --color-success: var(--color-success);
   --color-error: var(--color-error);
+
 
   /* Borders & Transitions */
   --radius: var(--radius);
@@ -132,6 +183,8 @@
 
 /* @custom-variant dark (&:where (.dark, .dark *)) */
 
-html, body, #root {
+html,
+body,
+#root {
   height: 100%;
 }

@@ -10,7 +10,6 @@ import FamilyTreeView1 from '../components/tree1/FamilyTree';
 
 let familyTreeTabs = [
   { key: 'Member Directory', label: 'Member Directory', icon: <ListBulletIcon className="w-5 h-5" />, isSecured: false },
-  // { key: 'Family Tree', label: 'Family Tree', icon: <UsersIcon className="w-5 h-5" /> , isSecured: false},
   { key: 'Family Tree D3', label: 'Family Tree', icon: <UsersIcon className="w-5 h-5" /> , isSecured: false},
   { key: 'Unlinked Members', label: 'Unlinked Members', icon: <UserMinusIcon className="w-5 h-5" /> , isSecured: true},
 ];

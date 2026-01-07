@@ -30,23 +30,23 @@ export const ModalDialog = ({ open, onClose, title, children }: ModalProps) => {
         {/* modal container */}
         <div
           onClick={(e) => e.stopPropagation()}
-          className={`bg-background-secondary rounded-xl shadow-xl p-6 transition-all relative w-8/12 border ${
+          className={`bg-background-secondary rounded-xl shadow-xl p-lg transition-all relative w-4/6 border flex flex-col max-h-[120vh] ${
             open ? "scale-70 opacity-100" : "scale-90 opacity-0"
           }`}
         >
-          <button onClick={onClose} className="absolute top-2 right-2 p-1">
-            <XMarkIcon className="h-7 w-7" />
+          <button onClick={onClose} className="absolute top-2 right-2 p-lg">
+            <XMarkIcon className="h-10 w-10" />
           </button>
           {/* modal header */}
-          <div>
+          <div className="shrink-0">
             <h1 className="text-3xl font-heading font-bold text-text-primary mb-lg">
               {title}
             </h1>
           </div>
           {/* modal body */}
-          <div>{children}</div>
+          <div className="overflow-y-auto px-lg">{children}</div>
           {/* modal footer */}
-          <div>
+          <div className="shrink-0">
             
           </div>
         </div>

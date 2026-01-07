@@ -19,9 +19,9 @@ function Home() {
           ></div>
           {/* Content */}
           <div className="relative flex flex-col items-center gap-lg">
-            <h1 className="text-5xl font-heading font-bold text-accent-primary">Uncover Your Roots</h1>
+            <h1 className="text-5xl font-heading font-bold text-text-primary">Uncover Your Roots</h1>
             <Link to="/family-tree">
-              <button className="bg-accent-primary text-background-primary font-semibold text-lg py-md px-xl rounded-xl hover:bg-opacity-80 transition-colors duration-300">
+              <button className="bg-action-secondary text-text-primary font-semibold text-lg py-md px-xl rounded-xl hover:bg-opacity-80 transition-colors duration-300">
                 Explore the Tree
               </button>
             </Link>
@@ -43,7 +43,7 @@ function Home() {
             {/* { Add more Stories } */}
             <div className="flex items-center">
               <Link to="/stories">
-                <button className="bg-accent-primary text-background-primary font-semibold text-lg py-md px-xl rounded-xl hover:bg-opacity-80 transition-colors duration-300">
+                <button className="bg-action-secondary text-text-primary font-semibold text-lg py-md px-xl rounded-xl hover:bg-opacity-80 transition-colors duration-300">
                   Add More Stories
                 </button>
               </Link>
@@ -55,7 +55,7 @@ function Home() {
   };
 
   return (
-    <div className="p-md space-y-2xl">
+    <div className="space-y-2xl p-2">
       {HeroSection()}
       {LatestStoriesSection()}
     </div>
