@@ -30,8 +30,8 @@ function DesktopNavigation() {
           key={item.name}
           to={item.path}
           className={`text-text-primary no-underline text-md font-semibold 
-            hover:m-1 hover:border-b-2 hover:border-action-primary 
-            transition-colors duration-300`}
+            hover:m-0 hover:border-b-2 hover:border-action-primary 
+            ease-in-out  transition-colors duration-300`}
         >
           {item.name}
         </NavLink>

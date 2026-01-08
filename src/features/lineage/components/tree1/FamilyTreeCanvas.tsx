@@ -91,6 +91,48 @@ export default function FamilyTreeCanvas({ rootData, onSelect, width: initialWid
     setPan((prevPan) => ({ x: prevPan.x + e.movementX / zoom, y: prevPan.y + e.movementY / zoom }));
   };
 
+  // Touch handling
+  const lastTouchRef = useRef<{ x: number; y: number } | null>(null);
+  const lastPinchDistRef = useRef<number | null>(null);
+
+  const handleTouchStart: React.TouchEventHandler<HTMLDivElement> = (e) => {
+    if (e.touches.length === 1) {
+      setIsDragging(true);
+      lastTouchRef.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+    } else if (e.touches.length === 2) {
+      setIsDragging(false);
+      const dist = Math.hypot(
+        e.touches[0].clientX - e.touches[1].clientX,
+        e.touches[0].clientY - e.touches[1].clientY
+      );
+      lastPinchDistRef.current = dist;
+    }
+  };
+
+  const handleTouchMove: React.TouchEventHandler<HTMLDivElement> = (e) => {
+    if (e.touches.length === 1 && isDragging && lastTouchRef.current) {
+      const touch = e.touches[0];
+      const deltaX = touch.clientX - lastTouchRef.current.x;
+      const deltaY = touch.clientY - lastTouchRef.current.y;
+      setPan((prevPan) => ({ x: prevPan.x + deltaX / zoom, y: prevPan.y + deltaY / zoom }));
+      lastTouchRef.current = { x: touch.clientX, y: touch.clientY };
+    } else if (e.touches.length === 2 && lastPinchDistRef.current) {
+      const dist = Math.hypot(
+        e.touches[0].clientX - e.touches[1].clientX,
+        e.touches[0].clientY - e.touches[1].clientY
+      );
+      const delta = dist - lastPinchDistRef.current;
+      setZoom((prevZoom) => Math.max(0.3, Math.min(2.5, prevZoom + delta * 0.005)));
+      lastPinchDistRef.current = dist;
+    }
+  };
+
+  const handleTouchEnd: React.TouchEventHandler<HTMLDivElement> = () => {
+    setIsDragging(false);
+    lastTouchRef.current = null;
+    lastPinchDistRef.current = null;
+  };
+
   const cardWidth = 160;
   const cardHeight = 80;
 
@@ -98,11 +140,14 @@ export default function FamilyTreeCanvas({ rootData, onSelect, width: initialWid
     <>
       <div
         ref={containerRef}
-        className="w-full h-full overflow-hidden bg-background-secondary cursor-move"
+        className="w-full h-full overflow-hidden bg-background-secondary cursor-move touch-none"
         onMouseDown={handleMouseDown}
         onMouseUp={handleMouseUp}
         onMouseLeave={handleMouseLeave}
         onMouseMove={handleMouseMove}
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
       >
         <svg width="100%" height="100%" viewBox={`${-width / 2 - pan.x} ${-height / 2 - pan.y} ${width / zoom} ${height / zoom }`}>
           <g>
@@ -128,9 +173,11 @@ export default function FamilyTreeCanvas({ rootData, onSelect, width: initialWid
               const d = node.data;
               const hasChildren = !!(d.children && d.children.length > 0);
               const isCollapsed = collapsedIds.has(d.member_id);
+              // Generate a unique key based on the node's path to handle duplicate member_ids
+              const uniqueKey = node.ancestors().map((n) => n.data.member_id).join('_');
 
               return (
-                <g key={d.member_id} transform={`translate(${y},${x})`}>
+                <g key={uniqueKey} transform={`translate(${y},${x})`}>
                   <foreignObject x={-cardWidth / 2} y={-cardHeight / 2} width={cardWidth} height={cardHeight}>
                     <div
                       className={` text-text-primary rounded-md shadow-sm border border-text-primary px-sm py-sm text-xs cursor-pointer
