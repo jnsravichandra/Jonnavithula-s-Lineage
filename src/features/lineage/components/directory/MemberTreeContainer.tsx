@@ -27,7 +27,7 @@ export default function MemberTreeContainer({ hierarchy, selectedMember, handleM
         </button>
       </div>
       {hierarchy ? (
-        <ul className="list-none pl-0 overflow-auto max-h-[70vh] whitespace-nowrap pr-2">
+        <ul className="list-none pl-0 overflow-auto flex-1 whitespace-nowrap pr-2 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent">
           <MemberTree
             node={hierarchy}
             expandedNodes={expandedNodes}

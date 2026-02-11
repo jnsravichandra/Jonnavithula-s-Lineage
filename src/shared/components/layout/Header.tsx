@@ -53,7 +53,7 @@ function MobileNavigation() {
 
   return (
     <>
-      <div className="sm:hidden flex items-center justify-end rounded-full bg-background-secondary">
+      <div className="md:hidden flex items-center justify-end rounded-full bg-background-secondary">
         <button onClick={toggleMenu}>
           <Bars3Icon className="h-9 w-9" />
         </button>
@@ -129,7 +129,7 @@ function Header() {
         <div className="mx-auto flex justify-between items-center h-[60px] px-md">
           {headerLogo()}
           <div className="flex justify-end items-center gap-4 p-sm">
-            <div className="hidden sm:flex">
+            <div className="hidden md:flex">
               <DesktopNavigation />
             </div>
             <MobileNavigation />

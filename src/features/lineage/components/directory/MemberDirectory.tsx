@@ -51,8 +51,8 @@ function MemberDirectory({ familyTreeData, personCardActions }: MemberDirectoryP
   }, [handleMemberClick, familyTreeData.familyData]);
 
   return (
-    <div className="p-md flex gap-md">
-      <div className="w-1/3 min-w-[300px] flex flex-col gap-4 shrink-0">
+    <div className="p-md md:flex gap-md h-[calc(100vh-65px)]">
+      <div className={`flex flex-col gap-4 shrink-0 ${selectedMember ? 'hidden md:flex' : 'w-full'} md:w-1/3 md:min-w-[300px]`}>
         <div className="relative">
           <input
             type="text"
@@ -78,7 +78,7 @@ function MemberDirectory({ familyTreeData, personCardActions }: MemberDirectoryP
         <MemberTreeContainer hierarchy={hierarchy} selectedMember={selectedMember} handleMemberClick={handleMemberClick} />
       </div>
 
-      <div className="w-full">
+      <div className={`w-full h-full ${selectedMember ? 'block' : 'hidden md:block'}`}>
         {selectedMember ? (
           <MemberDashboard
             hierarchy={hierarchy!}

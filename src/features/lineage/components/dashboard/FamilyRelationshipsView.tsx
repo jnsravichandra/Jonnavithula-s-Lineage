@@ -82,7 +82,7 @@ export function FamilyRelationshipsView({ activeNode, setSelectedMember, setActi
   };
 
   return (
-    <div className="flex flex-col items-center gap-12 p-8 w-full">
+    <div className="flex flex-col items-center gap-8 md:gap-12 p-4 md:p-8 w-full">
       {/* Parents Section */}
       {parents.length > 0 && (
         <div className="flex flex-col items-center gap-2">

@@ -1,4 +1,4 @@
-import { MapPinIcon, UserCircleIcon, XMarkIcon } from '@heroicons/react/24/solid';
+import { ArrowLeftIcon, MapPinIcon, UserCircleIcon, XMarkIcon } from '@heroicons/react/24/solid';
 import type { Member } from '../../../../shared/datamodels';
 import MemberQuickActions from '../shared/MemberQuickActions';
 
@@ -16,7 +16,7 @@ interface MemberHeroProps {
 
 export function MemberHero({ member, setSelectedMember, onEdit, onShare, onAddParent, onAddSpouse, onAddChild, onLink, onDelete }: MemberHeroProps) {
   return (
-    <div className="relative bg-gradient-to-r from-accent-primary via-highlight to-accent-primary p-6 flex items-center gap-6 border-b border-text-primary">
+    <div className="relative bg-gradient-to-r from-accent-primary via-highlight to-accent-primary p-6 pt-12 flex items-center gap-6 border-b border-text-primary">
       <div className="absolute top-4 right-4 flex items-center gap-2">
         <MemberQuickActions
           member={member}
@@ -29,7 +29,8 @@ export function MemberHero({ member, setSelectedMember, onEdit, onShare, onAddPa
           onDelete={onDelete}
         />
         <button onClick={() => setSelectedMember(null)} className="p-2 hover:bg-accent-secondary rounded-full transition-colors">
-          <XMarkIcon className="text-background-primary h-6 w-6" />
+          <ArrowLeftIcon className="md:hidden text-background-primary h-6 w-6" />
+          <XMarkIcon className="hidden md:block text-background-primary h-6 w-6" />
         </button>
       </div>
       <div className="relative">
